@@ -162,8 +162,12 @@ const Navbar = ({ data1 }: any) => {
                                                 className="text-2xl cursor-pointer text-[#cd2626]"
                                                 onClick={handleBackToIndustries}
                                             />
-                                            <h2 className="text-xl font-bold text-gray-800">
-                                                {selectedIndustry.name}
+                                            <h2 className="text-xl font-bold text-gray-800 cursor-pointer hover:text-gray-900">
+                                                <a
+                                                    href={`/industory/${selectedIndustry.slug}/${selectedIndustry.id}`}>
+                                                    {selectedIndustry.name}
+                                                </a>
+
                                             </h2>
                                         </div>
                                         <div className="p-4">
@@ -208,7 +212,7 @@ const Navbar = ({ data1 }: any) => {
                     <div className="hidden md:flex h-[calc(100vh-73px)] bg-white text-black shadow-xl">
                         <div className='w-1/3 border-r border-gray-100 bg-gray-50/30 overflow-y-auto'>
                             <ul className="flex flex-col gap-1 p-4">
-                                {data1.map((item: any) => (
+                                {data1.reverse().map((item: any) => (
                                     <li
                                         onMouseEnter={() => setActiveData(item)}
                                         key={item.id}
@@ -236,9 +240,16 @@ const Navbar = ({ data1 }: any) => {
                             <div className="p-4">
                                 <div className='border-b border-gray-200 flex flex-row justify-between items-center mb-6 pb-4'>
                                     <div>
-                                        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                                            {activeData?.name}
-                                        </h2>
+                                       
+                                            <h2 className="text-xl font-bold text-gray-600 cursor-pointer hover:text-gray-900">
+                                                <a
+                                                    href={`/industory/${activeData?.slug}/${activeData?.id}`}>
+                                                    {activeData?.name}
+                                                </a>
+
+                                            </h2>
+                                          
+                                       
                                         <p className="text-gray-500 text-sm">
                                             • {activeData?.sub_industry?.length || 0} Sub-markets
                                         </p>
@@ -256,13 +267,13 @@ const Navbar = ({ data1 }: any) => {
                                         >
                                             <div className="flex items-start justify-between mb-3">
                                                 <h3 className="text-lg font-bold text-[#cd2626] transition-colors">
-                                                    {subMarket.subMarketName}
+                                                    {subMarket.name}
                                                 </h3>
                                                 <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center group-hover:bg-[#cd2626] transition-colors">
                                                     <RxTriangleRight className="text-[#cd2626] group-hover:text-white text-sm" />
                                                 </div>
                                             </div>
-                                            <p className="text-gray-600 text-sm leading-relaxed">
+                                            <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
                                                 {subMarket.description}
                                             </p>
                                         </div>

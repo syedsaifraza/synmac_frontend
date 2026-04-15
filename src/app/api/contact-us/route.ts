@@ -1,6 +1,6 @@
 export async function POST(req: Request) {
     try {
-        // Parse the incoming request body
+      
         const body = await req.json();
 
         // Send the data to the backend API

@@ -42,7 +42,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex flex-col">
-        <Navbar data1={data.users.data} />
+        <Navbar data1={data.users.data || []} />
         {children}
         <Footer />
       </body>

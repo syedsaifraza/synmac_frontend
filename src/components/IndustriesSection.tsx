@@ -62,10 +62,6 @@ async function getIndustries() {
 const IndustriesSection = async () => {
   const industries = await getIndustries();
 
-  console.log("Industries to display:", industries);
-
-  
- 
 
   if (industries.length === 0) {
     return (
@@ -101,10 +97,12 @@ const IndustriesSection = async () => {
           
             const firstSubIndustry = industry.sub_industry[0];
             const imageUrl = industry.image || industry.hero_background_file_url;
+
+            console.log(industry.id)
             
             return (
               <a
-                href={`/industory/${industry.slug}/${firstSubIndustry?.id || industry.id}`}
+                href={`/industory/${industry.slug}/${industry.id}`}
                 key={industry.id}
                 className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
               >
@@ -123,7 +121,7 @@ const IndustriesSection = async () => {
                   )}
                 </div>
                 <div className="p-5">
-                  <h3 className="font-semibold text-lg text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors">
+                  <h3  className="font-semibold text-lg text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors">
                     {industry.name}
                     <BiChevronRight 
                       size={18} 
@@ -134,7 +132,7 @@ const IndustriesSection = async () => {
                     {industry.sub_industry.length} sub-market{industry.sub_industry.length !== 1 ? 's' : ''}
                   </p>
                   {industry.description && (
-                    <p className="text-xs text-gray-400 mt-2 line-clamp-2">
+                    <p  className="text-xs text-gray-400 mt-2 line-clamp-2">
                       {industry.description}
                     </p>
                   )}

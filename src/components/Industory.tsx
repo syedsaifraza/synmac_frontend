@@ -10,39 +10,14 @@ import { LiaAngleDownSolid, LiaAngleRightSolid, LiaAngleUpSolid } from "react-ic
 
 
 
-const Industory = () => {
+const Industory = ({ industoryData }: any) => {
 
-
-  const [play, setPlay] = useState(false);
-
-
-  const faqs = [
-    {
-      question: "How can AI improve food safety?",
-      answer: "AI-powered vision systems can detect contaminants, monitor temperature, and track expiration dates in real-time across production lines."
-    },
-    {
-      question: "What are the benefits of supply chain digitization?",
-      answer: "Real-time tracking, reduced waste, improved traceability from farm to fork, and better demand forecasting for perishable goods."
-    },
-    {
-      question: "How does automation help beverage production?",
-      answer: "Automated bottling, labeling, and quality control systems increase throughput, reduce human error, and maintain consistency."
-    },
-    {
-      question: "What is smart inventory management?",
-      answer: "IoT sensors and AI predict stock levels, automate reordering, and reduce spoilage by optimizing storage conditions."
-    },
-    {
-      question: "How can data analytics improve menu planning?",
-      answer: "Analytics track customer preferences, seasonal trends, and nutritional data to optimize offerings and reduce food waste."
-    }
-  ];
+  const [play, setPlay] = useState(null);
 
   function FAQAccordion() {
     const [activeIndex, setActiveIndex] = useState(null);
 
-    const toggle = (index:any) => {
+    const toggle = (index: any) => {
       setActiveIndex(activeIndex === index ? null : index);
     };
 
@@ -52,7 +27,7 @@ const Industory = () => {
           <h2 className="text-3xl font-bold mb-6 text-center">  Answers to Your Most Important Questions</h2>
 
           <div className="">
-            {faqs.map((faq, index) => (
+            {industoryData.faqs.map((faq: any, index: any) => (
               <div
                 key={index}
                 className="border-b border-gray-600  overflow-hidden"
@@ -68,7 +43,7 @@ const Industory = () => {
                   </span>
                 </button>
 
-                {/* Answer */}
+
                 <div
                   className={`px-4 transition-all duration-300 ${activeIndex === index ? "max-h-40 py-3" : "max-h-0 overflow-hidden"
                     }`}
@@ -85,62 +60,10 @@ const Industory = () => {
     );
   }
 
-
-  const data = [
-    {
-      margin: "ml-20",
-      title: "Nestlé",
-      desc: "Reduces supply chain waste by 35% with AI-powered demand forecasting",
-      img: "/img1.jpg",
-    },
-    {
-      title: "Coca-Cola",
-      desc: "Optimizes production lines with real-time IoT monitoring across 200+ plants",
-      img: "/img2.jpg",
-    },
-    {
-      title: "Danone",
-      desc: "Ensures dairy quality with blockchain traceability from farm to shelf",
-      img: "/img3.jpg",
-    },
-    {
-      title: "PepsiCo",
-      desc: "AI-driven inventory management reduces spoilage by 28% in warehouses",
-      img: "/img1.jpg",
-    },
-    {
-      title: "Heineken",
-      desc: "Smart brewing automation increases efficiency while maintaining traditional quality",
-      img: "/img2.jpg",
-    },
-    {
-      title: "Unilever",
-      desc: "Digital twins optimize recipe scaling and ingredient sourcing globally",
-      img: "/img3.jpg",
-    },
-    {
-      title: "Kraft Heinz",
-      desc: "Computer vision systems detect packaging defects at 200 units per minute",
-      img: "/img1.jpg",
-    },
-    {
-      title: "Tyson Foods",
-      desc: "Predictive maintenance reduces equipment downtime by 40% in processing facilities",
-      img: "/img2.jpg",
-    },
-    {
-      margin: "mr-20",
-      title: "Starbucks",
-      desc: "Personalized recommendations drive 22% increase in customer loyalty program engagement",
-      img: "/img3.jpg",
-    },
-  ];
-
-
   function CustomerStories() {
     const scrollRef = useRef<any>(null);
 
-    const scroll = (direction:any) => {
+    const scroll = (direction: any) => {
       if (direction === "left") {
         scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
       } else {
@@ -175,25 +98,23 @@ const Industory = () => {
           ref={scrollRef}
           className="flex gap-6 overflow-x-auto  scroll-smooth no-scrollbar"
         >
-          {data.map((item, i) => (
+          {industoryData.features.map((item: any, i: any) => (
             <div
               key={i}
               className={`min-w-75 ${item?.margin} h-100 relative rounded-sm overflow-hidden `}
             >
 
               <img
-                src={"https://images.stockcake.com/public/3/e/8/3e83452c-6b60-479a-9161-56d0ddecf7a7_large/electronic-circuit-closeup-stockcake.jpg"}
+                src={item.icon}
                 alt={item.title}
                 className="w-full h-full object-cover "
               />
 
               {/* Overlay */}
               <div className="absolute inset-0 bg-black/50 flex flex-col justify-end p-4 hover:scale-100 transition duration-500">
-                <h3 className="text-white text-xl font-semibold">
-                  {item.title}
-                </h3>
+
                 <p className="text-gray-200 text-sm mt-1">
-                  {item.desc}
+                  {item.title}
                 </p>
 
 
@@ -207,7 +128,7 @@ const Industory = () => {
   function CustomerStories1() {
     const scrollRef = useRef<any>(null);
 
-    const scroll = (direction:any) => {
+    const scroll = (direction: any) => {
       if (direction === "left") {
         scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
       } else {
@@ -281,7 +202,7 @@ const Industory = () => {
           ref={scrollRef}
           className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar"
         >
-          {guidesData.map((guide, i) => (
+          {industoryData.guides.map((guide: any, i: any) => (
             <div
               key={i}
               className={`min-w-75 ${i === 0 ? "ml-20" : i === guidesData.length - 1 ? "mr-20" : ""} h-50 border border-gray-200 relative overflow-hidden rounded-sm`}
@@ -292,9 +213,9 @@ const Industory = () => {
                     {guide.title}
                   </h3>
                   <p className="text-gray-600 text-md mt-2 line-clamp-3">
-                    {guide.desc}
+                    {guide.description}
                   </p>
-                  <a href={guide.link} className="text-blue-600 text-sm mt-2 inline-block">
+                  <a href={guide.file} className="text-blue-600 text-sm mt-2 inline-block">
                     Check Guide →
                   </a>
                 </div>
@@ -305,8 +226,6 @@ const Industory = () => {
       </div>
     );
   }
-
-
 
   function ResourcesSection() {
     return (
@@ -323,62 +242,23 @@ const Industory = () => {
 
           <div className="space-y-8 border-l pl-6 grid grid-cols-2 w-full gap-4">
 
-            <div className="p-2">
-              <h3 className="font-semibold text-xl">
-                The Food & Beverage Leader's AI Readiness Checklist
-              </h3>
-              <p className="text-gray-600 text-md mt-2">
-                AI opportunity is transforming food production. Are you ready? Don't risk falling
-                behind, missing critical safety insights, and exposing supply chain gaps.
-              </p>
-              <a href="#" className="text-blue-600 text-sm mt-2 inline-block">
-                Check Documents →
-              </a>
-            </div>
-
-            <div className="p-2">
-              <h3 className="font-semibold text-xl">
-                It's time to modernize your food supply chain for AI
-              </h3>
-              <p className="text-gray-600 text-md mt-2">
-                How do you turn AI potential into reality? By making supply chain
-                infrastructure a catalyst for traceability, freshness, safety, and growth.
-              </p>
-              <a href="#" className="text-blue-600 text-sm mt-2 inline-block">
-                Check Documents →
-              </a>
-            </div>
+            {
+              industoryData.resources.map((res: any,i:any) => (
+                <div key={i} className="p-2">
+                  <h3 className="font-semibold text-xl">
+                    {res.title}
+                  </h3>
+                  <p className="text-gray-600 text-md mt-2">
+                    {res.description}
+                  </p>
+                  <a href={res.file} target="_blank" className="text-blue-600 text-sm mt-2 inline-block">
+                    Check Documents →
+                  </a>
+                </div>
+              ))
+            }
 
 
-
-
-
-
-            <div className="p-2">
-              <h3 className="font-semibold text-xl">
-                IDC Spotlight: Accelerate Growth in Food & Beverage
-              </h3>
-              <p className="text-gray-600 text-md mt-2">
-                The need to modernize food production infrastructure has never been more
-                urgent. This IDC paper unpacks the challenges businesses face with spoilage.
-              </p>
-              <a href="#" className="text-blue-600 text-sm mt-2 inline-block">
-                Check Documents →
-              </a>
-            </div>
-
-            <div className="p-2">
-              <h3 className="font-semibold text-xl">
-                IDC infographic: Strategic Food Supply Chain Transformation
-              </h3>
-              <p className="text-gray-600 text-md mt-2">
-                Discover how unified, AI-powered platforms with integrated traceability
-                drive growth and operational efficiency from farm to fork.
-              </p>
-              <a href="#" className="text-blue-600 text-sm mt-2 inline-block">
-                Check Documents →
-              </a>
-            </div>
 
 
 
@@ -394,40 +274,10 @@ const Industory = () => {
   }
 
 
-  const subIndustries = [
-    {
-      title: "Dairy & Alternatives",
-      desc: "Optimize cold chain logistics, reduce spoilage, and ensure quality from farm to shelf.",
-      img: "https://www.safefood.net/getmedia/2eb5cb9d-11df-4705-8e97-3f302f1a6c62/alt-dairy-products.jpg",
-    },
-    {
-      title: "Beverages",
-      desc: "Smart bottling, recipe optimization, and predictive maintenance for production lines.",
-      img: "https://midaswellnesshub.com/wp-content/uploads/2025/12/571b3ecb0e3c4b0ab1d6723d72df48c0_1080w.jpg",
-    },
-    {
-      title: "Snacks & Confectionery",
-      desc: "AI-powered quality control, packaging automation, and demand forecasting.",
-      img: "https://www.confectioneryproduction.com/wp-content/uploads/pic1-snacks1.jpg",
-    },
-    {
-      title: "Fresh Produce",
-      desc: "Harvest prediction, ripening optimization, and waste reduction through smart inventory.",
-      img: "https://images.aptean.com/apteanmarketimages/5BxDJOBOYKyH2SFKOmAcgW/7300fdab56e0b54729e89929bf74a033/card-why-you-need-a-specialized-fresh-produce-erp.jpg",
-    },
-    {
-      title: "Meat & Seafood",
-      desc: "Temperature monitoring, shelf-life prediction, and blockchain traceability solutions.",
-      img: "https://www.campdenbri.co.uk/images/raw-meat-fish-medium.jpg",
-    },
-  ];
-
-
-
   function SolutionsSection() {
     const [showAll, setShowAll] = useState(false);
 
-    const visibleData = showAll ? subIndustries : subIndustries.slice(0, 3);
+    const visibleData = showAll ? industoryData.sub_industry : industoryData.sub_industry.slice(0, 3);
 
     return (
       <div className="bg-[#333737] text-white py-16 px-4">
@@ -440,15 +290,15 @@ const Industory = () => {
 
 
           <div className="grid md:grid-cols-3 gap-8">
-            {visibleData.map((item, i) => (
+            {industoryData.sub_industry.map((item:any, i:any) => (
               <div
                 key={i}
                 className="bg-[#333737]  overflow-hidden"
               >
 
                 <img
-                  src={item.img}
-                  alt={item.title}
+                  src={item.image}
+                  alt={item.name}
                   className="w-full h-70 object-cover"
                 />
 
@@ -456,10 +306,10 @@ const Industory = () => {
                 <div className="py-6 flex justify-between items-start gap-4">
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold">
-                      {item.title}
+                      {item.name}
                     </h3>
                     <p className="text-white text-md mt-2 line-clamp-3 overflow-hidden">
-                      {item.desc}
+                      {item.description}
                     </p>
                   </div>
 
@@ -487,29 +337,27 @@ const Industory = () => {
     );
   }
 
-
   function SolutionsSection1() {
-    const [showAll, setShowAll] = useState(false);
-
-    const visibleData = showAll ? subIndustries : subIndustries.slice(0, 3);
-
+   
     return (
       <div className=" text-black py-16 px-4">
         <div className="max-w-6xl mx-auto">
 
-          {/* Heading */}
           <h2 className="text-3xl md:text-4xl mb-4">
-            Browse different food & beverage segments and find the best solutions for you
+            {industoryData.feature_title}
           </h2>
 
-          <p className="text-gray-600 text-lg">We're accelerating a sustainable food future with smart production, reduced waste, and complete traceability from farm to fork. Our AI-powered solutions help food and beverage companies optimize every step of the journey.</p>
+          <p className="text-gray-600 text-lg">
+
+            {industoryData.feature_description}
+          </p>
 
 
-          {/* Cards */}
+
           <div className="my-6 rouned-md p-3 border border-gray-300 bg-white">
-            {visibleData.slice(0, 1).map((item, i) => (
+         
               <div
-                key={i}
+               
                 className=" flex flex-row  gap-4 overflow-hidden"
               >
 
@@ -517,10 +365,10 @@ const Industory = () => {
                 <div className=" flex justify-between items-start">
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold">
-                      We're accelerating a sustainable food future with the Smart Production Platform
+                      {industoryData.feature_sub_title}
                     </h3>
                     <p className="text-gray-600 mt-2 text-md line-clamp-3 overflow-hidden">
-                      The Smart Production Platform allows food manufacturers to offer sustainably sourced products with complete carbon footprint transparency and farm-to-fork traceability certificate.
+                      {industoryData.feature_sub_description}
                     </p>
                   </div>
 
@@ -528,13 +376,13 @@ const Industory = () => {
 
                 </div>
                 <img
-                  src={"https://commonthreadco.com/cdn/shop/articles/2022_Food_Beverage_Industry_Report-V2_1200x.jpg?v=1650920884"}
-                  alt={item.title}
+                  src={industoryData.feature_file_link}
+                  alt={"sub-dis"}
                   className="w-full h-70 object-cover"
                 />
 
               </div>
-            ))}
+          
           </div>
 
         </div>
@@ -542,26 +390,23 @@ const Industory = () => {
     );
   }
 
-
-
   function CareerSection() {
     return (
       <div className="bg-black text-white py-16 px-4">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
 
-          {/* LEFT CONTENT */}
           <div>
 
 
             <h2 className="text-4xl md:text-5xl font-semibold mb-6">
-              Food and Beverages
+              {industoryData.name}
             </h2>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Explore a wide range of delicious food and refreshing beverages crafted to satisfy every taste. Experience quality, flavor, and freshness in every bite.
+              {industoryData.description}
             </p>
 
-            {/* CTA */}
+
             <button className="flex items-center gap-3 group">
               <span className="text-lg">Conntect us</span>
 
@@ -571,10 +416,9 @@ const Industory = () => {
             </button>
           </div>
 
-          {/* RIGHT IMAGE */}
           <div>
             <img
-              src="https://synmac-backend.serverscripts.in/storage/media/1776162255_Future-of-food-industry-blog.webp"
+              src={industoryData.image}
               alt="career"
               className="w-full h-87 object-contain"
             />
@@ -585,160 +429,125 @@ const Industory = () => {
     );
   }
 
+  function HeroSection() {
+    return (
+      <>
+
+        <div
+          className="relative h-100 bg-fixed px-20 bg-cover flex items-center"
+          style={{
+            backgroundImage:
+              `url(${industoryData.hero_background_file_url})`,
+          }}
+        >
+
+          <div className="absolute inset-0 bg-black/60"></div>
 
 
+          <div className="relative z-10 px-6 max-w-4xl">
+            <h1 onClick={() => console.log(industoryData)} className="text-5xl md:text-5xl max-w-xl  text-white font-semibold tracking-wide mb-4">
+              {industoryData.hero_background_title}
+            </h1>
 
-  return (
-    <div>
-
-
-      <div
-        className="relative h-100 bg-fixed px-20 bg-cover flex items-center"
-        style={{
-          backgroundImage:
-            'url("https://synmac-backend.serverscripts.in/storage/media/1776145327_electronicHeroSection.jpeg")',
-        }}
-      >
-
-        <div className="absolute inset-0 bg-black/60"></div>
+            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6">
+              {industoryData.hero_background_description}
+            </p>
 
 
-        <div className="relative z-10 px-6 max-w-4xl">
-          <h1 className="text-5xl md:text-5xl max-w-xl  text-white font-semibold tracking-wide mb-4">
-            Food & Beverage Solutions
-          </h1>
+          </div>
+        </div>
+        <div className="border border-gray-900 px-25 py-2">
+          <div className="flex flex-row gap-1 items-center font-semibold">
+            <a href="/">Home</a>
+            <LiaAngleRightSolid />
+            <h1>Industries</h1>
+            <LiaAngleRightSolid />
+            <h1>Food & Beverage</h1>
+          </div>
 
-          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6">
-            Transform your food and beverage operations with AI-powered solutions. From farm to fork, we help you reduce waste, ensure safety, and optimize production..
-          </p>
 
 
         </div>
-      </div>
-      <div className="border border-gray-900 px-25 py-2">
-        <div className="flex flex-row gap-1 items-center font-semibold">
-          <h1>Home</h1>
-          <LiaAngleRightSolid />
-          <h1>Industries</h1>
-          <LiaAngleRightSolid />
-          <h1>Food & Beverage</h1>
-        </div>
+      </>
+    )
+  }
 
-
-
-      </div>
-
-      {SolutionsSection()}
-      {SolutionsSection1()}
-
+  function VideoSection() {
+    return (
       <div className="max-w-6xl mx-auto  py-10 text-center">
 
         <div className="grid md:grid-cols-2 gap-8">
 
+          {
+            industoryData.videos.map((video: any,i:any) => (
+              <div key={i} className="text-left">
 
-          <div className="text-left">
-
-            <div
-              className="relative cursor-pointer rounded-sm overflow-hidden"
-              onClick={() => setPlay(true)}
-            >
-              {!play ? (
-                <>
-                  <img
-                    src="https://trendzmena.com/wp-content/uploads/2023/05/GreenRed_Peppers.jpg"
-                    alt="thumbnail"
-                    className="w-full h-80 object-cover"
-                  />
-
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white/30 text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg text-xl">
-                      <FaPlay />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <video
-                  controls
-                  autoPlay
-                  className="w-full h-80 object-cover"
+                <div
+                  className="relative cursor-pointer rounded-sm overflow-hidden"
+                  onClick={() => setPlay(video.thumbnail_file_link)}
                 >
-                  <source src="/video.mp4" type="video/mp4" />
-                </video>
-              )}
-            </div>
+                  {!play ? (
+                    <>
+                      <img
+                        src={video.thumbnail_file_link}
+                        alt="thumbnail"
+                        className="w-full h-80 object-cover"
+                      />
 
-            <h3 className="mt-4 text-xl font-semibold">Smart Food Processing</h3>
-            <p className="text-gray-600 mt-2 text-md">
-              Deliver consistent quality with intelligent processing purpose-built for
-              high throughput, simplified operations, and food safety at scale.
-            </p>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-white/30 text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg text-xl">
+                          <FaPlay />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <video
+                      controls
+                      autoPlay
+                      className="w-full h-80 object-cover"
+                    >
+                      <source src={video.file_link} type="video/mp4" />
+                    </video>
+                  )}
+                </div>
 
-            <button
-              onClick={() => setPlay(true)}
+                <h3 className="mt-4 text-xl font-semibold">{video.title}</h3>
+                <p className="text-gray-600 mt-2 text-md">
+                  {video.description}
+                </p>
 
-              className="text-blue-600 mt-3 inline-block text-sm font-medium"
-            >
-              Watch Video
-            </button>
-          </div>
+                <button
+                  onClick={() => setPlay(video.file_link)}
 
-          <div className="text-left">
-            <div
-              className="relative cursor-pointer rounded-sm overflow-hidden"
-              onClick={() => setPlay(true)}
-            >
-              {!play ? (
-                <>
-                  <img
-                    src="https://www.hlb-mauritius.com/wp-content/uploads/2022/09/Building-a-Sustainable-Supply-Chain.png"
-                    alt="thumbnail"
-                    className="w-full h-80 object-cover"
-                  />
-
-
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white/30 text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg text-xl">
-                      <FaPlay />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <video
-                  controls
-                  autoPlay
-                  className="w-full h-80 object-cover"
+                  className="text-blue-600 mt-3 inline-block text-sm font-medium"
                 >
-                  <source src="/video.mp4" type="video/mp4" />
-                </video>
-              )}
-            </div>
-            <h3 className="mt-4 text-xl font-semibold">Sustainable Supply Chain</h3>
-            <p className="text-gray-600 mt-2 text-md">
-              Accelerate sustainability with a modular and validated design that
-              combines traceability, cold chain monitoring, and waste reduction.
-            </p>
+                  Watch Video
+                </button>
+              </div>
+            ))
+          }
 
-            <button
-              onClick={() => setPlay(true)}
 
-              className="text-blue-600 mt-3 inline-block text-sm font-medium"
-            >
-              Watch Video
-            </button>
-          </div>
+
+
+
 
         </div>
       </div>
+    )
+  }
 
-
+  return (
+    <div>
+      {HeroSection()}
+      {SolutionsSection()}
+      {SolutionsSection1()}
+      {VideoSection()}
       {ResourcesSection()}
-
       {CustomerStories()}
       {CustomerStories1()}
       {CareerSection()}
       {FAQAccordion()}
-
-
     </div>
   )
 }

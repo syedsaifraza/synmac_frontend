@@ -6,14 +6,7 @@ import Img from "../assets/hero-bg.jpg"
 export default function Header({ title }: { title: string }) {
   return (
     <div className="w-full">
-     
-      <div className="px-6 py-3 text-sm text-gray-600 bg-white">
-        <span className="cursor-pointer hover:underline">Home</span>
-        <span className="mx-2">{'>'}</span>
-        <span className="text-gray-500">
-          {title}
-        </span>
-      </div>
+  
 
       
       <div className="relative w-full h-100">
