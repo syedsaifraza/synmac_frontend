@@ -41,18 +41,24 @@ interface Industry {
 
 async function getIndustries() {
   try {
-    const res = await fetch("http://localhost:3000/api/industry", {
-      cache: "no-store",
+    const res = await fetch("/api/industry", {
+      // next: { revalidate: 300 },
+      cache: "no-store"
     });
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch industries: ${res.status}`);
     }
-    
+
+
+
+
     const result = await res.json();
 
-    
-    return result.users?.data || [];
+
+    console.log("hello", result)
+
+    return result?.industries || [];
   } catch (error) {
     console.error("Error fetching industries:", error);
     return [];
@@ -91,18 +97,18 @@ const IndustriesSection = async () => {
             Click on any industry to explore sub-markets and discover the specialty chemicals we offer.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {industries.map((industry: Industry) => {
-          
+
             const firstSubIndustry = industry.sub_industry[0];
             const imageUrl = industry.image || industry.hero_background_file_url;
 
             console.log(industry.id)
-            
+
             return (
-              <a
-                href={`/industory/${industry.slug}/${industry.id}`}
+              <Link
+                href={`/industry/${industry.slug}/${industry.id}`}
                 key={industry.id}
                 className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
               >
@@ -121,23 +127,23 @@ const IndustriesSection = async () => {
                   )}
                 </div>
                 <div className="p-5">
-                  <h3  className="font-semibold text-lg text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors">
+                  <h3 className="font-semibold text-lg text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors">
                     {industry.name}
-                    <BiChevronRight 
-                      size={18} 
-                      className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1" 
+                    <BiChevronRight
+                      size={18}
+                      className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
                     />
                   </h3>
                   <p className="text-sm text-gray-500 mt-1">
                     {industry.sub_industry.length} sub-market{industry.sub_industry.length !== 1 ? 's' : ''}
                   </p>
                   {industry.description && (
-                    <p  className="text-xs text-gray-400 mt-2 line-clamp-2">
+                    <p className="text-xs text-gray-400 mt-2 line-clamp-2">
                       {industry.description}
                     </p>
                   )}
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>

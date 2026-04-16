@@ -5,10 +5,7 @@ import Img from "../assets/hero-bg.jpg"
 
 export default function Header({ title }: { title: string }) {
   return (
-    <div className="w-full">
-  
-
-      
+    <div className="w-full">      
       <div className="relative w-full h-100">
       
         <Image

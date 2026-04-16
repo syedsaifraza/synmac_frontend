@@ -8,11 +8,12 @@ import { RxTriangleRight } from "react-icons/rx";
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
+import Link from 'next/link';
 
 
 
 
-const Navbar = ({ data1 }: any) => {
+const Navbar = ({ data }: any) => {
 
 
 
@@ -28,19 +29,19 @@ const Navbar = ({ data1 }: any) => {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Set initial active data when data1 changes
+    // Set initial active data when data changes
     useEffect(() => {
-        if (data1 && data1.length > 0) {
-            setActiveData(data1[0]);
+        if (data && data.length > 0) {
+            setActiveData(data[0]);
         }
-    }, [data1]);
+    }, [data]);
 
     const closeMenu = () => {
         setIsMenuOpen(false);
         setShowSubmarkets(false);
         setSelectedIndustry(null);
-        if (data1 && data1.length > 0) {
-            setActiveData(data1[0]);
+        if (data && data.length > 0) {
+            setActiveData(data[0]);
         }
     }
 
@@ -60,8 +61,8 @@ const Navbar = ({ data1 }: any) => {
         setSelectedIndustry(null);
     }
 
-    // Don't render if data1 is not available
-    if (!data1 || data1.length === 0) {
+    // Don't render if data is not available
+    if (!data || data.length === 0) {
         return null;
     }
 
@@ -132,7 +133,7 @@ const Navbar = ({ data1 }: any) => {
                                 <div className="p-4">
                                     <h2 className="text-xl font-bold text-gray-800 mb-4 px-2">Industries</h2>
                                     <ul className="flex flex-col gap-2">
-                                        {data1.map((item: any) => (
+                                        {data.map((item: any) => (
                                             <li
                                                 key={item.id}
                                                 onClick={() => handleIndustryClick(item)}
@@ -163,10 +164,9 @@ const Navbar = ({ data1 }: any) => {
                                                 onClick={handleBackToIndustries}
                                             />
                                             <h2 className="text-xl font-bold text-gray-800 cursor-pointer hover:text-gray-900">
-                                                <a
-                                                    href={`/industory/${selectedIndustry.slug}/${selectedIndustry.id}`}>
+                                                <Link href={`/industry/${selectedIndustry.slug}/${selectedIndustry.id}`}>
                                                     {selectedIndustry.name}
-                                                </a>
+                                                </Link>
 
                                             </h2>
                                         </div>
@@ -212,7 +212,7 @@ const Navbar = ({ data1 }: any) => {
                     <div className="hidden md:flex h-[calc(100vh-73px)] bg-white text-black shadow-xl">
                         <div className='w-1/3 border-r border-gray-100 bg-gray-50/30 overflow-y-auto'>
                             <ul className="flex flex-col gap-1 p-4">
-                                {data1.reverse().map((item: any) => (
+                                {data.reverse().map((item: any) => (
                                     <li
                                         onMouseEnter={() => setActiveData(item)}
                                         key={item.id}
@@ -240,16 +240,16 @@ const Navbar = ({ data1 }: any) => {
                             <div className="p-4">
                                 <div className='border-b border-gray-200 flex flex-row justify-between items-center mb-6 pb-4'>
                                     <div>
-                                       
-                                            <h2 className="text-xl font-bold text-gray-600 cursor-pointer hover:text-gray-900">
-                                                <a
-                                                    href={`/industory/${activeData?.slug}/${activeData?.id}`}>
-                                                    {activeData?.name}
-                                                </a>
 
-                                            </h2>
-                                          
-                                       
+                                        <h2 className="text-xl font-bold text-gray-600 cursor-pointer hover:text-gray-900">
+
+                                            <Link href={`/industry/${activeData.slug}/${activeData.id}`}>
+                                                {activeData?.name}
+                                            </Link>
+
+                                        </h2>
+
+
                                         <p className="text-gray-500 text-sm">
                                             • {activeData?.sub_industry?.length || 0} Sub-markets
                                         </p>

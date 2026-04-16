@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
-  context: { params: Promise<{ id: string }> }
+  req: Request, { params }: any
 ) {
   try {
-    const { id } = await context.params; 
-
-    console.log("API ID:", id);
+    const { id } = await params;
 
     const res = await fetch(
-      `https://synmac-backend.serverscripts.in/api/v1/user/industry/view/${id}`,
+      `https://synmac-backend.serverscripts.in/api/v1/user/sub-industry/view`,
       {
         cache: "no-store",
       }
@@ -18,13 +15,16 @@ export async function GET(
 
     const data = await res.json();
 
-    console.log("Actual data", data)
+
+    const sub_industry = data.data.find((subin: any) => subin.id == id);
+
 
 
     return NextResponse.json({
       success: true,
-      users: data.data,
+      data: sub_industry,
     });
+
   } catch (error) {
     return NextResponse.json({
       success: false,
