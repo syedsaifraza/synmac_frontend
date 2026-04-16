@@ -1,7 +1,7 @@
 import Industory from "@/components/Industory";
 
 async function getUser(id: any) {
-  const res = await fetch(`/api/industry/${id}`, {
+  const res = await fetch(`https://talentia.org.in/api/industry/${id}`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

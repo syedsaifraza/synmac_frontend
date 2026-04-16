@@ -6,7 +6,7 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 
 async function getUser(id: any) {
   const res = await fetch(
-    `/api/category/${id}`,
+    `https://talentia.org.in/api/category/${id}`,
     {
       // next: { revalidate: 300 },
       cache: "no-store"

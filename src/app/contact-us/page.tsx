@@ -170,7 +170,7 @@ export default function Page() {
     setIsSubmitting(true);
 
     toast.promise(
-      fetch("/api/contact-us", {
+      fetch("https://talentia.org.in/api/contact-us", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

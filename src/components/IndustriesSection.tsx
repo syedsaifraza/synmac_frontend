@@ -41,7 +41,7 @@ interface Industry {
 
 async function getIndustries() {
   try {
-    const res = await fetch("/api/industry", {
+    const res = await fetch("https://talentia.org.in/api/industry", {
       // next: { revalidate: 300 },
       cache: "no-store"
     });
