@@ -4,10 +4,15 @@ import { useState, useEffect } from "react";
 import heroBg1 from "@/assets/hero-bg.jpg";
 import heroBg2 from "@/assets/hero-bg-2.jpg";
 import heroBg3 from "@/assets/hero-bg-3.jpg";
+import heroBg4 from "@/assets/img4.png";
+import heroBg5 from "@/assets/img5.png";
+import heroBg6 from "@/assets/img6.jpeg";
+import heroBg7 from "@/assets/img7.png";
+
 import Image from "next/image";
 import { BiChevronDown } from "react-icons/bi";
 
-const slides = [heroBg1, heroBg2, heroBg3];
+const slides = [heroBg4,heroBg5,heroBg7,heroBg6];
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);

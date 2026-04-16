@@ -52,9 +52,9 @@ const Page = async ({ params }: any) => {
 
           </div>
         </div>
-        <div className="border border-gray-500 px-25 py-2">
+        <div className="border-b border-gray-400 px-25 py-2">
           <div className="flex flex-row gap-1 items-center font-semibold">
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
             <LiaAngleRightSolid />
 
             <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams.industryId}`}>{data?.data?.industry_name}</Link>
@@ -111,9 +111,11 @@ const Page = async ({ params }: any) => {
                 <img src={item.image} alt={item.name} className="w-full h-70 object-cover" />
                 <div className="py-6 flex justify-between items-start gap-4">
                   <div className="flex-1">
-                    <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} className="text-xl text-gray-900 font-semibold">
+{/* 
+                    href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} */}
+                    <div  className="text-xl text-gray-900 font-semibold">
                       {item.name}
-                    </Link>
+                    </div>
                     <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
                       {item.description}
                     </p>

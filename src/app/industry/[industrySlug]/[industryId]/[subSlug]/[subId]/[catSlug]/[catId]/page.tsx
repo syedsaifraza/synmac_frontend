@@ -54,9 +54,9 @@ const Page = async ({ params }: any) => {
 
           </div>
         </div>
-        <div className="border border-gray-500 px-25 py-2">
+        <div className="border-b border-gray-400 px-25 py-2">
           <div className="flex flex-row gap-1 items-center font-semibold">
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
             <LiaAngleRightSolid />
 
             <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams.industryId}`}>{data?.data?.industry_name}</Link>

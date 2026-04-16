@@ -296,9 +296,9 @@ const Industory = ({ industoryData }: any) => {
             </p>
           </div>
         </div>
-        <div className="border border-gray-900 px-25 py-2">
+        <div className="border-b border-gray-300 px-25 py-2">
           <div className="flex flex-row gap-1 items-center font-semibold">
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
             <LiaAngleRightSolid />
             <h1>{industoryData.hero_background_title}</h1>
           </div>

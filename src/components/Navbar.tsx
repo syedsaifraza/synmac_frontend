@@ -9,6 +9,7 @@ import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 
 
@@ -16,7 +17,7 @@ import Link from 'next/link';
 const Navbar = ({ data }: any) => {
 
 
-
+    const pathname = usePathname();
     const [activeData, setActiveData] = useState<any>(null)
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,12 +30,16 @@ const Navbar = ({ data }: any) => {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Set initial active data when data changes
     useEffect(() => {
         if (data && data.length > 0) {
             setActiveData(data[0]);
         }
     }, [data]);
+
+
+    useEffect(() => {
+        closeMenu();
+    }, [pathname]);
 
     const closeMenu = () => {
         setIsMenuOpen(false);
@@ -47,11 +52,11 @@ const Navbar = ({ data }: any) => {
 
     const handleIndustryClick = (industry: any) => {
         if (window.innerWidth < 768) {
-            // Mobile view: show submarkets screen
+
             setSelectedIndustry(industry);
             setShowSubmarkets(true);
         } else {
-            // Desktop view: just update active data
+
             setActiveData(industry);
         }
     }
@@ -66,6 +71,15 @@ const Navbar = ({ data }: any) => {
         return null;
     }
 
+
+
+
+    const handleOpenIndustryPage = ({ }) => {
+
+    }
+
+
+
     return (
         <>
             <nav
@@ -74,11 +88,13 @@ const Navbar = ({ data }: any) => {
             >
                 <div className={`flex flex-row items-center justify-between p-4 px-6 ${isMenuOpen && "border-b border-gray-200"}`}>
                     <div className='flex flex-row items-center gap-2 cursor-pointer'>
-                        <Image src={Logo} alt="Logo" className="h-12 w-12" />
-                        <span className="font-extrabold text-3xl text-[#cd2626]">SYNMAC</span>
+                        <Link href={"/"} className='flex flex-row items-center'>    <Image src={Logo} alt="Logo" className="h-12 w-12" />
+                            <span className="font-extrabold text-3xl text-[#cd2626]">SYNMAC</span>
+                        </Link>
+
                     </div>
 
-                    {/* Desktop Navigation */}
+                    
                     <ul className={`hidden md:flex flex-row items-center gap-6 text-[16px] font-medium  ${!scrolled && !isMenuOpen ? "" : "text-gray-700"}`}>
                         <li className="relative group cursor-pointer">
                             <span onClick={() => { isMenuOpen ? closeMenu() : setIsMenuOpen(!isMenuOpen) }}>Industries</span>
@@ -92,14 +108,14 @@ const Navbar = ({ data }: any) => {
                             <span>Resources</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </li>
-                        <a href='/about-us' className="relative group cursor-pointer">
+                        <Link href='/about-us' className="relative group cursor-pointer">
                             <span>About us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href='/contact-us' className="relative group cursor-pointer">
+                        </Link>
+                        <Link href='/contact-us' className="relative group cursor-pointer">
                             <span>Contact us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                        </a>
+                        </Link>
                         <li className="relative group cursor-pointer">
                             <BiSearch className="text-xl" />
                         </li>
@@ -121,7 +137,7 @@ const Navbar = ({ data }: any) => {
                     </div>
                 </div>
 
-                {/* Mobile Menu Overlay */}
+
                 {isMenuOpen && (
                     <div className="md:hidden fixed inset-0 top-18 bg-white z-40">
                         <div className="h-full relative overflow-hidden">
@@ -207,18 +223,18 @@ const Navbar = ({ data }: any) => {
                     </div>
                 )}
 
-                {/* Desktop Dropdown Menu */}
+
                 {isMenuOpen && window.innerWidth >= 768 && activeData && (
                     <div className="hidden md:flex h-[calc(100vh-73px)] bg-white text-black shadow-xl">
                         <div className='w-1/3 border-r border-gray-100 bg-gray-50/30 overflow-y-auto'>
-                            <ul className="flex flex-col gap-1 p-4">
+                            <ul className="flex flex-col gap-1 p-3">
                                 {data.reverse().map((item: any) => (
                                     <li
                                         onMouseEnter={() => setActiveData(item)}
                                         key={item.id}
-                                        className={`group rounded-xl py-2 px-4 cursor-pointer transition-all duration-200 
+                                        className={`group bg-[#cd2626]/5 rounded-xl py-2 px-4 cursor-pointer transition-all duration-200 
                                             ${activeData?.id === item.id
-                                                ? "bg-[#cd2626]/20 text-[#cd2626]"
+                                                ? "hover:bg-[#cd2626]/10 text-[#cd2626]"
                                                 : "hover:bg-[#cd2626]/10 text-gray-700 hover:text-[#cd2626]"
                                             }`}
                                     >
@@ -236,12 +252,12 @@ const Navbar = ({ data }: any) => {
                             </ul>
                         </div>
 
-                        <div className="w-2/3 overflow-y-auto">
+                        <div className="w-full overflow-y-auto">
                             <div className="p-4">
-                                <div className='border-b border-gray-200 flex flex-row justify-between items-center mb-6 pb-4'>
+                                <div className='border-b border-gray-200 flex flex-row justify-between items-center mb-2 pb-4'>
                                     <div>
 
-                                        <h2 className="text-xl font-bold text-gray-600 cursor-pointer hover:text-gray-900">
+                                        <h2 className="font-medium text-base text-gray-600 cursor-pointer hover:text-gray-900 decoration-[#cd2626] hover:underline ">
 
                                             <Link href={`/industry/${activeData.slug}/${activeData.id}`}>
                                                 {activeData?.name}
@@ -250,9 +266,7 @@ const Navbar = ({ data }: any) => {
                                         </h2>
 
 
-                                        <p className="text-gray-500 text-sm">
-                                            • {activeData?.sub_industry?.length || 0} Sub-markets
-                                        </p>
+
                                     </div>
                                     <div>
                                         <IoClose className='cursor-pointer' onClick={() => closeMenu()} size={30} />
@@ -263,19 +277,17 @@ const Navbar = ({ data }: any) => {
                                     {activeData?.sub_industry?.map((subMarket: any) => (
                                         <div
                                             key={subMarket.id}
-                                            className="group bg-gray-50 rounded-xl p-5 hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:border-[#cd2626]/20"
+                                            className="group p-2 "
                                         >
-                                            <div className="flex items-start justify-between mb-3">
-                                                <h3 className="text-lg font-bold text-[#cd2626] transition-colors">
+                                            <Link  href={`/industry/${activeData.slug}/${activeData.id}/${subMarket.slug}/${subMarket.id}`} className="flex gap-2 items-center ">
+                                                <h3 className="text-sm font-semibold text-[#000000] decoration-[#cd2626] hover:underline ">
                                                     {subMarket.name}
                                                 </h3>
-                                                <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center group-hover:bg-[#cd2626] transition-colors">
-                                                    <RxTriangleRight className="text-[#cd2626] group-hover:text-white text-sm" />
+                                                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+                                                    <FaAngleRight className="text-[#000000]  text-sm" />
                                                 </div>
-                                            </div>
-                                            <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                                                {subMarket.description}
-                                            </p>
+                                            </Link>
+
                                         </div>
                                     ))}
                                     {(!activeData?.sub_industry || activeData.sub_industry.length === 0) && (
