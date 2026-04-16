@@ -1,4 +1,5 @@
 import Industory from "@/components/Industory";
+import Sub_IndustrySection from "@/components/Sub_IndustrySection";
 import Link from "next/link";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LiaAngleRightSolid } from "react-icons/lia";
@@ -7,7 +8,8 @@ async function getUser(id: any) {
   const res = await fetch(
     `/api/sub-industry/${id}`,
     {
-      next: { revalidate: 300 },
+      // next: { revalidate: 300 },
+      cache: "no-store"
     }
   );
 
@@ -94,7 +96,7 @@ const Page = async ({ params }: any) => {
 
   function SolutionsSection() {
 
-    console.log("yahi hai kya dta", data?.data)
+    console.log("yahi hai kya dta", data?.data.resources)
 
     return (
       <div className="bg-gray-50 text-white py-16 px-4">
@@ -138,6 +140,18 @@ const Page = async ({ params }: any) => {
   }
 
 
+  const info = {
+    "name": data?.data?.name,
+    "image": data?.data?.image,
+    "description": data?.data?.description
+  }
+
+
+  const resources = data?.data?.resources
+
+  console.log(data?.data?.resources)
+
+
 
 
 
@@ -149,6 +163,11 @@ const Page = async ({ params }: any) => {
       {HeroSection()}
       {SolutionsSection1()}
       {SolutionsSection()}
+      <Sub_IndustrySection
+        faqs={data?.data?.faqs}
+        info={info}
+        Resources = {resources}
+      />
 
     </div>
   );

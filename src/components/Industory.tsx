@@ -97,52 +97,52 @@ const Industory = ({ industoryData }: any) => {
     );
   }
 
-  function CustomerStories1() {
-    const scrollRef = useRef<any>(null);
+  // function CustomerStories1() {
+  //   const scrollRef = useRef<any>(null);
 
-    const scroll = (direction: any) => {
-      if (direction === "left") {
-        scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-      } else {
-        scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-      }
-    };
+  //   const scroll = (direction: any) => {
+  //     if (direction === "left") {
+  //       scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+  //     } else {
+  //       scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+  //     }
+  //   };
 
 
-    if (!industoryData?.guides || industoryData?.guides.length === 0) return null;
+  //   if (!industoryData?.guides || industoryData?.guides.length === 0) return null;
 
-    return (
-      <div className="py-10">
-        <div className="flex justify-between items-center mb-6 px-20">
-          <h2 className="text-3xl font-semibold">Guides</h2>
-          <div className="flex gap-3">
-            <button onClick={() => scroll("left")} className="p-2 text-4xl">
-              <IoIosArrowRoundBack />
-            </button>
-            <button onClick={() => scroll("right")} className="p-2 text-4xl">
-              <IoIosArrowRoundForward />
-            </button>
-          </div>
-        </div>
+  //   return (
+  //     <div className="py-10">
+  //       <div className="flex justify-between items-center mb-6 px-20">
+  //         <h2 className="text-3xl font-semibold">Guides</h2>
+  //         <div className="flex gap-3">
+  //           <button onClick={() => scroll("left")} className="p-2 text-4xl">
+  //             <IoIosArrowRoundBack />
+  //           </button>
+  //           <button onClick={() => scroll("right")} className="p-2 text-4xl">
+  //             <IoIosArrowRoundForward />
+  //           </button>
+  //         </div>
+  //       </div>
 
-        <div ref={scrollRef} className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar">
-          {industoryData.guides.map((guide: any, i: any) => (
-            <div key={i} className={`min-w-75 ${i === 0 ? "ml-20" : i === industoryData.guides.length - 1 ? "mr-20" : ""} h-50 border border-gray-200 relative overflow-hidden rounded-sm`}>
-              <div className="absolute inset-0 flex flex-col justify-end p-4 hover:scale-100 transition duration-500">
-                <div className="p-2">
-                  <h3 className="font-semibold text-xl line-clamp-2">{guide.title}</h3>
-                  <p className="text-gray-600 text-md mt-2 line-clamp-3">{guide.description}</p>
-                  <a href={guide.file} className="text-blue-600 text-sm mt-2 inline-block">
-                    Check Guide →
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  //       <div ref={scrollRef} className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar">
+  //         {industoryData.guides.map((guide: any, i: any) => (
+  //           <div key={i} className={`min-w-75 ${i === 0 ? "ml-20" : i === industoryData.guides.length - 1 ? "mr-20" : ""} h-50 border border-gray-200 relative overflow-hidden rounded-sm`}>
+  //             <div className="absolute inset-0 flex flex-col justify-end p-4 hover:scale-100 transition duration-500">
+  //               <div className="p-2">
+  //                 <h3 className="font-semibold text-xl line-clamp-2">{guide.title}</h3>
+  //                 <p className="text-gray-600 text-md mt-2 line-clamp-3">{guide.description}</p>
+  //                 <a href={guide.file} className="text-blue-600 text-sm mt-2 inline-block">
+  //                   Check Guide →
+  //                 </a>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   function ResourcesSection() {
     // Don't render if no resources data
@@ -174,7 +174,7 @@ const Industory = ({ industoryData }: any) => {
   function SolutionsSection() {
 
 
-    console.log("yahi hai inusty wlaa page jaha s out bnae ga ",industoryData)
+    console.log("yahi hai inusty wlaa page jaha s out bnae ga ", industoryData)
 
     const [showAll, setShowAll] = useState(false);
 
@@ -350,12 +350,13 @@ const Industory = ({ industoryData }: any) => {
   return (
     <div>
       {HeroSection()}
-      {SolutionsSection()}
       {SolutionsSection1()}
+      {SolutionsSection()}
+
       {VideoSection()}
       {ResourcesSection()}
       {CustomerStories()}
-      {CustomerStories1()}
+      {/* {CustomerStories1()} */}
       {CareerSection()}
       {FAQAccordion()}
     </div>

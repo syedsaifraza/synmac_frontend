@@ -8,7 +8,10 @@ export async function GET(
 
     const res = await fetch(
       `https://synmac-backend.serverscripts.in/api/v1/user/product-category/view`,
-      {
+      { method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
         cache: "no-store",
       }
     );

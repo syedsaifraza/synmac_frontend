@@ -1,4 +1,5 @@
 import Industory from "@/components/Industory";
+import Product_Category from "@/components/Product_Category";
 import Link from "next/link";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LiaAngleRightSolid } from "react-icons/lia";
@@ -7,7 +8,8 @@ async function getUser(id: any) {
   const res = await fetch(
     `/api/category/${id}`,
     {
-      next: { revalidate: 300 },
+      // next: { revalidate: 300 },
+      cache: "no-store"
     }
   );
 
@@ -111,9 +113,14 @@ const Page = async ({ params }: any) => {
                 <img src={item.image} alt={item.name} className="w-full h-70 object-cover" />
                 <div className="py-6 flex justify-between items-start gap-4">
                   <div className="flex-1">
-                    <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} className="text-xl text-gray-900 font-semibold">
+
+                     {/* href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} */}
+
+                     
+                    <div
+                     className="text-xl text-gray-900 font-semibold">
                       {item.name}
-                    </Link>
+                    </div>
                     <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
                       {item.description}
                     </p>
@@ -140,7 +147,14 @@ const Page = async ({ params }: any) => {
   }
 
 
+  const info = {
+    "name": data?.data?.name,
+    "image": data?.data?.image,
+    "description": data?.data?.description
+  }
 
+
+  const resources = data?.data?.resources
 
 
 
@@ -151,6 +165,9 @@ const Page = async ({ params }: any) => {
       {HeroSection()}
       {/* {SolutionsSection1()} */}
       {SolutionsSection()}
+      <Product_Category faqs={data?.data?.faqs}
+        info={info}
+        Resources={resources} />
 
     </div>
   );
