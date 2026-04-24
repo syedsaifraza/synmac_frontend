@@ -8,7 +8,6 @@ import { LiaAngleDownSolid, LiaAngleUpSolid } from 'react-icons/lia';
 
 const Product_Category = ({ faqs, info, Resources }: any) => {
 
-    console.log("hello", faqs)
     function FAQAccordion() {
         const [activeIndex, setActiveIndex] = useState(null);
 
@@ -20,7 +19,7 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
         if (!faqs || faqs?.length === 0) return null;
 
         return (
-            <div className="max-w-6xl mx-auto py-10 px-4">
+            <div className="max-w-6xl mx-auto py-10 ">
                 <div>
                     <h2 className="text-3xl font-bold mb-6 text-center">Answers to Your Most Important Questions</h2>
 
@@ -60,7 +59,7 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
         if (!info?.name || !info?.image) return null;
 
         return (
-            <div className="bg-black text-white py-16 px-4">
+            <div className="bg-black text-white py-16 ">
                 <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
                     <div>
                         <h2 className="text-4xl md:text-5xl font-semibold mb-6">{info.name}</h2>
@@ -82,13 +81,13 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
 
     function ResourcesSection() {
 
-        console.log("heljijdoiejof", Resources)
+     
         if (!Resources || Resources?.length === 0) return null;
 
         return (
             <div className="bg-gray-100 py-16">
-                <div className="px-4 flex flex-row gap-10">
-                    <div className="flex items-center justify-center w-2/4 px-20">
+                <div className=" flex flex-row gap-10 max-w-6xl mx-auto">
+                    <div className="flex items-center justify-center w-2/5">
                         <h2 className="text-3xl font-semibold leading-snug">Resources to stay ahead</h2>
                     </div>
 

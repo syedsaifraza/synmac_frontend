@@ -6,10 +6,10 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 
 async function getUser(id: any) {
   const res = await fetch(
-    `https://talentia.org.in/api/category/${id}`,
+    `http://synmac.acetians.in/api/category/${id}`,
     {
-      // next: { revalidate: 300 },
-      cache: "no-store"
+      // next : { revalidate: 300 }
+      //  cache: "no-store"
     }
   );
 
@@ -19,15 +19,17 @@ async function getUser(id: any) {
 const Page = async ({ params }: any) => {
   const resolvedParams = await params;
 
-  console.log(resolvedParams.catId)
+
 
   const data = await getUser(resolvedParams.catId);
 
-  console.log("data yahi hai na data sahi wla ", data);
+
+
 
   function HeroSection() {
 
-    console.log("data kya ye bhi chal rah hai ", data.data);
+
+
     return (
       <>
 
@@ -40,7 +42,6 @@ const Page = async ({ params }: any) => {
         >
 
           <div className="absolute inset-0 bg-black/60"></div>
-
 
           <div className="relative z-10 px-6 max-w-4xl">
             <h1 className="text-5xl md:text-5xl max-w-xl  text-white font-semibold tracking-wide mb-4">
@@ -98,7 +99,7 @@ const Page = async ({ params }: any) => {
 
   function SolutionsSection() {
 
-
+    console.log(data?.data)
 
     return (
       <div className="bg-gray-50 text-white py-16 px-4">
@@ -108,29 +109,45 @@ const Page = async ({ params }: any) => {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {data?.data?.products.map((item: any, i: any) => (
-              <div key={i} className="bg-gray-50 overflow-hidden">
-                <img src={item.image} alt={item.name} className="w-full h-70 object-cover" />
-                <div className="py-6 flex justify-between items-start gap-4">
-                  <div className="flex-1">
+            {data?.data?.products.map((item: any, i: any) => {
+              console.log(item)
+              return (
+                <div key={i} className="bg-gray-50 overflow-hidden">
+                  <img src={item.image} alt={item.name} className="w-full h-70 object-cover" />
+                  <div className="py-6 flex justify-between items-start gap-4">
+                    <div className="flex-1">
 
-                     {/* href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} */}
+                      {/* href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} */}
 
-                     
-                    <div
-                     className="text-xl text-gray-900 font-semibold">
-                      {item.name}
+
+                      <Link
+
+                        href={`/product?
+productname=${encodeURIComponent(item?.name)}
+&productid=${item?.id}
+&industryname=${encodeURIComponent(item?.industry_name)}
+&industryid=${item?.industry_id}
+&subindustryname=${encodeURIComponent(item?.sub_industry_name)}
+&subindustryid=${item?.sub_industry_id}
+&productcategoryname=${encodeURIComponent(item?.product_category_name)}
+&productcategoryid=${item?.product_category_id}
+`}
+
+                        className="text-xl text-gray-900 font-semibold">
+                        hello sir      {item.name}
+                      </Link>
+                      <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
+                        {item.description}
+                      </p>
                     </div>
-                    <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
-                      {item.description}
-                    </p>
-                  </div>
-                  <div className="bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full text-3xl">
-                    <IoIosArrowRoundForward />
+                    <div className="bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full text-3xl">
+                      <IoIosArrowRoundForward />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+
+            })}
           </div>
 
           {/* <div className="flex mt-10">

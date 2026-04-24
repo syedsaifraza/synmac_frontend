@@ -6,7 +6,7 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 
 async function getUser(id: any) {
   const res = await fetch(
-    `https://talentia.org.in/api/sub-industry/${id}`,
+    `http://synmac.acetians.in/api/sub-industry/${id}`,
     {
       // next: { revalidate: 300 },
       cache: "no-store"
@@ -21,11 +21,11 @@ const Page = async ({ params }: any) => {
 
   const data = await getUser(resolvedParams.subId);
 
-  console.log("data", data);
+
 
   function HeroSection() {
 
-    console.log("data", data.data);
+
     return (
       <>
 
@@ -53,7 +53,7 @@ const Page = async ({ params }: any) => {
           </div>
         </div>
         <div className="border-b border-gray-400 px-25 py-2">
-          <div className="flex flex-row gap-1 items-center font-semibold">
+          <div className="flex flex-row gap-1 max-w-6xl mx-auto items-center font-semibold">
             <Link href="/">Home</Link>
             <LiaAngleRightSolid />
 
@@ -75,7 +75,7 @@ const Page = async ({ params }: any) => {
     if (!data?.data?.feature_title) return
 
     return (
-      <div className=" text-black py-16 px-4">
+      <div className=" text-black py-16 ">
         <div className="max-w-6xl mx-auto">
 
           <h2 className="text-3xl md:text-4xl mb-4">
@@ -96,7 +96,7 @@ const Page = async ({ params }: any) => {
 
   function SolutionsSection() {
 
-    console.log("yahi hai kya dta", data?.data.resources)
+
 
     return (
       <div className="bg-gray-50 text-white py-16 px-4">
@@ -111,11 +111,11 @@ const Page = async ({ params }: any) => {
                 <img src={item.image} alt={item.name} className="w-full h-70 object-cover" />
                 <div className="py-6 flex justify-between items-start gap-4">
                   <div className="flex-1">
-{/* 
-                    href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} */}
-                    <div  className="text-xl text-gray-900 font-semibold">
+
+
+                    <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} className="text-xl text-gray-900 font-semibold">
                       {item.name}
-                    </div>
+                    </Link>
                     <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
                       {item.description}
                     </p>
@@ -151,7 +151,7 @@ const Page = async ({ params }: any) => {
 
   const resources = data?.data?.resources
 
-  console.log(data?.data?.resources)
+
 
 
 
@@ -168,7 +168,7 @@ const Page = async ({ params }: any) => {
       <Sub_IndustrySection
         faqs={data?.data?.faqs}
         info={info}
-        Resources = {resources}
+        Resources={resources}
       />
 
     </div>

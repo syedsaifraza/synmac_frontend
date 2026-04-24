@@ -20,12 +20,14 @@ export const metadata: Metadata = {
 };
 
 async function getIndustries() {
-  const res = await fetch("https://talentia.org.in/api/industry", {
+  const res = await fetch("http://synmac.acetians.in/api/industry", {
     // next: { revalidate: 300 },
     cache: "no-store"
   });
 
-  const data = await res.json();
+  const data = await res.json(); console.log("a ja saale", data)
+
+
   return data.industries || [];
 }
 

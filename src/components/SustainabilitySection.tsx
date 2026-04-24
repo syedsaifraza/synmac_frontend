@@ -31,17 +31,30 @@ const useCountUp = (end: number, duration = 2000, start = false) => {
   return count;
 };
 
-const stats = [
-  { end: 30, suffix: "+", label: "Years of Excellence" },
-  { end: 1700, suffix: "+", label: "Products" },
-  { end: 17, suffix: "+", label: "Countries Served" },
-  { end: 1000, suffix: "+", label: "Happy Clients" },
-];
 
-const SustainabilitySection = () => {
+
+const SustainabilitySection = ({ data }: any) => {
+
+
   const ref = useScrollReveal<HTMLElement>();
   const [visible, setVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  //   const stats = [
+  //   { end: 30, suffix: "+", label: "Years of Excellence" },
+  //   { end: 1700, suffix: "+", label: "Products" },
+  //   { end: 17, suffix: "+", label: "Countries Served" },
+  //   { end: 1000, suffix: "+", label: "Happy Clients" },
+  // ];
+
+  const stats = data?.key_no?.map((stats:any) => {
+
+    return {
+      end: stats.value,
+      suffix: "+",
+      label: stats.name
+    }
+  })
 
   useEffect(() => {
     const el = statsRef.current;
@@ -53,13 +66,13 @@ const SustainabilitySection = () => {
     return () => obs.disconnect();
   }, []);
 
-  const counts = stats.map(s => useCountUp(s.end, 2000, visible));
+  const counts = stats?.map((s:any) => useCountUp(s.end, 2000, visible));
 
   return (
     <>
 
-      <section ref={ref} className="section-fade-in py-24 px-6 bg-gray-50">
-        <div className="container mx-auto">
+      <section ref={ref} className="section-fade-in pb-20 px-6 bg-gray-50">
+        <div className="container max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Sustainability</p>
@@ -112,8 +125,8 @@ const SustainabilitySection = () => {
       </section>
 
 
-      <section ref={statsRef} className="py-20 px-6 bg-[#292929]">
-        <div className="container mx-auto">
+      <section ref={statsRef} className="py-20  bg-[#292929]">
+        <div className="container mx-auto max-w-6xl ">
           <div className="text-center mb-12">
             <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Key Numbers</p>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-white">
@@ -121,7 +134,7 @@ const SustainabilitySection = () => {
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((s, i) => (
+            {stats?.map((s:any, i:any) => (
               <div key={s.label} className="text-center py-6">
                 <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
                   {counts[i]}{s.suffix}

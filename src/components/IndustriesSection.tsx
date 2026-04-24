@@ -41,7 +41,7 @@ interface Industry {
 
 async function getIndustries() {
   try {
-    const res = await fetch("https://talentia.org.in/api/industry", {
+    const res = await fetch("http://synmac.acetians.in/api/industry", {
       // next: { revalidate: 300 },
       cache: "no-store"
     });
@@ -56,7 +56,10 @@ async function getIndustries() {
     const result = await res.json();
 
 
-    console.log("hello", result)
+    console.log("a ja saale", result)
+
+
+
 
     return result?.industries || [];
   } catch (error) {
@@ -71,10 +74,10 @@ const IndustriesSection = async () => {
 
   if (industries.length === 0) {
     return (
-      <section className="bg-white py-24 px-6 text-black">
+      <section id="industry-block" className="bg-white py-24 px-6 text-black">
         <div className="container mx-auto text-center">
           <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Industries We Serve</p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="font-display text-3xl md:text-6xl font-bold mb-4">
             Coming <span className="text-[#cd2626]">Soon</span>
           </h2>
           <p className="text-gray-500">Industries data is being loaded. Please check back later.</p>
@@ -84,7 +87,7 @@ const IndustriesSection = async () => {
   }
 
   return (
-    <section className="bg-white py-24 px-6 text-black">
+    <section id="industry-block" className="bg-white py-24 max-w-6xl mx-auto text-black">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">
@@ -103,8 +106,6 @@ const IndustriesSection = async () => {
 
             const firstSubIndustry = industry.sub_industry[0];
             const imageUrl = industry.image || industry.hero_background_file_url;
-
-            console.log(industry.id)
 
             return (
               <Link
@@ -134,11 +135,9 @@ const IndustriesSection = async () => {
                       className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
                     />
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {industry.sub_industry.length} sub-market{industry.sub_industry.length !== 1 ? 's' : ''}
-                  </p>
+
                   {industry.description && (
-                    <p className="text-xs text-gray-400 mt-2 line-clamp-2">
+                    <p className="text-xs text-gray-400 mt-2 line-clamp-3">
                       {industry.description}
                     </p>
                   )}

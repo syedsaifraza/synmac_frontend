@@ -20,8 +20,8 @@ const OurStrengths = () => {
   const ref = useScrollReveal<HTMLElement>();
 
   return (
-    <section ref={ref} className="section-fade-in py-24 px-6 bg-muted/40 bg-gray-50">
-      <div className="container mx-auto">
+    <section ref={ref} className="section-fade-in py-24  bg-muted/40 bg-gray-50">
+      <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Our Strengths</p>
           <h2 className="font-display text-3xl text-black md:text-4xl font-bold">

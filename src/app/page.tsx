@@ -4,13 +4,27 @@ import OurStrengths from "@/components/OurStrengths";
 import SustainabilitySection from "@/components/SustainabilitySection";
 import Image from "next/image";
 
-export default function page() {
+async function getUser() {
+  const res = await fetch(`http://synmac.acetians.in/api/company-info/`, {
+    // next: { revalidate: 300 }
+    cache: "no-store"
+  });
+  return res.json();
+}
+
+
+export default async function page() {
+
+  const data = await getUser()
+
+
+
   return (
     <div className="">
-      <HeroSection/>
+      <HeroSection />
       <IndustriesSection />
       <OurStrengths />
-      <SustainabilitySection/>
+      <SustainabilitySection data={data.data} />
     </div>
   );
 }
