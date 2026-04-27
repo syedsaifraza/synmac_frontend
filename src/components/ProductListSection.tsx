@@ -1,6 +1,7 @@
 'use client'
 
 import { Search } from 'lucide'
+import { FaLock, FaLockOpen } from "react-icons/fa";
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
@@ -11,6 +12,9 @@ import { FaX } from 'react-icons/fa6'
 import { useRouter } from "next/navigation";
 
 const ProductListSection = ({ industry, sub_industry, product_category, product }: any) => {
+
+
+    console.log(product)
 
     const searchParams = useSearchParams();
 
@@ -218,7 +222,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     </p>
                 </div>
 
-                {/* Search Bar */}
+
                 <div className="relative max-w-2xl mb-4 sm:mb-6">
                     <BiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                     <input
@@ -230,7 +234,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     />
                 </div>
 
-                {/* Filter Chips */}
+
                 <div className="flex gap-2 flex-wrap mb-4 sm:mb-6">
                     {search && (
                         <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
@@ -286,7 +290,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     {/* Mobile Filter Drawer */}
                     {isFilterOpen && (
                         <>
-                            <div 
+                            <div
                                 className="fixed inset-0 bg-black/50 z-50 lg:hidden"
                                 onClick={() => setIsFilterOpen(false)}
                             />
@@ -322,54 +326,85 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                     >
                                         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="font-bold text-base sm:text-lg text-gray-900 mb-1">{pro?.name}</h3>
-                                                <p className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-2">{pro?.description}</p>
+                                                <Link href={`/product/${pro?.slug}/${pro?.id}`}
+                                                    className="font-bold text-base sm:text-lg text-gray-900 mb-1 hover:text-[#cd2626]">{pro?.name}</Link>
+                                                <p dangerouslySetInnerHTML={{ __html: pro?.description }} className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4" />
                                                 <div className="flex flex-wrap gap-1.5">
-                                                    {pro?.industry_name && (
-                                                        <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
-                                                            {pro?.industry_name}
-                                                        </span>
-                                                    )}
-                                                    {pro?.sub_industry_name && (
-                                                        <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
-                                                            {pro?.sub_industry_name}
-                                                        </span>
-                                                    )}
-                                                    {pro?.product_category_name && (
-                                                        <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
-                                                            {pro?.product_category_name}
-                                                        </span>
-                                                    )}
+
+                                                    <div className='flex flex-row w-full justify-between'>
+
+                                                        <div>
+                                                            {pro?.industry_name && (
+                                                                <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                    {pro?.industry_name}
+                                                                </span>
+                                                            )}
+                                                            {pro?.sub_industry_name && (
+                                                                <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                    {pro?.sub_industry_name}
+                                                                </span>
+                                                            )}
+                                                            {pro?.product_category_name && (
+                                                                <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                    {pro?.product_category_name}
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+
+
+                                                        <div className="flex flex-row items-center gap-2 shrink-0">
+
+                                                            {/* TDS */}
+                                                            {pro?.tds_doc && (
+                                                                <a
+                                                                    href={!pro?.is_tds_locked ? pro?.tds_doc : "#"}
+                                                                    onClick={(e) => {
+                                                                        if (pro?.is_tds_locked) {
+                                                                            e.preventDefault(); // block click
+                                                                        }
+                                                                    }}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
+        ${pro?.is_tds_locked
+                                                                            ? "bg-gray-400 cursor-not-allowed"
+                                                                            : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
+                                                                        }`}
+                                                                >
+                                                                    {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
+                                                                    TDS
+                                                                </a>
+                                                            )}
+
+                                                            {/* MSDS */}
+                                                            {pro?.msds_doc && (
+                                                                <a
+                                                                    href={!pro?.is_msds_locked ? pro?.msds_doc : "#"}
+                                                                    onClick={(e) => {
+                                                                        if (pro?.is_msds_locked) {
+                                                                            e.preventDefault();
+                                                                        }
+                                                                    }}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
+        ${pro?.is_msds_locked
+                                                                            ? "bg-gray-400 cursor-not-allowed"
+                                                                            : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
+                                                                        }`}
+                                                                >
+                                                                    {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
+                                                                    MSDS
+                                                                </a>
+                                                            )}
+
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
-                                            <div className="flex flex-row sm:flex-col items-center gap-2 shrink-0">
-                                                <Link 
-                                                    href={`/product/${pro?.slug}/${pro?.id}`} 
-                                                    className="text-xs h-8 px-3 gap-1 bg-[#cd2626] text-white flex flex-row items-center font-semibold rounded-md hover:bg-[#a31e1e] transition-colors whitespace-nowrap"
-                                                >
-                                                    <BsEye size={12} /> View Details
-                                                </Link>
-                                                {pro?.tds_doc && (
-                                                    <a 
-                                                        href={pro?.tds_doc}
-                                                        target='_blank'
-                                                        rel="noopener noreferrer"
-                                                        className="text-xs h-8 px-3 gap-1 bg-[#cd2626] text-white flex flex-row items-center font-semibold rounded-md hover:bg-[#a31e1e] transition-colors whitespace-nowrap"
-                                                    >
-                                                        TDS
-                                                    </a>
-                                                )}
-                                                {pro?.msds_doc && (
-                                                    <a 
-                                                        href={pro?.msds_doc}
-                                                        target='_blank'
-                                                        rel="noopener noreferrer"
-                                                        className="text-xs h-8 px-3 gap-1 bg-[#cd2626] text-white flex flex-row items-center font-semibold rounded-md hover:bg-[#a31e1e] transition-colors whitespace-nowrap"
-                                                    >
-                                                        MSDS
-                                                    </a>
-                                                )}
-                                            </div>
+
                                         </div>
                                     </div>
                                 ))

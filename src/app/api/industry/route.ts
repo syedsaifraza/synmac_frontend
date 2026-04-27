@@ -13,7 +13,6 @@ export async function GET() {
 
     const data = await res.json();
 
-    console.log("Industries",data)
 
     return Response.json({
       success: true,

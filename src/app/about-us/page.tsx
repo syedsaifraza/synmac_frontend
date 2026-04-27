@@ -357,7 +357,7 @@ const page = () => {
 
   return (
     <div>
-      <Header title={"About Us"} />
+      {/* <Header title={"About Us"} /> */}
       <div className='text-black flex flex-row p-14'>
         {/* Main Content */}
         <div className="w-full text-black px-4">

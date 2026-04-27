@@ -56,9 +56,6 @@ async function getIndustries() {
     const result = await res.json();
 
 
-    console.log("a ja saale", result)
-
-
 
 
     return result?.industries || [];
@@ -136,10 +133,13 @@ const IndustriesSection = async () => {
                     />
                   </h3>
 
+
                   {industry.description && (
-                    <p className="text-xs text-gray-400 mt-2 line-clamp-3">
-                      {industry.description}
-                    </p>
+                    <p className="text-xs text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.description }}/>
+
+                     
+
+                 
                   )}
                 </div>
               </Link>

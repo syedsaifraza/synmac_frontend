@@ -45,13 +45,10 @@ const Page = async ({ params }: any) => {
 
           <div className="relative z-10 px-6 max-w-4xl">
             <h1 className="text-5xl md:text-5xl max-w-xl  text-white font-semibold tracking-wide mb-4">
-              {data?.data?.hero_background_title}
+              {data?.data?.name}
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6">
-              {data?.data?.hero_background_description}
-            </p>
-
+            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6" dangerouslySetInnerHTML={{ __html: data?.data?.hero_background_description }} />
 
           </div>
         </div>
@@ -75,27 +72,6 @@ const Page = async ({ params }: any) => {
     )
   }
 
-  // function SolutionsSection1() {
-
-  //     return (
-  //         <div className=" text-black py-16 px-4">
-  //             <div className="max-w-6xl mx-auto">
-
-  //                 <h2 className="text-3xl md:text-4xl mb-4">
-  //                     {data?.data?.feature_title}
-  //                 </h2>
-
-  //                 <p className="text-gray-600 text-lg">
-
-  //                     {data?.data?.feature_description}
-  //                 </p>
-
-
-
-  //             </div>
-  //         </div>
-  //     );
-  // }
 
   function SolutionsSection() {
 
@@ -121,24 +97,32 @@ const Page = async ({ params }: any) => {
 
 
                       <Link
-
                         href={`/product?
 productname=${encodeURIComponent(item?.name)}
 &productid=${item?.id}
+
 &industryname=${encodeURIComponent(item?.industry_name)}
 &industryid=${item?.industry_id}
-&subindustryname=${encodeURIComponent(item?.sub_industry_name)}
-&subindustryid=${item?.sub_industry_id}
-&productcategoryname=${encodeURIComponent(item?.product_category_name)}
-&productcategoryid=${item?.product_category_id}
-`}
 
+
+${item?.sub_industry_name && `&subindustryname=${encodeURIComponent(item?.sub_industry_name)}`
+                          }
+
+${item?.sub_industry_id && `&subindustryid=${encodeURIComponent(item?.sub_industry_id)}`
+                          }
+
+${item?.product_category_name && `&productcategoryname=${encodeURIComponent(item?.product_category_name)}`
+                          }
+
+${item?.product_category_id && `&productcategoryid=${encodeURIComponent(item?.product_category_id)}`
+                          }
+`}
                         className="text-xl text-gray-900 font-semibold">
-                        hello sir      {item.name}
+                        {item.name}
                       </Link>
-                      <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
-                        {item.description}
-                      </p>
+
+                      <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden" dangerouslySetInnerHTML={{ __html: item.description }} />
+
                     </div>
                     <div className="bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full text-3xl">
                       <IoIosArrowRoundForward />

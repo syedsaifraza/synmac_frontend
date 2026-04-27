@@ -18,7 +18,7 @@ const Footer = async () => {
 
   return (
     <footer className="bg-[#292929]">
-      <div className="container mx-auto px-15 py-8">
+      <div className="container mx-auto lg:px-0 max-w-6xl py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
             <h3 className="font-display text-xl font-bold mb-4 text-white">

@@ -25,7 +25,7 @@ async function getIndustries() {
     cache: "no-store"
   });
 
-  const data = await res.json(); console.log("a ja saale", data)
+  const data = await res.json()
 
 
   return data.industries || [];

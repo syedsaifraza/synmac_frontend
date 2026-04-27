@@ -1,3 +1,5 @@
+import Industory from "@/components/Industory";
+
 export async function GET(req: Request, { params }: any) {
   const { id } = await params;
 
@@ -5,10 +7,10 @@ export async function GET(req: Request, { params }: any) {
     const res = await fetch(
       "https://synmac-backend.serverscripts.in/api/v1/user/industry/view",
       {
-         method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
         // next: { revalidate: 300 },
         cache: "no-store"
       }
@@ -16,8 +18,17 @@ export async function GET(req: Request, { params }: any) {
 
     const data = await res.json();
 
-   
+
+
+
+
+
     const industry = data.data.find((item: any) => item.id == id);
+
+
+
+    console.log("Data", industry)
+
 
     if (!industry) {
       return Response.json({ message: "Not found" }, { status: 404 });
@@ -25,7 +36,8 @@ export async function GET(req: Request, { params }: any) {
 
     return Response.json({
       success: true,
-      industry, 
+      industry,
+      randomIndustries: []
     });
 
   } catch (error) {

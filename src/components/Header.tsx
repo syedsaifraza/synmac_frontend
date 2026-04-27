@@ -1,59 +1,49 @@
 'use client';
 
 import Image from 'next/image';
-import Img from "../assets/hero-bg.jpg"
+import Link from 'next/link';
+import { LiaAngleRightSolid } from 'react-icons/lia';
 
-export default function Header({ title }: { title: string }) {
+export default function Header({ title, description, background_image, }: { title: string, description: string, background_image: string }) {
   return (
-    <div className="w-full">      
-      <div className="relative w-full h-100">
-      
-        <Image
-          src={Img}
-          alt="Agriculture"
-          fill
-          className="object-cover"
-          priority
-        />
 
-       
-        <div className="absolute inset-0 bg-black/40" />
+    <>
 
-     
-        <div className="absolute inset-0 flex flex-col justify-center px-10 md:px-20 text-white max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-          {title}
-          </h1>
-          <p className="mt-4 text-lg md:text-xl text-gray-200">
-            Growing together
-          </p>
+
+
+
+
+      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-cover bg-no-repeat bg-center flex items-center"
+        style={{ backgroundImage: `url(${background_image})` }} >
+
+
+
+        <div className="absolute inset-0 bg-black/60"></div>
+
+        <div className="relative z-10 px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto w-full text-white">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight">
+              {title}
+            </h1>
+            <p dangerouslySetInnerHTML={{ __html: description }} className="mt-4 text-lg md:text-xl" />
+          </div>
         </div>
+
+
+
       </div>
 
-     
-      {/* <div className="flex flex-wrap justify-between items-center px-6 md:px-20 py-4 bg-gray-100 text-sm">
-        
-        <div className="flex gap-6">
-          <span className="cursor-pointer flex items-center gap-2 hover:text-red-500">
-            📘 Applications
-          </span>
-          <span className="cursor-pointer flex items-center gap-2 hover:text-red-500">
-            📦 Products
-          </span>
-          <span className="cursor-pointer flex items-center gap-2 hover:text-red-500">
-            📄 Support
-          </span>
+      <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
+          <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
+          <LiaAngleRightSolid size={12} />
+          <h1 className="text-gray-600">{title}</h1>
         </div>
+      </div>
+    </>
 
-        <div className="flex gap-6 mt-2 md:mt-0">
-          <span className="cursor-pointer hover:text-green-600">
-            🌱 Sustainability
-          </span>
-          <span className="cursor-pointer hover:text-red-500">
-            Product Technologies
-          </span>
-        </div>
-      </div> */}
-    </div>
   );
 }
+
+
+

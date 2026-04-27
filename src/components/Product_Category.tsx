@@ -33,7 +33,8 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
                                     onClick={() => toggle(index)}
                                     className="w-full flex justify-between items-center p-4 text-left font-semibold text-lg bg-white hover:bg-gray-50"
                                 >
-                                    {faq.question}
+                                    <span dangerouslySetInnerHTML={{ __html: faq.question }}/>
+                                  
                                     <span className="text-xl">
                                         {activeIndex === index ? (<LiaAngleUpSolid />) : (<LiaAngleDownSolid />)}
                                     </span>
@@ -43,7 +44,7 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
                                     className={`px-4 transition-all duration-300 ${activeIndex === index ? "max-h-40 py-3" : "max-h-0 overflow-hidden"
                                         }`}
                                 >
-                                    <p className="text-gray-600 text-md">{faq.answer}</p>
+                                    <p dangerouslySetInnerHTML={{ __html: faq.answer }} className="text-gray-600 text-md"/>
                                 </div>
                             </div>
                         ))}
@@ -55,7 +56,7 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
 
 
     function CareerSection() {
-        // Don't render if required data is missing
+      
         if (!info?.name || !info?.image) return null;
 
         return (
@@ -95,7 +96,7 @@ const Product_Category = ({ faqs, info, Resources }: any) => {
                         {Resources.map((res: any, i: any) => (
                             <div key={i} className="p-2">
                                 <h3 className="font-semibold text-xl">{res.title}</h3>
-                                <p className="text-gray-600 text-md mt-2">{res.description}</p>
+                                <p dangerouslySetInnerHTML={{ __html: res.description }} className="text-gray-600 text-md mt-2"/>
                                 <a href={res.file} target="_blank" className="text-blue-600 text-sm mt-2 inline-block">
                                     Check Documents →
                                 </a>

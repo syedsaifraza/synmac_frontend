@@ -16,10 +16,13 @@ async function getUser(id: any) {
   return res.json();
 }
 
+
+
 const Page = async ({ params }: any) => {
   const resolvedParams = await params;
 
   const data = await getUser(resolvedParams.subId);
+
 
 
 
@@ -42,12 +45,10 @@ const Page = async ({ params }: any) => {
 
           <div className="relative z-10 px-6 max-w-4xl">
             <h1 className="text-5xl md:text-5xl max-w-xl  text-white font-semibold tracking-wide mb-4">
-              {data?.data?.hero_background_title}
+              {data?.data?.name}
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6">
-              {data?.data?.hero_background_description}
-            </p>
+            <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto mb-6" dangerouslySetInnerHTML={{ __html: data?.data?.hero_background_description }} />
 
 
           </div>
@@ -60,7 +61,7 @@ const Page = async ({ params }: any) => {
             <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams.industryId}`}>{data?.data?.industry_name}</Link>
             <LiaAngleRightSolid />
 
-            <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}`}>{data?.data?.hero_background_title}</Link>
+            <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}`}>{data?.data?.name}</Link>
           </div>
 
 
@@ -82,10 +83,8 @@ const Page = async ({ params }: any) => {
             {data?.data?.feature_title}
           </h2>
 
-          <p className="text-gray-600 text-lg">
+          <p dangerouslySetInnerHTML={{ __html: data?.data?.feature_description }} className="text-gray-600 text-lg" />
 
-            {data?.data?.feature_description}
-          </p>
 
 
 
@@ -113,12 +112,11 @@ const Page = async ({ params }: any) => {
                   <div className="flex-1">
 
 
-                    <Link href={`/industry/${resolvedParams.industrySlug}/${resolvedParams?.industryId}/${resolvedParams.subSlug}/${resolvedParams.subId}/${item.slug}/${item.id}`} className="text-xl text-gray-900 font-semibold">
+                    <Link href={`/industry/${data?.data?.slug}/${data?.data?.id}/${data?.data?.sub_industry_name}/${data?.data?.sub_industry_id}/${item.slug}/${item.id}`} className="text-xl text-gray-900 font-semibold">
                       {item.name}
                     </Link>
-                    <p className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden">
-                      {item.description}
-                    </p>
+                    <p dangerouslySetInnerHTML={{ __html: item.description }} className="text-gray-600 text-md mt-2 line-clamp-3 overflow-hidden" />
+
                   </div>
                   <div className="bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full text-3xl">
                     <IoIosArrowRoundForward />
@@ -152,6 +150,56 @@ const Page = async ({ params }: any) => {
   const resources = data?.data?.resources
 
 
+  // function OtherIndustry() {
+
+  //   const randomIndustries = [...filterIndus]
+  //     .sort(() => 0.5 - Math.random()) // shuffle
+  //     .slice(0, 3); // max 3 items
+
+  //   return (
+  //     <div className="bg-[#333737] text-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
+  //       <div className="max-w-6xl mx-auto">
+  //         <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-6 sm:mb-8 lg:mb-10">
+  //           Other Industries
+  //         </h2>
+
+  //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+  //           {randomIndustries.map((item: any, i: any) => (
+  //             <div key={i} className="bg-[#333737] overflow-hidden group">
+  //               <img
+  //                 src={item.image}
+  //                 alt={item.name}
+  //                 className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500"
+  //               />
+
+  //               <div className="py-4 sm:py-6 flex justify-between items-start gap-4">
+  //                 <div className="flex-1">
+  //                   <Link
+  //                     href={`/industry/${item.slug}/${item.id}`}
+  //                     className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition"
+  //                   >
+  //                     {item.name}
+  //                   </Link>
+
+  //                   <p
+  //                     dangerouslySetInnerHTML={{
+  //                       __html: DOMPurify.sanitize(item.description),
+  //                     }}
+  //                     className="text-gray-300 text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden"
+  //                   />
+  //                 </div>
+
+  //                 <div className="bg-[#cd2626] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-xl sm:text-2xl flex-shrink-0 group-hover:translate-x-1 transition">
+  //                   <IoIosArrowRoundForward />
+  //                 </div>
+  //               </div>
+  //             </div>
+  //           ))}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
 
 
@@ -166,6 +214,7 @@ const Page = async ({ params }: any) => {
       {SolutionsSection1()}
       {SolutionsSection()}
       <Sub_IndustrySection
+        data={data.data}
         faqs={data?.data?.faqs}
         info={info}
         Resources={resources}
