@@ -98,7 +98,7 @@ const IndustriesSection = async () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {industries.map((industry: Industry) => {
 
             const firstSubIndustry = industry.sub_industry[0];
@@ -106,7 +106,7 @@ const IndustriesSection = async () => {
 
             return (
               <Link
-                href={`/industry/${industry.slug}/${industry.id}`}
+                href={`/industry/${industry.slug}`}
                 key={industry.id}
                 className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
               >
@@ -134,8 +134,8 @@ const IndustriesSection = async () => {
                   </h3>
 
 
-                  {industry.description && (
-                    <p className="text-xs text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.description }}/>
+                  {industry.hero_background_description && (
+                    <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description }}/>
 
                      
 

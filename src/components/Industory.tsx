@@ -12,56 +12,13 @@ import About_Soluctions from "./About_Soluctions";
 import Faqs_Section from "./Faqs_Section";
 import Product_Category_Section from "./Product_Category_Section";
 import Product_Section from "./Product_Section";
+import ResourcesSection from "./ResourcesSection";
 
 const Industory = ({ industoryData }: any) => {
 
   console.log("yahi hia kya ", industoryData)
 
 
-
-  const [play, setPlay] = useState(null);
-
-
-
-  function ResourcesSection() {
-    if (!industoryData?.resources || industoryData?.resources?.length === 0) return null;
-
-    return (
-      <div className="bg-gray-50 py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-            <div className="lg:w-2/5">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-snug">Resources to stay ahead</h2>
-            </div>
-
-            <div className="lg:w-3/5 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-              {industoryData.resources.map((res: any, i: any) => (
-                <div key={i} className="p-4 sm:p-5 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="font-semibold text-lg sm:text-xl text-gray-900 mb-2">{res.title}</h3>
-
-                  <p className="text-gray-600 text-sm sm:text-base mt-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: res.description }} />
-
-                  <a href={res.file} target="_blank" className="text-[#cd2626] text-sm sm:text-base mt-3 inline-block font-medium hover:underline">
-                    Check Documents →
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-
-
-
-
-
-
-  function ProductCategory() {
-   
-  }
 
   function SubIndustry() {
     const [showAll, setShowAll] = useState(false);
@@ -82,7 +39,9 @@ const Industory = ({ industoryData }: any) => {
       <div className="bg-[#333737] text-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-6 sm:mb-8 lg:mb-10">
-            {industoryData.tag_line}
+            {/* {industoryData.tag_line} */}
+
+            Sub Industries
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -91,7 +50,7 @@ const Industory = ({ industoryData }: any) => {
                 <img src={item.image} alt={item.name} className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500" />
                 <div className="py-4 sm:py-6 flex justify-between items-start gap-4">
                   <div className="flex-1">
-                    <Link href={`/industry/${industoryData.slug}/${industoryData.id}/${item.slug}/${item.id}`} className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition">
+                    <Link href={`/industry/${industoryData.slug}/${item.slug}`} className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition">
                       {item.name}
                     </Link>
                     <p
@@ -133,7 +92,15 @@ const Industory = ({ industoryData }: any) => {
   return (
     <div className="min-h-screen bg-white">
 
-      <Header title={industoryData.name} description={industoryData.hero_background_description} background_image={industoryData.hero_background_file_url} />
+      <Header title={industoryData?.name} description={industoryData?.hero_background_description} background_image={industoryData.hero_background_file_url} />
+      <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
+          <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
+          <LiaAngleRightSolid size={12} />
+          <h1 className="text-gray-600">{industoryData?.name}</h1>
+
+        </div>
+      </div>
       <About_Soluctions heading={industoryData?.feature_title}
         description={industoryData?.feature_description}
         sub_heading={industoryData?.feature_sub_title}
@@ -141,8 +108,8 @@ const Industory = ({ industoryData }: any) => {
         image={industoryData?.feature_file_link} />
       <SubIndustry />
       <Product_Section product_list={industoryData?.products} />
-      <Product_Category_Section product_category={industoryData}/>
-      <ResourcesSection />
+      <Product_Category_Section data={industoryData?.product_category} />
+      <ResourcesSection resources={industoryData?.resources} />
       <Faqs_Section faqs={industoryData?.faqs} />
 
     </div>

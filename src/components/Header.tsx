@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { LiaAngleRightSolid } from 'react-icons/lia';
 
-export default function Header({ title, description, background_image, }: { title: string, description: string, background_image: string }) {
+export default function Header({ title, description, background_image, }: { title: string, description: string, background_image: string ,   }) {
   return (
 
     <>
@@ -20,7 +20,7 @@ export default function Header({ title, description, background_image, }: { titl
 
         <div className="absolute inset-0 bg-black/60"></div>
 
-        <div className="relative z-10 px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto w-full text-white">
+        <div className="relative z-10 px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto w-full text-white ">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-5xl font-bold leading-tight">
               {title}
@@ -33,13 +33,7 @@ export default function Header({ title, description, background_image, }: { titl
 
       </div>
 
-      <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
-          <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
-          <LiaAngleRightSolid size={12} />
-          <h1 className="text-gray-600">{title}</h1>
-        </div>
-      </div>
+      
     </>
 
   );

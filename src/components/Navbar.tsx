@@ -3,13 +3,14 @@ import React, { useEffect, useState, useRef } from 'react'
 import Logo from "../../public/favicon.png"
 import Image from 'next/image';
 import { BiSearch } from 'react-icons/bi';
-import { FaAngleRight } from 'react-icons/fa';
+import { FaAngleRight, FaSearch } from 'react-icons/fa';
 import { RxTriangleRight } from "react-icons/rx";
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { FiSearch } from 'react-icons/fi';
 
 const Navbar = ({ data }: any) => {
     const router = useRouter();
@@ -63,10 +64,7 @@ const Navbar = ({ data }: any) => {
         setSelectedIndustry(null);
     }
 
-    // Don't render if data is not available
-    if (!data || data.length === 0) {
-        return null;
-    }
+
 
     useEffect(() => {
         const handleClickOutside = (e: any) => {
@@ -85,7 +83,7 @@ const Navbar = ({ data }: any) => {
         };
     }, [isMenuOpen]);
 
-    // Handle hover for desktop dropdown
+   
     const handleMouseEnter = () => {
         if (window.innerWidth >= 768) {
             if (hoverTimeoutRef.current) {
@@ -105,30 +103,8 @@ const Navbar = ({ data }: any) => {
         }
     };
 
-    // Handle navigation on click for mobile
-    const handleIndustryNameClick = (industry: any) => {
-        if (window.innerWidth < 768) {
-            // On mobile, navigate to industry page
-            router.push(`/industry/${industry.slug}/${industry.id}`);
-            closeMenu();
-        }
-    };
+  
 
-    const handleSubIndustryNameClick = (subIndustry: any) => {
-        if (window.innerWidth < 768) {
-            // On mobile, navigate to sub-industry page
-            router.push(`/industry/${selectedIndustry?.slug}/${selectedIndustry?.id}/${subIndustry.slug}/${subIndustry.id}`);
-            closeMenu();
-        }
-    };
-
-    const handleCategoryClick = (category: any) => {
-        if (window.innerWidth < 768) {
-            // On mobile, navigate to category page
-            router.push(`/industry/${selectedIndustry?.slug}/${selectedIndustry?.id}/${activeSubIndustry?.slug}/${activeSubIndustry?.id}/${category.slug}/${category.id}`);
-            closeMenu();
-        }
-    };
 
     return (
         <>
@@ -138,12 +114,13 @@ const Navbar = ({ data }: any) => {
                 <div className={` ${scrolled ? "bg-white shadow-md sticky top-0" : `${isMenuOpen ? "bg-white text-black" : "bg-transparent text-white"}`
                     }  ${isMenuOpen && "border-b border-gray-200"}`}>
 
-                    {/* Navbar container with uniform padding */}
+               
                     <div className={`flex flex-row mx-auto max-w-6xl items-center justify-between py-4`}>
                         <div className='flex flex-row items-center gap-2 cursor-pointer'>
                             <Link href={"/"} className='flex flex-row items-center'>
                                 <Image src={Logo} alt="Logo" className="h-12 w-12" />
                                 <span className="font-extrabold text-3xl text-[#cd2626]">SYNMAC</span>
+                                   <span className="font-extrabold text-3xl text-black font-bold">beta</span>
                             </Link>
                         </div>
 
@@ -174,6 +151,9 @@ const Navbar = ({ data }: any) => {
                                 <span>Contact us</span>
                                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                             </Link>
+                             <li className="relative group cursor-pointer">
+                               <FiSearch/>
+                            </li>
                         </ul>
 
                         {/* Mobile Hamburger Menu */}
@@ -341,15 +321,15 @@ const Navbar = ({ data }: any) => {
                     </div>
                 )}
 
-                {/* Desktop Mega Menu - Opens on Hover */}
+           
                 {isMenuOpen && window.innerWidth >= 768 && activeData && (
                     <div
-                        className="hidden md:block fixed left-0 right-0 bg-white shadow-lg z-40"
+                        className="hidden md:block fixed left-0 right-0  z-40"
                         onMouseEnter={handleMouseEnter}
                         onMouseLeave={handleMouseLeave}
                     >
                         <div className="text-black max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[80vh]">
-                            <div className="w-full bg-white flex rounded-lg shadow-lg overflow-hidden">
+                            <div className="w-full bg-white flex overflow-hidden">
                                 {/* Industries Column */}
                                 <div className='w-1/3 border-r border-gray-100 bg-gray-50/30 overflow-y-auto max-h-[80vh]'>
                                     <ul className="flex flex-col gap-1 p-3">

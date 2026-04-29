@@ -5,6 +5,9 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+  
+
+    console.log("id yai kya ",id)
 
     const res = await fetch(
       `https://synmac-backend.serverscripts.in/api/v1/user/sub-industry/view`,
@@ -19,7 +22,10 @@ export async function GET(
     const data = await res.json();
 
 
-    const sub_industry = data.data.find((subin: any) => subin.id == id);
+    const sub_industry = data.data.find((subin: any) => subin.slug === id);
+
+
+    console.log(sub_industry)
 
 
 

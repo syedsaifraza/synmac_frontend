@@ -23,7 +23,7 @@ export async function GET(
      console.log("category-info",data)
 
 
-    const sub_industry = data.data.find((subin: any) => subin.id == id);
+    const sub_industry = data.data.find((subin: any) => subin.slug === id);
 
 
 

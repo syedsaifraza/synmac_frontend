@@ -1,17 +1,21 @@
+'use client'
 import Link from 'next/link';
 import React from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
 
-const Product_Category_Section = ({industoryData}:any) => {
+const Product_Category_Section = ({ data }: any) => {
+
+
+    console.log("product categories", data)
     const [showAll, setShowAll] = React.useState(false);
 
-    if (!industoryData?.product_category
-        || industoryData?.product_category
+    if (!data
+        || data
             ?.length === 0) return null;
 
-    const visibleData = showAll ? industoryData?.product_category
-        : industoryData?.product_category
+    const visibleData = showAll ? data
+        : data
             .slice(0, 3);
 
     return (
@@ -29,7 +33,7 @@ const Product_Category_Section = ({industoryData}:any) => {
                                 <div className="flex-1">
                                     <Link
 
-                                        href={`/industry/${industoryData.slug}/${industoryData?.id}/${industoryData?.sub_industry_name}/${industoryData.sub_industry_id}/${item.slug}/${item.id}`}
+                                        href={`/industry/${item.industry_slug}/${item?.sub_industry_slug || " "}/${item.slug}`}
 
 
                                         className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition">
@@ -47,7 +51,7 @@ const Product_Category_Section = ({industoryData}:any) => {
                 </div>
 
                 {
-                    industoryData?.products
+                    data
                         .length > 3 && (
                         <div className="flex mt-8 sm:mt-10">
                             <button

@@ -4,9 +4,9 @@ import { LiaAngleRightSolid } from 'react-icons/lia';
 
 import { FaLock, FaLockOpen } from "react-icons/fa";
 
-async function getProduct(id: any) {
+async function getProduct(slug: any) {
   const res = await fetch(
-    `https://synmac-backend.serverscripts.in/api/v1/user/product/view/${id}`,
+    `https://synmac-backend.serverscripts.in/api/v1/user/product/viewbyslug/${slug}`,
     {
       method: "GET",
       headers: {
@@ -20,7 +20,7 @@ async function getProduct(id: any) {
 
 const Page = async ({ params }: any) => {
   const resolvedParams = await params;
-  const response = await getProduct(resolvedParams.id);
+  const response = await getProduct(resolvedParams.slug);
   const productData = response?.data || null;
 
   console.log("API Response:", response);

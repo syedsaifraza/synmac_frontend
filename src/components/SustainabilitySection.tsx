@@ -47,7 +47,7 @@ const SustainabilitySection = ({ data }: any) => {
   //   { end: 1000, suffix: "+", label: "Happy Clients" },
   // ];
 
-  const stats = data?.key_no?.map((stats:any) => {
+  const stats = data?.key_no?.map((stats: any) => {
 
     return {
       end: stats.value,
@@ -66,7 +66,7 @@ const SustainabilitySection = ({ data }: any) => {
     return () => obs.disconnect();
   }, []);
 
-  const counts = stats?.map((s:any) => useCountUp(s.end, 2000, visible));
+  const counts = stats?.map((s: any) => useCountUp(s.end, 2000, visible));
 
   return (
     <>
@@ -134,14 +134,30 @@ const SustainabilitySection = ({ data }: any) => {
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats?.map((s:any, i:any) => (
-              <div key={s.label} className="text-center py-6">
-                <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
-                  {counts[i]}{s.suffix}
+            {stats?.map((s: any, i: any) => {
+
+              let label;
+
+              if (s.label === "years_of_excellence") {
+                label = "Years Of Excellence"
+              } else if (s.label === "no_of_products") {
+                label = "No Of Products"
+              } else if (s.label === "countries_served") {
+                label = "Countries Served"
+              } else if (s.label === "happy_clients") {
+                label = "Happy Clients"
+              }
+
+              return (
+                <div key={s.label} className="text-center py-6">
+                  <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+                    {counts[i]}{s.suffix}
+                  </div>
+                  <p className="text-sm text-white/60">{label}</p>
                 </div>
-                <p className="text-sm text-white/60">{s.label}</p>
-              </div>
-            ))}
+              )
+
+            })}
           </div>
         </div>
       </section>

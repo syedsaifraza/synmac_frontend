@@ -3,6 +3,9 @@ import Industory from "@/components/Industory";
 export async function GET(req: Request, { params }: any) {
   const { id } = await params;
 
+
+  console.log(id)
+
   try {
     const res = await fetch(
       "https://synmac-backend.serverscripts.in/api/v1/user/industry/view",
@@ -23,7 +26,9 @@ export async function GET(req: Request, { params }: any) {
 
 
 
-    const industry = data.data.find((item: any) => item.id == id);
+
+
+    const industry = data.data.find((item: any) => item.slug == id);
 
 
 

@@ -42,14 +42,7 @@ const Footer = async () => {
               </Link>
             </div>
           </div>
-          {/* <div>
-          <h4 className="font-display font-semibold mb-4 text-sm tracking-wider uppercase text-white/50">Industries</h4>
-          <ul className="space-y-2 text-sm">
-            {["Sugar", "Paper & Pulp", "Textile", "Leather", "Paint & Coating", "Water Treatment"].map((i) => (
-              <li key={i}><Link href="/industries" className="text-white/70 hover:text-primary transition-colors">{i}</Link></li>
-            ))}
-          </ul>
-        </div> */}
+         
           <div>
             <h4 className="font-display font-semibold mb-4 text-sm tracking-wider uppercase text-white/50">Company</h4>
             <ul className="space-y-2 text-sm">

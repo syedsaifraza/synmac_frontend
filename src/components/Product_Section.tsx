@@ -1,8 +1,14 @@
+'use client'
+
 import React from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
 import Link from "next/link"
 
 const Product_Section = ({ product_list }: any) => {
+
+
+    const params = new URLSearchParams();
+
 
     const [showAll, setShowAll] = React.useState(false);
 
@@ -21,42 +27,51 @@ const Product_Section = ({ product_list }: any) => {
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    {visibleData.map((item: any, i: any) => (
-                        <div key={i} className="overflow-hidden group">
+                    {visibleData.map((item: any, i: any) => {
+
+
+                        if (item?.name) {
+                            params.append("productname", item.name);
+                        }
+
+                        if (item?.id) {
+                            params.append("productid", item.id);
+                        }
+
+                        if (item?.industry_name) {
+                            params.append("industryname", item.industry_name);
+                        }
+
+                        if (item?.sub_industry_name) {
+                            params.append("subindustryname", item.sub_industry_name);
+                        }
+
+                        if (item?.product_category_name) {
+                            params.append("productcategoryname", item.product_category_name);
+                        }
+
+                        const url = `/product?${params.toString()}`;
+
+                        return (<div key={i} className="overflow-hidden group">
                             <img src={item.image} alt={item.name} className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500" />
                             <div className="py-4 sm:py-6 flex justify-between items-start gap-4">
                                 <div className="flex-1">
-                                    <Link href={`/product?
-productname=${encodeURIComponent(item?.name)}
-&productid=${item?.id}
+                                    <Link
 
-&industryname=${encodeURIComponent(item?.industry_name)}
-&industryid=${item?.industry_id}
-
-
-${item?.sub_industry_name && `&subindustryname=${encodeURIComponent(item?.sub_industry_name)}`
-                                        }
-
-${item?.sub_industry_id && `&subindustryid=${encodeURIComponent(item?.sub_industry_id)}`
-                                        }
-
-${item?.product_category_name && `&productcategoryname=${encodeURIComponent(item?.product_category_name)}`
-                                        }
-
-${item?.product_category_id && `&productcategoryid=${encodeURIComponent(item?.product_category_id)}`
-                                        }
-`} className="text-lg sm:text-xl font-semibold hover:text-gray-700 transition">
+                                        href={url}
+                                        className="text-lg sm:text-xl font-semibold hover:text-gray-700 transition">
                                         {item.name}
                                     </Link>
                                     <p
-                                        dangerouslySetInnerHTML={{ __html: item.description }} className="text-white text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
+                                        dangerouslySetInnerHTML={{ __html: item.description }} className="text-gray-500 text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
                                 </div>
                                 <div className="bg-[#cd2626] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-xl sm:text-2xl  shrink-0 group-hover:translate-x-1 transition">
                                     <IoIosArrowRoundForward />
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        </div>)
+
+                    })}
                 </div>
 
                 {

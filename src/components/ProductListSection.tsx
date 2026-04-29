@@ -23,14 +23,14 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
     const industryname = searchParams.get("industryname")
     const sub_industry_name = searchParams.get("subindustryname")
 
-    console.log(productname, productcategoryname)
+    console.log(productname, productcategoryname, industryname, sub_industry_name)
 
     const router = useRouter();
 
     const [selected, setSelected] = useState("");
     const [search, setSearch] = useState<any>(productname);
     const [filterSearch, setFilterSearch] = useState("");
-    const [isFilterOpen, setIsFilterOpen] = useState(false); // For mobile filter drawer
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const [filters, setFilters] = useState({
         industry: industryname ? industryname : "",
@@ -38,7 +38,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         category: productcategoryname ? productcategoryname : "",
     });
 
-    // Fixed filter logic with optional chaining and null checks
+
     const filterProduct = product?.data?.filter((pro: any) => {
         const matchIndustry =
             !filters.industry || pro?.industry_name === filters.industry;
@@ -326,8 +326,8 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                     >
                                         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                                             <div className="flex-1 min-w-0">
-                                                <Link href={`/product/${pro?.slug}/${pro?.id}`}
-                                                    className="font-bold text-base sm:text-lg text-gray-900 mb-1 hover:text-[#cd2626]">{pro?.name}</Link>
+                                                <Link href={`/product/${pro?.slug}`}
+                                                    className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">{pro?.name}</Link>
                                                 <p dangerouslySetInnerHTML={{ __html: pro?.description }} className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4" />
                                                 <div className="flex flex-wrap gap-1.5">
 
