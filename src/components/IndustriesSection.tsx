@@ -99,10 +99,10 @@ const IndustriesSection = async () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {industries.map((industry: Industry) => {
+          {industries?.map((industry: Industry) => {
 
             const firstSubIndustry = industry.sub_industry[0];
-            const imageUrl = industry.image || industry.hero_background_file_url;
+            const imageUrl = industry.feature_file_link || industry.hero_background_file_url;
 
             return (
               <Link
