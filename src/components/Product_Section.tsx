@@ -63,7 +63,7 @@ const Product_Section = ({ product_list }: any) => {
                                         {item.name}
                                     </Link>
                                     <p
-                                        dangerouslySetInnerHTML={{ __html: item.description }} className="text-gray-500 text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
+                                        dangerouslySetInnerHTML={{ __html: item.hero_background_description }} className="text-gray-500 text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
                                 </div>
                                 <div className="bg-[#cd2626] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-xl sm:text-2xl  shrink-0 group-hover:translate-x-1 transition">
                                     <IoIosArrowRoundForward />

@@ -1,10 +1,8 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import Logo from "../../public/favicon.png"
 import Image from 'next/image';
-import { BiSearch } from 'react-icons/bi';
-import { FaAngleRight, FaSearch } from 'react-icons/fa';
-import { RxTriangleRight } from "react-icons/rx";
+import { FaAngleRight } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
@@ -12,28 +10,102 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 
-const Navbar = ({ data }: any) => {
+// Types
+interface Product {
+    id: number;
+    slug: string;
+    name: string;
+    [key: string]: any;
+}
+
+interface ProductCategory {
+    id: number;
+    slug: string;
+    name: string;
+    products?: Product[];
+    [key: string]: any;
+}
+
+interface SubIndustry {
+    id: number;
+    slug: string;
+    name: string;
+    product_category?: ProductCategory[];
+    products?: Product[];
+    [key: string]: any;
+}
+
+interface Industry {
+    id: number;
+    slug: string;
+    name: string;
+    sub_industry?: SubIndustry[];
+    product_category?: ProductCategory[];
+    products?: Product[];
+    feature_file_link?: string;
+    feature_title?: string;
+    feature_description?: string;
+    [key: string]: any;
+}
+
+const Navbar = ({ data }: { data: Industry[] }) => {
     const router = useRouter();
     const pathname = usePathname();
-    const [activeData, setActiveData] = useState<any>(null)
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [selectedIndustry, setSelectedIndustry] = useState<any>(null);
-    const [showSubmarkets, setShowSubmarkets] = useState(false);
-    const [activeSubIndustry, setActiveSubIndustry] = useState<any>(null);
-    const [isHovering, setIsHovering] = useState(false);
+    const [mobileView, setMobileView] = useState<'main' | 'industries' | 'subIndustries' | 'categories' | 'products'>('main');
+    const [selectedIndustry, setSelectedIndustry] = useState<Industry | null>(null);
+    const [selectedSubIndustry, setSelectedSubIndustry] = useState<SubIndustry | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null);
+    const [activeIndustry, setActiveIndustry] = useState<Industry | null>(null);
+    const [activeSubIndustry, setActiveSubIndustry] = useState<SubIndustry | null>(null);
+    const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
     const hoverTimeoutRef = useRef<any>(null);
+    const [isClient, setIsClient] = useState(false);
+
+
+
+    const getProducts = () => {
+        // 1. Category (subIndustry OR industry)
+        if (activeCategory?.products?.length) {
+            return activeCategory.products;
+        }
+
+        // 2. SubIndustry direct
+        if (activeSubIndustry?.products?.length) {
+            return activeSubIndustry.products;
+        }
+
+        // 3. Industry direct
+        if (activeIndustry?.products?.length) {
+            return activeIndustry.products;
+        }
+
+        return [];
+    };
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50);
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("scroll", onScroll);
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
     useEffect(() => {
         if (data && data.length > 0) {
-            setActiveData(data[0]);
-            setActiveSubIndustry(data[0]?.sub_industry?.[0] || null);
+            const firstIndustry = data[0];
+            setActiveIndustry(firstIndustry);
+            if (firstIndustry?.sub_industry?.[0]) {
+                setActiveSubIndustry(firstIndustry.sub_industry[0]);
+                if (firstIndustry.sub_industry[0]?.product_category?.[0]) {
+                    setActiveCategory(firstIndustry.sub_industry[0].product_category[0]);
+                }
+            } else if (firstIndustry?.product_category?.[0]) {
+                setActiveCategory(firstIndustry.product_category[0]);
+            }
         }
     }, [data]);
 
@@ -43,384 +115,488 @@ const Navbar = ({ data }: any) => {
 
     const closeMenu = () => {
         setIsMenuOpen(false);
-        setShowSubmarkets(false);
+        setMobileView('main');
         setSelectedIndustry(null);
-        if (data && data.length > 0) {
-            setActiveData(data[0]);
-        }
-    }
+        setSelectedSubIndustry(null);
+        setSelectedCategory(null);
+    };
 
-    const handleIndustryClick = (industry: any) => {
-        if (window.innerWidth < 768) {
-            setSelectedIndustry(industry);
-            setShowSubmarkets(true);
+    const hasSubIndustries = (industry: Industry) => {
+        return industry?.sub_industry && industry.sub_industry.length > 0;
+    };
+
+    const hasDirectCategories = (industry: Industry) => {
+        return industry?.product_category && industry.product_category.length > 0;
+    };
+
+    const hasDirectProducts = (industry: Industry) => {
+        return industry?.products && industry.products.length > 0;
+    };
+
+    const hasCategories = (subIndustry: SubIndustry) => {
+        return subIndustry?.product_category && subIndustry.product_category.length > 0;
+    };
+
+    const hasDirectProductsInSub = (subIndustry: SubIndustry) => {
+        return subIndustry?.products && subIndustry.products.length > 0;
+    };
+
+    const hasProductsInCategory = (category: ProductCategory) => {
+        return category?.products && category.products.length > 0;
+    };
+
+    const handleIndustryHover = useCallback((industry: Industry) => {
+        setActiveIndustry(industry);
+
+        if (hasSubIndustries(industry)) {
+            const sub = industry.sub_industry![0];
+            setActiveSubIndustry(sub);
+
+            if (hasCategories(sub)) {
+                setActiveCategory(sub.product_category![0]);
+            } else {
+                setActiveCategory(null);
+            }
+
+        } else if (hasDirectCategories(industry)) {
+            setActiveSubIndustry(null);
+            setActiveCategory(industry.product_category![0]);
+
         } else {
-            setActiveData(industry);
+
+            setActiveSubIndustry(null);
+            setActiveCategory(null);
         }
-    }
+    }, []);
 
-    const handleBackToIndustries = () => {
-        setShowSubmarkets(false);
-        setSelectedIndustry(null);
-    }
+    const handleSubIndustryHover = useCallback((subIndustry: SubIndustry) => {
+        setActiveSubIndustry(subIndustry);
 
+        if (hasCategories(subIndustry)) {
+            setActiveCategory(subIndustry.product_category![0]);
+        } else {
 
-
-    useEffect(() => {
-        const handleClickOutside = (e: any) => {
-            if (!e.target.closest(".mega-menu")) {
-                setIsMenuOpen(false);
-                setIsHovering(false);
-            }
-        };
-
-        if (isMenuOpen) {
-            document.addEventListener("click", handleClickOutside);
+            setActiveCategory(null);
         }
+    }, []);
 
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, [isMenuOpen]);
+    const getIndustryUrl = (industry: Industry) => `/industry/${industry.slug}`;
+    const getSubIndustryUrl = (industry: Industry, subIndustry: SubIndustry) =>
+        `/industry/${industry.slug}/${subIndustry.slug}`;
+    const getCategoryUrl = (industry: Industry, subIndustry: SubIndustry | null, category: ProductCategory) => {
 
-   
-    const handleMouseEnter = () => {
-        if (window.innerWidth >= 768) {
-            if (hoverTimeoutRef.current) {
-                clearTimeout(hoverTimeoutRef.current);
-            }
-            setIsHovering(true);
-            setIsMenuOpen(true);
-        }
+        return `/industry/${industry.slug}/${subIndustry?.slug || " "}/${category?.slug || " "}`;
+
+
     };
 
-    const handleMouseLeave = () => {
-        if (window.innerWidth >= 768) {
-            hoverTimeoutRef.current = setTimeout(() => {
-                setIsHovering(false);
-                setIsMenuOpen(false);
-            }, 200);
-        }
+
+
+
+    const getProductUrl = (data: any) => {
+        const params = new URLSearchParams();
+
+        if (data?.name) params.append("productname", data.name);
+        if (data?.id) params.append("productid", data.id);
+        if (data?.industry_name) params.append("industryname", data.industry_name);
+        if (data?.sub_industry_name) params.append("subindustryname", data.sub_industry_name);
+        if (data?.product_category_name) params.append("productcategoryname", data.product_category_name);
+
+        return `/product?${params.toString()}`;
     };
 
-  
 
+
+
+    const products = getProducts();
+
+
+
+
+    if (!isClient) {
+        return null;
+    }
 
     return (
-        <>
-            <nav
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300`}
-            >
-                <div className={` ${scrolled ? "bg-white shadow-md sticky top-0" : `${isMenuOpen ? "bg-white text-black" : "bg-transparent text-white"}`
-                    }  ${isMenuOpen && "border-b border-gray-200"}`}>
+        <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+            <div className={`${scrolled ? "bg-white shadow-md" : `${isMenuOpen ? "bg-white text-black" : "bg-transparent text-white"}`} ${isMenuOpen && "border-b border-gray-200"}`}>
+                <div className="max-w-6xl mx-auto flex items-center justify-between py-4">
+                    <Link href="/" className="flex items-center gap-2">
+                        <Image src={Logo} alt="Logo" className="h-10 w-10" />
+                        <span className="font-extrabold text-2xl text-[#cd2626]">SYNMAC</span>
+                        <span className="font-extrabold text-2xl text-black">beta</span>
+                    </Link>
 
-               
-                    <div className={`flex flex-row mx-auto max-w-6xl items-center justify-between py-4`}>
-                        <div className='flex flex-row items-center gap-2 cursor-pointer'>
-                            <Link href={"/"} className='flex flex-row items-center'>
-                                <Image src={Logo} alt="Logo" className="h-12 w-12" />
-                                <span className="font-extrabold text-3xl text-[#cd2626]">SYNMAC</span>
-                                   <span className="font-extrabold text-3xl text-black font-bold">beta</span>
-                            </Link>
-                        </div>
+                    <ul className={`hidden md:flex items-center gap-6 text-sm font-medium ${!scrolled && !isMenuOpen ? "text-white" : "text-gray-700"}`}>
+                        <li
+                            className="relative group cursor-pointer"
+                            onMouseEnter={() => {
+                                if (window.innerWidth >= 768) {
+                                    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                                    setIsMenuOpen(true);
+                                }
+                            }}
+                            onMouseLeave={() => {
+                                if (window.innerWidth >= 768) {
+                                    hoverTimeoutRef.current = setTimeout(() => setIsMenuOpen(false), 200);
+                                }
+                            }}
+                        >
+                            <span>Industries</span>
+                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
+                        </li>
+                        <Link href="/product" className="relative group">
+                            <span>Products</span>
+                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                        <Link href="/resources" className="relative group">
+                            <span>Resources</span>
+                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                        <Link href="/about-us" className="relative group">
+                            <span>About us</span>
+                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                        <Link href="/contact-us" className="relative group">
+                            <span>Contact us</span>
+                            <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
+                        </Link>
+                        <FiSearch className="cursor-pointer" />
+                    </ul>
 
-                        <ul className={`hidden md:flex flex-row items-center gap-6 text-[16px] font-medium ${!scrolled && !isMenuOpen ? "" : "text-gray-700"}`}>
-                            <li
-                                className="relative group cursor-pointer"
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
+                    <div className="md:hidden">
+                        {!isMenuOpen ? (
+                            <HiMenuAlt3
+                                className={`text-2xl cursor-pointer ${!scrolled && !isMenuOpen ? "text-white" : "text-gray-700"}`}
+                                onClick={() => setIsMenuOpen(true)}
+                            />
+                        ) : (
+                            <IoClose
+                                className="text-2xl cursor-pointer text-gray-700"
+                                onClick={closeMenu}
+                            />
+                        )}
+                    </div>
+                </div>
+            </div>
+
+
+            {isMenuOpen && typeof window !== 'undefined' && window.innerWidth >= 768 && activeIndustry && (
+                <div
+                    className="hidden md:block fixed left-0 right-0 z-40"
+                    onMouseEnter={() => {
+                        if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+                        setIsMenuOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                        hoverTimeoutRef.current = setTimeout(() => setIsMenuOpen(false), 200);
+                    }}
+                >
+                    <div className="max-w-6xl mx-auto ">
+                        <div className="w-full bg-white shadow-xl rounded-b-2xl overflow-hidden relative">
+                            <div className="grid grid-cols-5 gap-0">
+
+                                {/* Column 1: Feature */}
+                                <div className="col-span-1 bg-linear-to-br from-gray-50 to-gray-100  border-r border-gray-200 min-h-100">
+                                    {activeIndustry.feature_file_link && (
+
+                                        <img
+                                            src={activeIndustry.feature_file_link}
+                                            alt={activeIndustry.name}
+                                            className="w-full h-full  object-cover"
+                                        />
+
+                                    )}
+
+                                </div>
+
+                                {/* Column 2: Industries */}
+                                <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white px-3 py-2">
+                                        <h3 className="text-[11px] font-semibold text-gray-400">INDUSTRIES</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+
+                                    </div>
+                                    <div className="p-2">
+                                        {data.map((industry) => (
+                                            <Link
+                                                key={industry.id}
+                                                href={getIndustryUrl(industry)}
+                                                onMouseEnter={() => handleIndustryHover(industry)}
+                                                className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs mb-0.5
+                                                    ${activeIndustry?.id === industry.id
+                                                        ? "bg-[#cd2626]/10 text-[#cd2626]"
+                                                        : "text-gray-700 hover:bg-gray-50"
+                                                    }
+                                                `}
+                                            >
+                                                <span className="truncate">{industry.name}</span>
+                                                <FaAngleRight className="text-[10px]" />
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Column 3: Sub Industries */}
+                                <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white px-3 py-2">
+                                        <h3 className="text-[11px] font-semibold text-gray-400">SUB INDUSTRIES</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                    </div>
+                                    <div className="p-2">
+                                        {hasSubIndustries(activeIndustry) ? (
+                                            activeIndustry.sub_industry?.map((sub) => (
+                                                <Link
+                                                    key={sub.id}
+                                                    href={getSubIndustryUrl(activeIndustry, sub)}
+                                                    onMouseEnter={() => handleSubIndustryHover(sub)}
+                                                    className={`block px-3 py-2 rounded-lg text-xs mb-0.5
+                                                        ${activeSubIndustry?.id === sub.id
+                                                            ? "bg-[#cd2626]/10 text-[#cd2626]"
+                                                            : "text-gray-700 hover:bg-gray-50"
+                                                        }
+                                                    `}
+                                                >
+                                                    {sub.name}
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <div className="px-3 py-4 text-center text-xs text-gray-400">
+                                                No sub industries
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Column 4: Categories */}
+                                <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white px-3 py-2">
+                                        <h3 className="text-[11px] font-semibold text-gray-400">CATEGORIES</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                    </div>
+                                    <div className="p-2">
+
+
+
+
+
+
+
+
+                                        {activeSubIndustry && hasCategories(activeSubIndustry) ? (
+                                            activeSubIndustry.product_category?.map((cat) => (
+                                                <Link
+                                                    key={cat.id}
+                                                    href={getCategoryUrl(activeIndustry, activeSubIndustry, cat)}
+                                                    onMouseEnter={() => setActiveCategory(cat)}
+                                                    className={`block px-3 py-2 rounded-lg text-xs mb-0.5
+                                                        ${activeCategory?.id === cat.id
+                                                            ? "bg-[#cd2626]/10 text-[#cd2626]"
+                                                            : "text-gray-700 hover:bg-gray-50"
+                                                        }
+                                                    `}
+                                                >
+                                                    {cat.name}
+                                                </Link>
+                                            ))
+                                        ) : activeIndustry && hasDirectCategories(activeIndustry) ? (
+                                            activeIndustry.product_category?.map((cat) => (
+                                                <Link
+                                                    key={cat.id}
+                                                    href={getCategoryUrl(activeIndustry, null, cat)}
+                                                    onMouseEnter={() => setActiveCategory(cat)}
+                                                    className={`block px-3 py-2 rounded-lg text-xs mb-0.5
+                ${activeCategory?.id === cat.id
+                                                            ? "bg-[#cd2626]/10 text-[#cd2626]"
+                                                            : "text-gray-700 hover:bg-gray-50"
+                                                        }
+            `}
+                                                >
+                                                    {cat.name}
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <div className="px-3 py-4 text-center text-xs text-gray-400">
+                                                No categories
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Column 5: Products */}
+                                <div className="col-span-1 bg-white overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white px-3 py-2">
+                                        <h3 className="text-[11px] font-semibold text-gray-400">PRODUCTS</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                    </div>
+                                    <div className="p-2">
+                                        {products.length > 0 ? (
+                                            products.map((product) => (
+                                                <Link
+                                                    key={product.id}
+                                                    href={getProductUrl(product)}
+                                                    className="block px-3 py-2 rounded-lg text-xs mb-0.5 text-gray-700 hover:bg-gray-50"
+                                                >
+                                                    {product.name}
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <div className="px-3 py-4 text-center text-xs text-gray-400">
+                                                No products
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={closeMenu}
+                                className="absolute top-2 right-2 p-1 hover:bg-gray-100 rounded-full"
                             >
-                                <span>Industries</span>
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                            </li>
-                            <Link href="/product" className="relative group cursor-pointer">
-                                <span>Products</span>
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                            <Link
-                            href={"/resources"}
-                             className="relative group cursor-pointer">
-                                <span>Resources</span>
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                            <Link href='/about-us' className="relative group cursor-pointer">
-                                <span>About us</span>
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                            <Link href='/contact-us' className="relative group cursor-pointer">
-                                <span>Contact us</span>
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
-                             <li className="relative group cursor-pointer">
-                               <FiSearch/>
-                            </li>
-                        </ul>
-
-                        {/* Mobile Hamburger Menu */}
-                        <div className="md:hidden">
-                            {!isMenuOpen ? (
-                                <HiMenuAlt3
-                                    className={`text-2xl cursor-pointer ${!scrolled && !isMenuOpen ? "text-white" : "text-gray-700"}`}
-                                    onClick={() => setIsMenuOpen(true)}
-                                />
-                            ) : (
-                                <IoClose
-                                    className="text-2xl cursor-pointer text-gray-700"
-                                    onClick={() => closeMenu()}
-                                />
-                            )}
+                                <IoClose size={18} className="text-gray-400" />
+                            </button>
                         </div>
                     </div>
                 </div>
-                {/* Mobile Menu */}
-                {isMenuOpen && (
-                    <div className="md:hidden fixed inset-0 top-0 bg-white z-50 overflow-y-auto">
+            )}
 
-                        {/* HEADER */}
-                        <div className="flex items-center justify-between p-4 border-b">
-                            <h2 className="text-xl font-bold">Menu</h2>
-                            <IoClose
-                                className="text-2xl cursor-pointer"
-                                onClick={closeMenu}
-                            />
-                        </div>
-
-                        {/* MAIN NAV LINKS */}
-                        {!showSubmarkets && !selectedIndustry && (
-                            <div className="p-4 flex flex-col gap-4">
-
-                                {/* INDUSTRIES */}
-                                <div className="flex justify-between items-center border-b pb-3">
-                                    <span
-                                        className="text-lg font-medium cursor-pointer"
-                                        onClick={() => setShowSubmarkets(true)}
-                                    >
-                                        Industries
-                                    </span>
-                                    <FaAngleRight
-                                        className="cursor-pointer"
-                                        onClick={() => setShowSubmarkets(true)}
-                                    />
-                                </div>
-
-                                <Link href="/product" onClick={closeMenu}>Products</Link>
-                                <Link href="/about-us" onClick={closeMenu}>About Us</Link>
-                                <Link href="/contact-us" onClick={closeMenu}>Contact Us</Link>
-                            </div>
+            {/* Mobile Menu - Simplified */}
+            {isMenuOpen && typeof window !== 'undefined' && window.innerWidth < 768 && (
+                <div className="md:hidden fixed inset-0 top-0 bg-white z-50 overflow-y-auto">
+                    <div className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
+                        {mobileView !== 'main' && (
+                            <button onClick={() => {
+                                if (mobileView === 'products') {
+                                    if (selectedCategory) setMobileView('categories');
+                                    else if (selectedSubIndustry) setMobileView('subIndustries');
+                                    else setMobileView('industries');
+                                } else if (mobileView === 'categories') {
+                                    if (selectedSubIndustry) setMobileView('subIndustries');
+                                    else setMobileView('industries');
+                                } else if (mobileView === 'subIndustries') {
+                                    setMobileView('industries');
+                                } else if (mobileView === 'industries') {
+                                    setMobileView('main');
+                                }
+                                setSelectedCategory(null);
+                                setSelectedSubIndustry(null);
+                                setSelectedIndustry(null);
+                            }} className="p-1">
+                                <MdArrowBack className="text-2xl" />
+                            </button>
                         )}
-
-                        {/* INDUSTRY LIST */}
-                        {showSubmarkets && !selectedIndustry && (
-                            <div className="p-4">
-
-                                {/* BACK */}
-                                <div className="flex items-center gap-3 mb-4">
-                                    <MdArrowBack
-                                        className="text-2xl cursor-pointer"
-                                        onClick={() => setShowSubmarkets(false)}
-                                    />
-                                    <h2 className="text-xl font-bold">Industries</h2>
-                                </div>
-
-                                {data.map((item: any) => (
-                                    <div
-                                        key={item.id}
-                                        className="flex justify-between items-center py-3 border-b"
-                                    >
-                                        {/* TEXT → PAGE */}
-                                        <span
-                                            className="cursor-pointer"
-                                            onClick={() => {
-                                                router.push(`/industry/${item.slug}/${item.id}`);
-                                                closeMenu();
-                                            }}
-                                        >
-                                            {item.name}
-                                        </span>
-
-                                        {/* ARROW → SUB INDUSTRY */}
-                                        <FaAngleRight
-                                            className="cursor-pointer"
-                                            onClick={() => setSelectedIndustry(item)}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* SUB INDUSTRY LIST */}
-                        {selectedIndustry && !activeSubIndustry && (
-                            <div className="p-4">
-
-                                {/* BACK */}
-                                <div className="flex items-center gap-3 mb-4">
-                                    <MdArrowBack
-                                        className="text-2xl cursor-pointer"
-                                        onClick={() => setSelectedIndustry(null)}
-                                    />
-                                    <h2 className="text-xl font-bold">
-                                        {selectedIndustry.name}
-                                    </h2>
-                                </div>
-
-                                {selectedIndustry.sub_industry?.map((sub: any) => (
-                                    <div
-                                        key={sub.id}
-                                        className="flex justify-between items-center py-3 border-b"
-                                    >
-                                        {/* TEXT → PAGE */}
-                                        <span
-                                            className="cursor-pointer"
-                                            onClick={() => {
-                                                router.push(`/industry/${selectedIndustry.slug}/${selectedIndustry.id}/${sub.slug}/${sub.id}`);
-                                                closeMenu();
-                                            }}
-                                        >
-                                            {sub.name}
-                                        </span>
-
-                                        {/* ARROW → CATEGORY */}
-                                        <FaAngleRight
-                                            className="cursor-pointer"
-                                            onClick={() => setActiveSubIndustry(sub)}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* CATEGORY LIST */}
-                        {activeSubIndustry && (
-                            <div className="p-4">
-
-                                {/* BACK */}
-                                <div className="flex items-center gap-3 mb-4">
-                                    <MdArrowBack
-                                        className="text-2xl cursor-pointer"
-                                        onClick={() => setActiveSubIndustry(null)}
-                                    />
-                                    <h2 className="text-xl font-bold">
-                                        {activeSubIndustry.name}
-                                    </h2>
-                                </div>
-
-                                {activeSubIndustry.product_category?.map((cat: any) => (
-                                    <div
-                                        key={cat.id}
-                                        className="py-3 border-b cursor-pointer"
-                                        onClick={() => {
-                                            router.push(`/industry/${selectedIndustry.slug}/${selectedIndustry.id}/${activeSubIndustry.slug}/${activeSubIndustry.id}/${cat.slug}/${cat.id}`);
-                                            closeMenu();
-                                        }}
-                                    >
-                                        {cat.name}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        <h2 className="text-lg font-semibold flex-1 text-center">
+                            {mobileView === 'main' && 'Menu'}
+                            {mobileView === 'industries' && 'Industries'}
+                            {mobileView === 'subIndustries' && selectedIndustry?.name}
+                            {mobileView === 'categories' && (selectedSubIndustry?.name || selectedIndustry?.name)}
+                            {mobileView === 'products' && (selectedCategory?.name || selectedSubIndustry?.name || 'Products')}
+                        </h2>
+                        <button onClick={closeMenu} className="p-1">
+                            <IoClose className="text-2xl" />
+                        </button>
                     </div>
-                )}
 
-           
-                {isMenuOpen && window.innerWidth >= 768 && activeData && (
-                    <div
-                        className="hidden md:block fixed left-0 right-0  z-40"
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        <div className="text-black max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[80vh]">
-                            <div className="w-full bg-white flex overflow-hidden">
-                                {/* Industries Column */}
-                                <div className='w-1/3 border-r border-gray-100 bg-gray-50/30 overflow-y-auto max-h-[80vh]'>
-                                    <ul className="flex flex-col gap-1 p-3">
-                                        {[...data].map((item: any) => (
-                                            <div key={item.id}>
-                                                <Link
-                                                    href={`/industry/${item.slug}/${item.id}`}
-                                                    onMouseEnter={() => {
-                                                        setActiveData(item);
-                                                        setActiveSubIndustry(item?.sub_industry?.[0] || null);
-                                                    }}
-                                                    className={`group py-2 px-4 cursor-pointer transition-all flex justify-between items-center
-                                                        ${activeData?.id === item.id ? "bg-[#cd2626]/10 text-[#cd2626]" : "hover:bg-[#cd2626]/10"}
-                                                    `}
-                                                >
-                                                    <span>{item.name}</span>
-                                                    <FaAngleRight className="text-xs" />
-                                                </Link>
-                                            </div>
-                                        ))}
-                                    </ul>
-                                </div>
+                    <div className="p-4">
+                        {mobileView === 'main' && (
+                            <div className="space-y-4">
+                                <button onClick={() => setMobileView('industries')} className="w-full flex justify-between items-center py-3 border-b">
+                                    <span className="text-base font-medium">Industries</span>
+                                    <FaAngleRight />
+                                </button>
+                                <Link href="/product" onClick={closeMenu} className="block py-3 border-b">Products</Link>
+                                <Link href="/resources" onClick={closeMenu} className="block py-3 border-b">Resources</Link>
+                                <Link href="/about-us" onClick={closeMenu} className="block py-3 border-b">About Us</Link>
+                                <Link href="/contact-us" onClick={closeMenu} className="block py-3 border-b">Contact Us</Link>
+                            </div>
+                        )}
 
-                                {/* Sub-industries Column */}
-                                <div className="w-1/3 border-r border-gray-100 bg-white overflow-y-auto max-h-[80vh]">
-                                    <ul className="flex flex-col gap-1 p-3">
-                                        {activeData?.sub_industry?.map((sub: any) => (
-                                            <li key={sub.id}>
-                                                <Link
-                                                    href={`/industry/${activeData.slug}/${activeData.id}/${sub.slug}/${sub.id}`}
-                                                    onMouseEnter={() => setActiveSubIndustry(sub)}
-                                                    className={`group py-2 px-4 cursor-pointer transition-all flex justify-between items-center
-                                                        ${activeSubIndustry?.id === sub.id ? "bg-[#cd2626]/10 text-[#cd2626]" : "hover:bg-[#cd2626]/10"}
-                                                    `}
-                                                >
-                                                    <span>{sub.name}</span>
-                                                    <FaAngleRight className="text-xs" />
-                                                </Link>
-                                            </li>
-                                        ))}
-                                        {(!activeData?.sub_industry || activeData.sub_industry.length === 0) && (
-                                            <li className="py-2 px-4 text-gray-400 text-sm">
-                                                No sub-industries available
-                                            </li>
-                                        )}
-                                    </ul>
-                                </div>
-
-                                {/* Categories Column */}
-                                <div className="w-1/3 bg-white overflow-y-auto max-h-[80vh] relative">
-                                    <div className="p-4">
-                                        <h3 className="text-sm font-semibold mb-3 text-gray-600">
-                                            {activeSubIndustry?.name || "Product Categories"}
-                                        </h3>
-
-                                        {activeSubIndustry?.product_category?.map((cat: any) => (
-                                            <Link
-                                                key={cat.id}
-                                                href={`/industry/${activeData.slug}/${activeData.id}/${activeSubIndustry.slug}/${activeSubIndustry.id}/${cat.slug}/${cat.id}`}
-                                                className="block py-2 px-3 hover:bg-gray-100 rounded-md transition text-gray-700 hover:text-[#cd2626]"
-                                            >
-                                                {cat.name}
-                                            </Link>
-                                        ))}
-
-                                        {activeSubIndustry && (!activeSubIndustry.product_category || activeSubIndustry.product_category.length === 0) && (
-                                            <p className="text-gray-400 text-sm px-3">
-                                                No categories available
-                                            </p>
-                                        )}
-
-                                        {!activeSubIndustry && (
-                                            <p className="text-gray-400 text-sm px-3">
-                                                Hover on any sub-industry to see categories
-                                            </p>
-                                        )}
-                                    </div>
+                        {mobileView === 'industries' && (
+                            <div>
+                                {data.map((industry) => (
                                     <button
-                                        onClick={() => closeMenu()}
-                                        className="absolute top-2 right-2 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                        key={industry.id}
+                                        onClick={() => {
+                                            setSelectedIndustry(industry);
+                                            if (hasSubIndustries(industry)) setMobileView('subIndustries');
+                                            else if (hasDirectCategories(industry)) setMobileView('categories');
+                                            else if (hasDirectProducts(industry)) setMobileView('products');
+                                        }}
+                                        className="w-full flex justify-between items-center py-3 border-b"
                                     >
-                                        <IoClose size={24} className="text-gray-500 hover:text-[#cd2626]" />
+                                        <span>{industry.name}</span>
+                                        <FaAngleRight />
                                     </button>
-                                </div>
+                                ))}
                             </div>
-                        </div>
-                    </div>
-                )}
-            </nav>
-        </>
-    )
-}
+                        )}
 
-export default Navbar
+                        {mobileView === 'subIndustries' && selectedIndustry && (
+                            <div>
+                                {selectedIndustry.sub_industry?.map((sub) => (
+                                    <button
+                                        key={sub.id}
+                                        onClick={() => {
+                                            setSelectedSubIndustry(sub);
+                                            if (hasCategories(sub)) setMobileView('categories');
+                                            else if (hasDirectProductsInSub(sub)) setMobileView('products');
+                                        }}
+                                        className="w-full flex justify-between items-center py-3 border-b"
+                                    >
+                                        <span>{sub.name}</span>
+                                        <FaAngleRight />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {mobileView === 'categories' && selectedSubIndustry && (
+                            <div>
+                                {selectedSubIndustry.product_category?.map((cat) => (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => {
+                                            setSelectedCategory(cat);
+                                            if (hasProductsInCategory(cat)) setMobileView('products');
+                                        }}
+                                        className="w-full flex justify-between items-center py-3 border-b"
+                                    >
+                                        <span>{cat.name}</span>
+                                        <FaAngleRight />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {mobileView === 'products' && (
+                            <div>
+                                {selectedCategory?.products?.map((product) => (
+                                    <Link
+                                        key={product.id}
+                                        href={getProductUrl(product)}
+                                        onClick={closeMenu}
+                                        className="block py-3 border-b"
+                                    >
+                                        {product.name}
+                                    </Link>
+                                ))}
+                                {!selectedCategory && selectedSubIndustry?.products?.map((product) => (
+                                    <Link
+                                        key={product.id}
+                                        href={getProductUrl(product)}
+                                        onClick={closeMenu}
+                                        className="block py-3 border-b"
+                                    >
+                                        {product.name}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+        </nav>
+    );
+};
+
+export default Navbar;

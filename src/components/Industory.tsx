@@ -47,14 +47,14 @@ const Industory = ({ industoryData }: any) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {visibleData.map((item: any, i: any) => (
               <div key={i} className="bg-[#333737] overflow-hidden group">
-                <img src={item.image} alt={item.name} className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500" />
+                <img src={item.feature_file_link} alt={item.name} className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500" />
                 <div className="py-4 sm:py-6 flex justify-between items-start gap-4">
                   <div className="flex-1">
                     <Link href={`/industry/${industoryData.slug}/${item.slug}`} className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition">
                       {item.name}
                     </Link>
                     <p
-                      dangerouslySetInnerHTML={{ __html: item.description }} className="text-white text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
+                      dangerouslySetInnerHTML={{ __html: item.hero_background_description }} className="text-white text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
                   </div>
                   <div className="bg-[#cd2626] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-xl sm:text-2xl flex-shrink-0 group-hover:translate-x-1 transition">
                     <IoIosArrowRoundForward />

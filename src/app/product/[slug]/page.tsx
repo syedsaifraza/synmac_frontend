@@ -3,6 +3,7 @@ import React from 'react';
 import { LiaAngleRightSolid } from 'react-icons/lia';
 
 import { FaLock, FaLockOpen } from "react-icons/fa";
+import Header from '@/components/Header';
 
 async function getProduct(slug: any) {
   const res = await fetch(
@@ -40,11 +41,12 @@ const Page = async ({ params }: any) => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
+      
+
       <div className="relative bg-gray-900 text-white">
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src={productData?.hero_background_file_url || productData?.image}
+            src={ productData?.image}
             alt={productData?.hero_background_title || "Product Hero"}
             className="w-full h-full object-cover opacity-40"
           />
@@ -137,7 +139,7 @@ const Page = async ({ params }: any) => {
 
             {/* Uses Section */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-gradient-to-r from-gray-50/40 to-white">
+              <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-linear-to-r from-gray-50/40 to-white">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 tracking-tight">
                   Uses
                 </h2>
@@ -148,7 +150,7 @@ const Page = async ({ params }: any) => {
                 {
                   productData.usecases.map((use:any)=>(
  <li className="px-4 sm:px-6 py-3 sm:py-3.5 text-gray-700 flex items-start gap-2 sm:gap-3 text-sm sm:text-base">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0"></span>
                   <span className="flex-1">{use.title}</span>
                 </li>
                   ))
@@ -160,7 +162,7 @@ const Page = async ({ params }: any) => {
 
             {/* Benefits Section */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-gradient-to-r from-gray-50/40 to-white">
+              <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-linear-to-r from-gray-50/40 to-white">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 tracking-tight">
                   Benefits
                 </h2>
@@ -171,7 +173,7 @@ const Page = async ({ params }: any) => {
                 {
                   productData.benefits.map((prod:any)=>(
                      <li className="px-4 sm:px-6 py-3 sm:py-3.5 text-gray-700 flex items-start gap-2 sm:gap-3 text-sm sm:text-base">
-                  <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-medium flex-shrink-0 mt-0.5">✓</span>
+                  <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-medium shrink-0 mt-0.5">✓</span>
                   <span className="flex-1">{prod.title}</span>
                 </li>
                   ))
