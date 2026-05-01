@@ -41,9 +41,12 @@ const Page = async ({ params }: any) => {
 
   return (
     <div className="min-h-screen bg-white">
+
+
+      <Header title={productData?.name} description={" "} background_image={productData?.hero_background_file_url} />
       
 
-      <div className="relative bg-gray-900 text-white">
+      {/* <div className="relative bg-gray-900 text-white">
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={ productData?.image}
@@ -73,7 +76,7 @@ const Page = async ({ params }: any) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0">

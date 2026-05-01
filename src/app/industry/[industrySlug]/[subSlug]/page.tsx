@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Industory from "@/components/Industory";
 import Product_Category_Section from "@/components/Product_Category_Section";
 import Sub_IndustrySection from "@/components/Sub_IndustrySection";
+import SubIndustries from "@/components/SubIndustries";
 import Link from "next/link";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LiaAngleRightSolid } from "react-icons/lia";
@@ -68,7 +69,7 @@ const Page = async ({ params }: any) => {
         </div>
       </div>
 
-
+errrr
       < About_Soluctions
         heading={data?.data?.feature_title}
         description={data?.data?.feature_description}
@@ -79,12 +80,15 @@ const Page = async ({ params }: any) => {
 
       <Product_Category_Section data={data?.data?.product_category} />
 
+  
+
       <Sub_IndustrySection
         data={data.data}
         faqs={data?.data?.faqs}
         info={info}
         Resources={resources}
       />
+          <SubIndustries industry={data?.data?.relatedSubIndustry}/>
 
     </div>
   );

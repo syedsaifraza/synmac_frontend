@@ -1,87 +1,105 @@
 'use client'
 
-import { Search } from 'lucide'
 import { FaLock, FaLockOpen } from "react-icons/fa";
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import React, { useState } from 'react'
+import { useSearchParams, usePathname } from 'next/navigation'
+import React, { useState, useEffect } from 'react'
 import { BiSearch } from 'react-icons/bi'
-import { BsEye } from 'react-icons/bs'
-import { Fa500Px } from 'react-icons/fa'
 import { FaX } from 'react-icons/fa6'
 import { useRouter } from "next/navigation";
 
 const ProductListSection = ({ industry, sub_industry, product_category, product }: any) => {
-
-
-    console.log(product)
-
     const searchParams = useSearchParams();
-
-    const productname = searchParams.get("productname");
-    const productcategoryname = searchParams.get("productcategoryname")
-    const industryname = searchParams.get("industryname")
-    const sub_industry_name = searchParams.get("subindustryname")
-
-    console.log(productname, productcategoryname, industryname, sub_industry_name)
-
+    const pathname = usePathname();
     const router = useRouter();
 
-    const [selected, setSelected] = useState("");
-    const [search, setSearch] = useState<any>(productname);
+    // State for UI
+    const [search, setSearch] = useState<string>("");
     const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-
     const [filters, setFilters] = useState({
-        industry: industryname ? industryname : "",
-        subIndustry: sub_industry_name ? sub_industry_name : "",
-        category: productcategoryname ? productcategoryname : "",
+        industry: "",
+        subIndustry: "",
+        category: "",
     });
 
+    // 🔥 IMPORTANT: useEffect to sync with URL parameters
+    useEffect(() => {
+        // Read all params from URL
+        const productname = searchParams.get("productname");
+        const productcategoryname = searchParams.get("productcategoryname");
+        const industryname = searchParams.get("industryname");
+        const subindustryname = searchParams.get("subindustryname");
+        const searchQuery = searchParams.get("search"); // New search param
 
+        // Update search state
+        if (searchQuery) {
+            setSearch(searchQuery);
+        } else if (productname) {
+            setSearch(productname);
+        } else {
+            setSearch("");
+        }
+
+        // Update filters state
+        setFilters({
+            industry: industryname || "",
+            subIndustry: subindustryname || "",
+            category: productcategoryname || "",
+        });
+
+    }, [searchParams, pathname]); // Re-run when URL changes
+
+    // Filter products based on current state
     const filterProduct = product?.data?.filter((pro: any) => {
-        const matchIndustry =
-            !filters.industry || pro?.industry_name === filters.industry;
-
-        const matchSubIndustry =
-            !filters.subIndustry ||
-            pro?.sub_industry_name === filters.subIndustry;
-
-        const matchCategory =
-            !filters.category ||
-            pro?.product_category_name === filters.category;
-
-        const matchSearch =
-            !search ||
-            pro?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        const matchIndustry = !filters.industry || pro?.industry_name === filters.industry;
+        const matchSubIndustry = !filters.subIndustry || pro?.sub_industry_name === filters.subIndustry;
+        const matchCategory = !filters.category || pro?.product_category_name === filters.category;
+        const matchSearch = !search || 
+            pro?.name?.toLowerCase().includes(search.toLowerCase()) || 
             pro?.description?.toLowerCase().includes(search.toLowerCase());
 
-        return (
-            matchIndustry &&
-            matchSubIndustry &&
-            matchCategory &&
-            matchSearch
-        );
+        return matchIndustry && matchSubIndustry && matchCategory && matchSearch;
     }) || [];
 
-    const handleFilterChange = (type: any, value: any) => {
-        setFilters((prev: any) => ({
-            ...prev,
-            [type]: prev[type] === value ? "" : value,
-        }));
+    // Handle filter change - update URL
+    const handleFilterChange = (type: string, value: string) => {
+        const newFilters = { ...filters, [type]: filters[type as keyof typeof filters] === value ? "" : value };
+        
+        // Build new URL params
+        const params = new URLSearchParams();
+        if (newFilters.industry) params.set("industryname", newFilters.industry);
+        if (newFilters.subIndustry) params.set("subindustryname", newFilters.subIndustry);
+        if (newFilters.category) params.set("productcategoryname", newFilters.category);
+        if (search) params.set("search", search);
+        
+        // Update URL without refresh
+        router.push(`/product?${params.toString()}`, { scroll: false });
+    };
+
+    // Handle search input change
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearch(value);
+        
+        // Update URL with search param
+        const params = new URLSearchParams(searchParams.toString());
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        router.push(`/product?${params.toString()}`, { scroll: false });
     };
 
     // Clear all filters
     const clearAllFilters = () => {
-        setFilters({
-            industry: "",
-            subIndustry: "",
-            category: "",
-        });
         setSearch("");
-        router.replace("/product");
+        setFilters({ industry: "", subIndustry: "", category: "" });
+        router.push("/product"); // Clear all params
     };
 
+    // Filtered data for sidebar
     const filteredIndustries = industry?.data?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
@@ -94,7 +112,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    // Filter sidebar content
+    // Filter Sidebar Component
     const FilterSidebar = () => (
         <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="relative mb-4">
@@ -114,7 +132,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     <div className="flex justify-between items-center mb-3">
                         <h2 className="font-semibold text-gray-800">Industry</h2>
                     </div>
-                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                    <div className="space-y-2 max-h-50 overflow-y-auto">
                         {filteredIndustries.length > 0 ? (
                             filteredIndustries.map((item: any) => (
                                 <label
@@ -146,7 +164,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     <div className="flex justify-between items-center mb-3">
                         <h2 className="font-semibold text-gray-800">Sub Industry</h2>
                     </div>
-                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                    <div className="space-y-2 max-h-50 overflow-y-auto">
                         {filteredSubIndustries.length > 0 ? (
                             filteredSubIndustries.map((item: any) => (
                                 <label
@@ -178,7 +196,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     <div className="flex justify-between items-center mb-3">
                         <h2 className="font-semibold text-gray-800">Product Category</h2>
                     </div>
-                    <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                    <div className="space-y-2 max-h-50 overflow-y-auto">
                         {filteredCategories.length > 0 ? (
                             filteredCategories.map((item: any) => (
                                 <label
@@ -222,24 +240,29 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     </p>
                 </div>
 
-
+                {/* Search Input */}
                 <div className="relative max-w-2xl mb-4 sm:mb-6">
                     <BiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                     <input
                         type="text"
                         placeholder="Search products by name or description..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={handleSearchChange}
                         className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-4 rounded-xl border border-gray-300 bg-white text-gray-700 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626]"
                     />
                 </div>
 
-
+                {/* Active Filters Display */}
                 <div className="flex gap-2 flex-wrap mb-4 sm:mb-6">
                     {search && (
                         <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                             Search: "{search}"
-                            <button onClick={() => setSearch("")} className="hover:text-red-500">
+                            <button onClick={() => {
+                                setSearch("");
+                                const params = new URLSearchParams(searchParams.toString());
+                                params.delete("search");
+                                router.push(`/product?${params.toString()}`);
+                            }} className="hover:text-red-500">
                                 ✕
                             </button>
                         </div>
@@ -278,10 +301,10 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     </button>
                 </div>
 
-                {/* Main Content - Desktop and Mobile */}
+                {/* Main Content */}
                 <div className="flex flex-col lg:flex-row gap-5 lg:gap-6">
-                    {/* Desktop Sidebar - Hidden on mobile */}
-                    <div className="hidden lg:block lg:w-80 xl:w-96 flex-shrink-0">
+                    {/* Desktop Sidebar */}
+                    <div className="hidden lg:block lg:w-80 xl:w-96 shrink-0">
                         <div className="sticky top-24">
                             <FilterSidebar />
                         </div>
@@ -327,12 +350,13 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                                             <div className="flex-1 min-w-0">
                                                 <Link href={`/product/${pro?.slug}`}
-                                                    className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">{pro?.name}</Link>
-                                                <p dangerouslySetInnerHTML={{ __html: pro?.description }} className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4" />
+                                                    className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">
+                                                    {pro?.name}
+                                                </Link>
+                                                <p dangerouslySetInnerHTML={{ __html: pro?.description }} 
+                                                    className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4" />
                                                 <div className="flex flex-wrap gap-1.5">
-
                                                     <div className='flex flex-row w-full justify-between'>
-
                                                         <div>
                                                             {pro?.industry_name && (
                                                                 <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
@@ -351,23 +375,19 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                             )}
                                                         </div>
 
-
-
                                                         <div className="flex flex-row items-center gap-2 shrink-0">
-
-                                                            {/* TDS */}
                                                             {pro?.tds_doc && (
                                                                 <a
                                                                     href={!pro?.is_tds_locked ? pro?.tds_doc : "#"}
                                                                     onClick={(e) => {
                                                                         if (pro?.is_tds_locked) {
-                                                                            e.preventDefault(); // block click
+                                                                            e.preventDefault();
                                                                         }
                                                                     }}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
-        ${pro?.is_tds_locked
+                                                                        ${pro?.is_tds_locked
                                                                             ? "bg-gray-400 cursor-not-allowed"
                                                                             : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
                                                                         }`}
@@ -377,7 +397,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                                 </a>
                                                             )}
 
-                                                            {/* MSDS */}
                                                             {pro?.msds_doc && (
                                                                 <a
                                                                     href={!pro?.is_msds_locked ? pro?.msds_doc : "#"}
@@ -389,7 +408,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
-        ${pro?.is_msds_locked
+                                                                        ${pro?.is_msds_locked
                                                                             ? "bg-gray-400 cursor-not-allowed"
                                                                             : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
                                                                         }`}
@@ -398,13 +417,10 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                                     MSDS
                                                                 </a>
                                                             )}
-
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 ))
@@ -427,4 +443,4 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
     )
 }
 
-export default ProductListSection
+export default ProductListSection;

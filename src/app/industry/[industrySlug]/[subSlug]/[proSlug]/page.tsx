@@ -3,7 +3,9 @@ import Faqs_Section from "@/components/Faqs_Section";
 import Header from "@/components/Header";
 import Industory from "@/components/Industory";
 import Product_Category from "@/components/Product_Category";
+import Product_Category_Section from "@/components/Product_Category_Section";
 import Product_Section from "@/components/Product_Section";
+import Related_Product_Category_Section from "@/components/RelatedProductCategory";
 import Link from "next/link";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { LiaAngleRightSolid } from "react-icons/lia";
@@ -73,6 +75,8 @@ const Page = async ({ params }: any) => {
         image={data.data.feature_file_link} />
 
       <Product_Section product_list={data?.data?.products} />
+
+       <Related_Product_Category_Section data={data?.data?.relatedProductCategory} />
 
 
       <Product_Category faqs={data?.data?.faqs}

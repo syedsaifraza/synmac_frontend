@@ -4,7 +4,7 @@ import React from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
 
-const Product_Category_Section = ({ data }: any) => {
+const Related_Product_Category_Section = ({ data }: any) => {
 
 
     console.log("product categories", data)
@@ -22,7 +22,7 @@ const Product_Category_Section = ({ data }: any) => {
         <div className="bg-[#333737] text-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-6 sm:mb-8 lg:mb-10">
-                    Product Categories
+                    Related Product Categories
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -72,4 +72,4 @@ const Product_Category_Section = ({ data }: any) => {
     );
 }
 
-export default Product_Category_Section
+export default Related_Product_Category_Section

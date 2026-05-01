@@ -52,6 +52,9 @@ interface Industry {
 }
 
 const Navbar = ({ data }: { data: Industry[] }) => {
+
+
+
     const router = useRouter();
     const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
@@ -69,11 +72,29 @@ const Navbar = ({ data }: { data: Industry[] }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
 
- const isHome = location.pathname === "/";
 
-     const textColor = isHome && !scrolled ? "text-primary-foreground" : "text-foreground";
-  const mutedColor = isHome && !scrolled ? "text-primary-foreground/70" : "text-muted-foreground";
 
+const isProductPage = pathname === '/product';
+    
+    // Determine navbar text color
+    const getNavbarTextColor = () => {
+        // Agar product page hai toh hamesha gray
+        if (isProductPage) return "text-gray-700";
+        
+        // Warna normal logic
+        return !scrolled && !isMenuOpen ? "text-white" : "text-gray-700";
+    };
+    
+    // Determine navbar background
+    const getNavbarBg = () => {
+        // Agar product page hai toh hamesha white background
+        if (isProductPage) return "bg-white shadow-md";
+        
+        // Warna normal logic
+        if (scrolled) return "bg-white shadow-md";
+        if (isMenuOpen) return "bg-white text-black";
+        return "bg-transparent text-white";
+    };
 
 
     const getProducts = () => {
@@ -230,7 +251,7 @@ const Navbar = ({ data }: { data: Industry[] }) => {
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-            <div className={`${scrolled ? "bg-white shadow-md" : `${isMenuOpen ? "bg-white text-black" : "bg-transparent text-white"}`} ${isMenuOpen && "border-b border-gray-200"}`}>
+      <div className={`${getNavbarBg()} ${isMenuOpen && "border-b border-gray-200"}`}>
                 <div className="max-w-6xl mx-auto flex items-center justify-between py-4">
                     <Link href="/" className="flex items-center gap-2">
                         <Image src={Logo} alt="Logo" className="h-10 w-10" />
@@ -238,7 +259,7 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                         <span className="font-extrabold text-2xl text-black">beta</span>
                     </Link>
 
-                    <ul className={`hidden md:flex items-center gap-6 text-sm font-medium ${!scrolled && !isMenuOpen ? "text-white" : "text-gray-700"}`}>
+                    <ul className={`hidden md:flex items-center gap-6 text-sm font-medium ${getNavbarTextColor()}`}>
                         <li
                             className="relative group cursor-pointer"
                             onMouseEnter={() => {
@@ -272,17 +293,28 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                             <span>Contact us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <button onClick={() => setSearchOpen(true)} className={textColor} aria-label="Search">
-              <FiSearch className='cursor-pointer' size={20} />
-            </button>
-            <LanguageSelector textColorClass={textColor} />
-           
+                        
+                        {/* Search Button */}
+                        <button 
+                            onClick={() => setSearchOpen(true)} 
+                            className={getNavbarTextColor()}
+                            aria-label="Search"
+                        >
+                            <FiSearch className='cursor-pointer' size={20} />
+                        </button>
+                        
+                        {/* Language Selector */}
+                        <LanguageSelector textColorClass={getNavbarTextColor()} />
                     </ul>
 
                     <div className="md:hidden">
                         {!isMenuOpen ? (
                             <HiMenuAlt3
-                                className={`text-2xl cursor-pointer ${!scrolled && !isMenuOpen ? "text-white" : "text-gray-700"}`}
+                                className={`text-2xl cursor-pointer ${
+                                    isProductPage 
+                                        ? "text-gray-700" 
+                                        : !scrolled && !isMenuOpen ? "text-white" : "text-gray-700"
+                                }`}
                                 onClick={() => setIsMenuOpen(true)}
                             />
                         ) : (
