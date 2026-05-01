@@ -2,13 +2,16 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import Logo from "../../public/favicon.png"
 import Image from 'next/image';
-import { FaAngleRight } from 'react-icons/fa';
+import { FaAngleRight, FaSearch } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
+import SearchOverlay from './SearchOverlay';
+import LanguageSelector from './LanguageSelector';
+import { FaMarsAndVenus } from 'react-icons/fa6';
 
 // Types
 interface Product {
@@ -62,6 +65,14 @@ const Navbar = ({ data }: { data: Industry[] }) => {
     const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
     const hoverTimeoutRef = useRef<any>(null);
     const [isClient, setIsClient] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+
+ const isHome = location.pathname === "/";
+
+     const textColor = isHome && !scrolled ? "text-primary-foreground" : "text-foreground";
+  const mutedColor = isHome && !scrolled ? "text-primary-foreground/70" : "text-muted-foreground";
 
 
 
@@ -261,7 +272,11 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                             <span>Contact us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <FiSearch className="cursor-pointer" />
+                        <button onClick={() => setSearchOpen(true)} className={textColor} aria-label="Search">
+              <FiSearch className='cursor-pointer' size={20} />
+            </button>
+            <LanguageSelector textColorClass={textColor} />
+           
                     </ul>
 
                     <div className="md:hidden">
@@ -296,21 +311,54 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                         <div className="w-full bg-white shadow-xl rounded-b-2xl overflow-hidden relative">
                             <div className="grid grid-cols-5 gap-0">
 
-                                {/* Column 1: Feature */}
-                                <div className="col-span-1 bg-linear-to-br from-gray-50 to-gray-100  border-r border-gray-200 min-h-100">
+                                <div className="col-span-1 p-2">
+
                                     {activeIndustry.feature_file_link && (
 
-                                        <img
-                                            src={activeIndustry.feature_file_link}
-                                            alt={activeIndustry.name}
-                                            className="w-full h-full  object-cover"
-                                        />
+                                        <div className=" overflow-hidden  transition duration-300 flex flex-col h-full">
+
+
+                                            <div className="w-full h-40 overflow-hidden rounded-2xl">
+                                                <img
+                                                    src={activeIndustry.feature_file_link}
+                                                    alt={activeIndustry.name}
+                                                    className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                                                />
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="p-4 flex flex-col grow">
+
+                                                {/* Title */}
+                                                <h1 className="text-lg font-semibold text-gray-800 mb-2">
+                                                    {activeIndustry.name}
+                                                </h1>
+
+                                                {/* Description */}
+                                                <p
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: activeIndustry.hero_background_description
+                                                    }}
+                                                    className="text-sm text-gray-600 line-clamp-3 mb-4"
+                                                />
+
+                                                {/* Button */}
+                                                <Link
+                                                    href={`/industry/${activeIndustry.slug}`}
+                                                    className="mt-auto inline-block text-center text-[#cd2626] border border-[#cd2626] px-4 py-2 rounded-lg hover:text-white hover:bg-[#cd2626] transition"
+                                                >
+                                                    Explore More
+                                                </Link>
+
+                                            </div>
+
+                                        </div>
 
                                     )}
 
                                 </div>
 
-                                {/* Column 2: Industries */}
+
                                 <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white px-3 py-2">
                                         <h3 className="text-[11px] font-semibold text-gray-400">INDUSTRIES</h3>
@@ -337,7 +385,6 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                                     </div>
                                 </div>
 
-                                {/* Column 3: Sub Industries */}
                                 <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white px-3 py-2">
                                         <h3 className="text-[11px] font-semibold text-gray-400">SUB INDUSTRIES</h3>
@@ -368,7 +415,7 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                                     </div>
                                 </div>
 
-                                {/* Column 4: Categories */}
+
                                 <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white px-3 py-2">
                                         <h3 className="text-[11px] font-semibold text-gray-400">CATEGORIES</h3>
@@ -423,7 +470,7 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                                     </div>
                                 </div>
 
-                                {/* Column 5: Products */}
+
                                 <div className="col-span-1 bg-white overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white px-3 py-2">
                                         <h3 className="text-[11px] font-semibold text-gray-400">PRODUCTS</h3>
@@ -460,7 +507,7 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                 </div>
             )}
 
-            {/* Mobile Menu - Simplified */}
+
             {isMenuOpen && typeof window !== 'undefined' && window.innerWidth < 768 && (
                 <div className="md:hidden fixed inset-0 top-0 bg-white z-50 overflow-y-auto">
                     <div className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
@@ -595,6 +642,8 @@ const Navbar = ({ data }: { data: Industry[] }) => {
                     </div>
                 </div>
             )}
+
+               <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
         </nav>
     );
 };
