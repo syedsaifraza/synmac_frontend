@@ -126,7 +126,7 @@ const IndustriesSection = async () => {
                 </div>
                 <div className="p-5">
                   <h3 className="font-semibold text-lg text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors">
-                    {industry.name}
+                    {industry?.name}
                     <BiChevronRight
                       size={18}
                       className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
@@ -135,7 +135,7 @@ const IndustriesSection = async () => {
 
 
                   {industry.hero_background_description && (
-                    <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description }}/>
+                    <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}/>
 
                      
 

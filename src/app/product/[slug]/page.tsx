@@ -162,7 +162,7 @@ const Page = async ({ params }: any) => {
 
             {/* Benefits Section */}
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-linear-to-r from-gray-50/40 to-white">
+              <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-lini-to-r from-gray-50/40 to-white">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 tracking-tight">
                   Benefits
                 </h2>
