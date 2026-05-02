@@ -229,7 +229,7 @@ export default function Contactus({ data }: any) {
         <div
           className=" h-100 flex justify-center  w-full"
           dangerouslySetInnerHTML={{
-            __html: data.map_embed_code
+            __html: data.map_embed_code || ""
           }}
         />
 

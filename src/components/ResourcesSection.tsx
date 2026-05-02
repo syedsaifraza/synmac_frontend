@@ -17,7 +17,7 @@ const ResourcesSection = ({resources}:any) => {
                             <div key={i} className="p-4 sm:p-5 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                                 <h3 className="font-semibold text-lg sm:text-xl text-gray-900 mb-2">{res.title}</h3>
 
-                                <p className="text-gray-600 text-sm sm:text-base mt-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: res.description }} />
+                                <p className="text-gray-600 text-sm sm:text-base mt-2 leading-relaxed" dangerouslySetInnerHTML={{ __html: res.description || "" }} />
 
                                 <a href={res.file} target="_blank" className="text-[#cd2626] text-sm sm:text-base mt-3 inline-block font-medium hover:underline">
                                     Check Documents →

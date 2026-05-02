@@ -304,7 +304,7 @@ const isProductPage = pathname === '/product';
                         </button>
                         
                         {/* Language Selector */}
-                        <LanguageSelector textColorClass={getNavbarTextColor()} />
+                        <LanguageSelector />
                     </ul>
 
                     <div className="md:hidden">
@@ -369,7 +369,7 @@ const isProductPage = pathname === '/product';
                                                 {/* Description */}
                                                 <p
                                                     dangerouslySetInnerHTML={{
-                                                        __html: activeIndustry.hero_background_description
+                                                        __html: activeIndustry.hero_background_description || ""
                                                     }}
                                                     className="text-sm text-gray-600 line-clamp-3 mb-4"
                                                 />

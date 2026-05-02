@@ -27,7 +27,7 @@ const Product_Category = ({ Resources }: any) => {
                         {Resources.map((res: any, i: any) => (
                             <div key={i} className="p-2">
                                 <h3 className="font-semibold text-xl">{res.title}</h3>
-                                <p dangerouslySetInnerHTML={{ __html: res.description }} className="text-gray-600 text-md mt-2" />
+                                <p dangerouslySetInnerHTML={{ __html: res.description || "" }} className="text-gray-600 text-md mt-2" />
                                 <a href={res.file} target="_blank" className="text-blue-600 text-sm mt-2 inline-block">
                                     Check Documents →
                                 </a>

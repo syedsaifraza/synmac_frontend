@@ -1,6 +1,6 @@
+'use client'
 import { useEffect, useState, useRef } from "react";
 import { FaGlobe } from "react-icons/fa";
-
 
 const languages = [
   { code: "en", label: "English" },
@@ -21,79 +21,85 @@ declare global {
   }
 }
 
-const LanguageSelector = ({ textColorClass }: { textColorClass: string }) => {
+const LanguageSelector = () => {
   const [open, setOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
   const ref = useRef<HTMLDivElement>(null);
 
+
   useEffect(() => {
-    // Load Google Translate script
-    if (!document.getElementById("google-translate-script")) {
-      window.googleTranslateElementInit = () => {
-        new window.google.translate.TranslateElement(
-          { pageLanguage: "en", autoDisplay: false },
-          "google_translate_element"
-        );
-      };
-      const script = document.createElement("script");
-      script.id = "google-translate-script";
-      script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      document.head.appendChild(script);
-    }
+    if (window.google && window.google.translate) return;
 
-    // Hide Google Translate bar via style
-    const style = document.createElement("style");
-    style.textContent = `
-      .goog-te-banner-frame, .skiptranslate, #google_translate_element { display: none !important; }
-      body { top: 0 !important; }
-      .goog-te-gadget { display: none !important; }
-    `;
-    document.head.appendChild(style);
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          autoDisplay: false,
+        },
+        "google_translate_element"
+      );
+    };
 
-    return () => { document.head.removeChild(style); };
+    const script = document.createElement("script");
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+
+    document.body.appendChild(script);
   }, []);
+
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
     };
+
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
 
   const selectLanguage = (langCode: string) => {
     setCurrentLang(langCode);
     setOpen(false);
 
-    // Trigger Google Translate
-    const select = document.querySelector<HTMLSelectElement>(".goog-te-combo");
-    if (select) {
-      select.value = langCode;
-      select.dispatchEvent(new Event("change"));
-    }
+    document.cookie = `googtrans=/en/${langCode}; path=/`;
+
+  
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   };
 
-  const currentLabel = languages.find((l) => l.code === currentLang)?.label || "EN";
+  const currentLabel =
+    languages.find((l) => l.code === currentLang)?.label || "EN";
 
   return (
     <div ref={ref} className="relative">
-      <div id="google_translate_element" className="hidden" />
+     
+      <div
+        id="google_translate_element"
+        style={{ display: "none" }}
+      />
+
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${textColorClass}`}
-        aria-label="Select language"
+        className="flex items-center gap-2 text-sm font-medium"
       >
         <FaGlobe size={16} />
-        <span className="hidden sm:inline">{currentLabel}</span>
+        <span>{currentLabel}</span>
       </button>
+
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-44 rounded-lg border border-border bg-background shadow-xl py-1 z-50 max-h-64 overflow-y-auto">
+        <div className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg z-50 max-h-64 overflow-y-auto">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => selectLanguage(lang.code)}
-              className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${
-                currentLang === lang.code ? "text-primary font-medium" : "text-foreground"
+              className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+                currentLang === lang.code ? "font-bold text-blue-600" : ""
               }`}
             >
               {lang.label}

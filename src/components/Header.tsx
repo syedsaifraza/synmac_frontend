@@ -25,7 +25,7 @@ export default function Header({ title, description, background_image, }: { titl
             <h1 className="text-3xl md:text-5xl font-bold leading-tight">
               {title}
             </h1>
-            <p dangerouslySetInnerHTML={{ __html: description }} className="mt-4 text-lg md:text-xl" />
+            <p dangerouslySetInnerHTML={{ __html: description || "" }} className="mt-4 text-lg md:text-xl" />
           </div>
         </div>
 

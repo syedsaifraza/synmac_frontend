@@ -33,7 +33,7 @@ const Page = async ({ params }: any) => {
     return (
       <div className="text-black py-8 sm:py-12 lg:py-16">
 
-        <p className="text-gray-600 text-base sm:text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: description }} />
+        <p className="text-gray-600 text-base sm:text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: description || "" }} />
 
       </div>
     );
@@ -110,7 +110,7 @@ const Page = async ({ params }: any) => {
               </a>
             )}
 
-            {/* MSDS */}
+           
             {productData.msds_doc && (
               <a
                 href={!productData?.is_msds_locked ? productData.msds_doc : "#"}
@@ -136,11 +136,11 @@ const Page = async ({ params }: any) => {
           </div>
         )}
 
-        {/* Uses and Benefits Section */}
+       
         <div className="py-6 sm:py-8 lg:py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
 
-            {/* Uses Section */}
+           
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-100 bg-linear-to-r from-gray-50/40 to-white">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 tracking-tight">
@@ -154,7 +154,10 @@ const Page = async ({ params }: any) => {
                   productData.usecases.map((use:any)=>(
  <li className="px-4 sm:px-6 py-3 sm:py-3.5 text-gray-700 flex items-start gap-2 sm:gap-3 text-sm sm:text-base">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0"></span>
-                  <span className="flex-1">{use.title}</span>
+                  
+                  <span  dangerouslySetInnerHTML={{
+                        __html: use.title || ""
+                      }} className="flex-1"></span>
                 </li>
                   ))
                 }
@@ -176,8 +179,10 @@ const Page = async ({ params }: any) => {
                 {
                   productData.benefits.map((prod:any)=>(
                      <li className="px-4 sm:px-6 py-3 sm:py-3.5 text-gray-700 flex items-start gap-2 sm:gap-3 text-sm sm:text-base">
-                  <span className="inline-flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-medium shrink-0 mt-0.5">✓</span>
-                  <span className="flex-1">{prod.title}</span>
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0"></span>
+                  <span  dangerouslySetInnerHTML={{
+                        __html: prod.title || ""
+                      }}  className="flex-1"></span>
                 </li>
                   ))
                 }

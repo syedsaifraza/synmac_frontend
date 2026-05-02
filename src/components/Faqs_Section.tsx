@@ -40,7 +40,7 @@ const Faqs_Section = ({ faqs }: Props) => {
                                 onClick={() => toggle(index)}
                                 className="w-full flex justify-between items-center p-4 sm:p-5 text-left font-semibold text-base sm:text-lg bg-white hover:bg-gray-50 transition-colors"
                             >
-                                <span dangerouslySetInnerHTML={{ __html: faq.question }} className="pr-4" />
+                                <span dangerouslySetInnerHTML={{ __html: faq.question || "" }} className="pr-4" />
                                 <span className="text-xl shrink-0">
                                     {activeIndex === index ? (<LiaAngleUpSolid />) : (<LiaAngleDownSolid />)}
                                 </span>
@@ -50,7 +50,7 @@ const Faqs_Section = ({ faqs }: Props) => {
                                 className={`px-4 sm:px-5 transition-all duration-300 ${activeIndex === index ? "max-h-96 pb-4 sm:pb-5" : "max-h-0 overflow-hidden"
                                     }`}
                             >
-                                <span dangerouslySetInnerHTML={{ __html: faq.answer }} className="text-gray-600 text-sm sm:text-base leading-relaxed" />
+                                <span dangerouslySetInnerHTML={{ __html: faq.answer || "" }} className="text-gray-600 text-sm sm:text-base leading-relaxed" />
                             </div>
                         </div>
                     ))}

@@ -1,50 +1,73 @@
 'use client'
 import Link from 'next/link';
-import { useState } from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
-const SubIndustries = ({industry}:any) => {
+const SubIndustries = ({ industry }: any) => {
 
-      if (!industry || industry?.length === 0) return null;
+  if (!industry || industry.length === 0) return null;
 
-   
+  return (
+    <div className="bg-[#2f3333] text-white py-16 px-4">
+      <div className="max-w-6xl mx-auto">
 
-    return (
-      <div className="bg-[#333737] text-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-6 sm:mb-8 lg:mb-10">
-            {/* {industoryData.tag_line} */}
+        {/* Heading */}
+        <h2 className="text-3xl font-semibold mb-10 tracking-tight">
+          Related Sub Industries
+        </h2>
 
-           Related Sub Industries
-          </h2>
+        {/* Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {industry.map((item: any, i: number) => {
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {industry.map((item: any, i: any) => (
-              <div key={i} className="bg-[#333737] overflow-hidden group">
-                <img src={item.feature_file_link} alt={item.name} className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500" />
-                <div className="py-4 sm:py-6 flex justify-between items-start gap-4">
-                  <div className="flex-1">
-                    <Link href={`/industry/${item.industry_slug}/${item.slug}`} className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition">
-                      {item.name}
-                    </Link>
-                    <p
-                      dangerouslySetInnerHTML={{ __html: item.hero_background_description }} className="text-white text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
-                  </div>
-                  <div className="bg-[#cd2626] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-xl sm:text-2xl shrink-0 group-hover:translate-x-1 transition">
-                    <IoIosArrowRoundForward />
-                  </div>
+            const url = `/industry/${item.industry_slug}/${item.slug}`;
+
+            return (
+              <Link
+                key={i}
+                href={url}
+                className="group block  rounded-xl overflow-hidden  transition"
+              >
+
+              
+                <div className="h-52 overflow-hidden">
+                  <img
+                    src={item.feature_file_link}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
                 </div>
-              </div>
-            ))}
-          </div>
 
-          
+             
+                <div className="p-5 flex items-start gap-4">
+ 
+              
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-gray-300 transition">
+                      {item.name}
+                    </h3>
 
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: item.hero_background_description || ""
+                      }}
+                      className="text-gray-400 text-sm line-clamp-3"
+                    />
+                  </div>
+
+                  {/* Arrow */}
+                  <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-1 group-hover:translate-x-1 transition">
+                    <IoIosArrowRoundForward className="text-xl text-white" />
+                  </div>
+
+                </div>
+              </Link>
+            );
+          })}
         </div>
-      </div>
-    );
-  
 
+      </div>
+    </div>
+  );
 }
 
 export default SubIndustries

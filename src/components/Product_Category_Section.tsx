@@ -1,75 +1,91 @@
 'use client'
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
-
 
 const Product_Category_Section = ({ data }: any) => {
 
+  const [showAll, setShowAll] = useState(false);
 
-    console.log("product categories", data)
-    const [showAll, setShowAll] = React.useState(false);
+  if (!data || data.length === 0) return null;
 
-    if (!data
-        || data
-            ?.length === 0) return null;
+  const visibleData = showAll ? data : data.slice(0, 3);
 
-    const visibleData = showAll ? data
-        : data
-            .slice(0, 3);
+  return (
+    <div className="bg-[#2f3333] text-white py-16 px-4">
+      <div className="max-w-6xl mx-auto">
 
-    return (
-        <div className="bg-[#333737] text-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-6xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl mb-6 sm:mb-8 lg:mb-10">
-                    Product Categories
-                </h2>
+    
+        <h2 className="text-3xl font-semibold mb-10 tracking-tight">
+          Product Categories
+        </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    {visibleData.map((item: any, i: any) => (
-                        <div key={i} className="bg-[#333737] overflow-hidden group">
-                            <img src={item.image} alt={item.name} className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition duration-500" />
-                            <div className="py-4 sm:py-6 flex justify-between items-start gap-4">
-                                <div className="flex-1">
-                                    <Link
+ 
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {visibleData.map((item: any, i: number) => {
 
-                                        href={`/industry/${item.industry_slug}/${item?.sub_industry_slug || " "}/${item.slug}`}
+            const url = `/industry/${item.industry_slug}/${item?.sub_industry_slug || ""}/${item.slug}`;
 
+            return (
+              <Link
+                key={i}
+                href={url}
+                className="group block rounded-xl overflow-hidden  transition"
+              >
 
-                                        className="text-lg sm:text-xl font-semibold hover:text-gray-300 transition">
-                                        {item.name}
-                                    </Link>
-                                    <p
-                                        dangerouslySetInnerHTML={{ __html: item.hero_background_description }} className="text-white text-sm sm:text-base mt-2 line-clamp-3 overflow-hidden" />
-                                </div>
-                                <div className="bg-[#cd2626] w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-xl sm:text-2xl shrink-0 group-hover:translate-x-1 transition">
-                                    <IoIosArrowRoundForward />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+              
+                <div className="h-52 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
                 </div>
 
-                {
-                    data
-                        .length > 3 && (
-                        <div className="flex mt-8 sm:mt-10">
-                            <button
-                                onClick={() => setShowAll(!showAll)}
-                                className="border border-white px-5 sm:px-6 py-2 rounded-full hover:bg-white hover:text-black transition text-sm sm:text-base"
-                            >
-                                {showAll ? "Show Less" : "Show All"}
-                            </button>
-                        </div>
-                    )
-                }
+                
+                <div className="p-5 flex items-start gap-4">
 
+               
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-gray-300 transition">
+                      {item.name}
+                    </h3>
 
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: item.hero_background_description || ""
+                      }}
+                      className="text-gray-400 text-sm line-clamp-3"
+                    />
+                  </div>
 
+                 
+                  <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-[2px] group-hover:translate-x-1 transition">
+                    <IoIosArrowRoundForward className="text-xl text-white" />
+                  </div>
 
-            </div>
+                </div>
+
+              </Link>
+            );
+          })}
         </div>
-    );
+
+      
+        {data.length > 3 && (
+          <div className="flex justify-center mt-12">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="border border-gray-400 px-6 py-2 rounded-full text-sm hover:bg-white hover:text-black transition"
+            >
+              {showAll ? "Show Less" : "Show All"}
+            </button>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
 }
 
 export default Product_Category_Section

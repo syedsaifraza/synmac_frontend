@@ -1,11 +1,9 @@
 import About_Soluctions from "@/components/About_Soluctions";
 import Header from "@/components/Header";
-import Industory from "@/components/Industory";
 import Product_Category_Section from "@/components/Product_Category_Section";
 import Sub_IndustrySection from "@/components/Sub_IndustrySection";
 import SubIndustries from "@/components/SubIndustries";
 import Link from "next/link";
-import { IoIosArrowRoundForward } from "react-icons/io";
 import { LiaAngleRightSolid } from "react-icons/lia";
 
 async function getUser(id: any) {
@@ -57,6 +55,8 @@ const Page = async ({ params }: any) => {
 
 
 
+      Sub Industyr Page
+
 
       <Header title={data?.data?.name} description={data?.data?.hero_background_description} background_image={data?.data?.hero_background_file_url} />
       <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
@@ -69,7 +69,6 @@ const Page = async ({ params }: any) => {
         </div>
       </div>
 
-errrr
       < About_Soluctions
         heading={data?.data?.feature_title}
         description={data?.data?.feature_description}
@@ -77,18 +76,16 @@ errrr
         sub_descriptiion={data?.data?.feature_sub_description}
         image={data?.data?.feature_file_link} />
 
-
       <Product_Category_Section data={data?.data?.product_category} />
-
-  
-
+     
       <Sub_IndustrySection
         data={data.data}
         faqs={data?.data?.faqs}
         info={info}
         Resources={resources}
       />
-          <SubIndustries industry={data?.data?.relatedSubIndustry}/>
+
+       <SubIndustries industry={data?.data?.relatedSubIndustry} />
 
     </div>
   );
