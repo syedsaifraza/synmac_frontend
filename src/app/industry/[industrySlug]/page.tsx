@@ -24,7 +24,6 @@ const page = async ({ params }: any) => {
 
   return (
     <div >
-      Industry Page
       <Industory industoryData={data?.industry}  filterIndus={data?.randomIndustries} />
     </div>
   );
