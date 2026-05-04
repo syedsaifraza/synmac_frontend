@@ -99,12 +99,12 @@ const IndustriesSection = async () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {industries?.slice(0, 8).map((industry: Industry, index: any) => {
+          {industries?.slice(0, 10).map((industry: Industry, index: any) => {
 
             const firstSubIndustry = industry.sub_industry[0];
             const imageUrl = industry.feature_file_link || industry.hero_background_file_url;
 
-            if (index === 7) {
+            if (index === 9) {
               return (
               
                   <Link key={industry.id} href={`/industries`} className="block relative overflow-hidden rounded-xl ">
