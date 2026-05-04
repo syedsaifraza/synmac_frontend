@@ -3,7 +3,7 @@ export async function POST(req: Request) {
       
         const body = await req.json();
 
-        // Send the data to the backend API
+      
         const res = await fetch("https://synmac-backend.serverscripts.in/api/v1/user/contactus/add", {
             method: "POST",
             headers: {
@@ -13,7 +13,11 @@ export async function POST(req: Request) {
             cache: "no-store",
         });
 
+        
+
         const data = await res.json();
+
+        console.log(data)
 
         return new Response(JSON.stringify({
             success: true,

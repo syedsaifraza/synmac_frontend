@@ -7,13 +7,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { BiSearch } from 'react-icons/bi'
 import { FaX } from 'react-icons/fa6'
 import { useRouter } from "next/navigation";
+import { DocumentRequestModal } from "./DocumentRequestModal";
+import { FilterSidebar } from "./FilterSidebar";
 
 const ProductListSection = ({ industry, sub_industry, product_category, product }: any) => {
     const searchParams = useSearchParams();
     const [search, setSearch] = useState<string>("");
     const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isInternalUpdate, setIsInternalUpdate] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [filters, setFilters] = useState({
         industry: "",
@@ -21,20 +22,162 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         category: "",
     });
 
-  
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState<{
+        productId: number;
+        productName: string;
+        documentType: 'tds' | 'msds';
+        documentUrl: string;
+    } | null>(null);
+    const [formData, setFormData] = useState({
+        client_name: "",
+        client_email: "",
+        client_phone: "",
+        company_name: "",
+        company_address: "",
+        message: ""
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
     const prevSearchParamsRef = useRef<string>("");
     const prevSearchRef = useRef<string>("");
     const prevFiltersRef = useRef(filters);
 
-    
-    const forceRefresh = () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            syncFromURL();
-        }, 100);
+
+    const hasPendingRequest = React.useCallback((productId: any, documentType: any) => {
+        const pendingRequests = localStorage.getItem(`doc_request_${productId}_${documentType}`);
+        if (pendingRequests) {
+            const requestData = JSON.parse(pendingRequests);
+            const hoursSinceRequest = (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
+            return hoursSinceRequest < 24;
+        }
+        return false;
+    }, []);
+
+
+    const saveRequestToLocalStorage = (productId: number, documentType: string) => {
+        const requestData = {
+            timestamp: Date.now(),
+            status: 'pending'
+        };
+        localStorage.setItem(`doc_request_${productId}_${documentType}`, JSON.stringify(requestData));
     };
 
-   
+
+    const removeRequestFromLocalStorage = (productId: number, documentType: string) => {
+        localStorage.removeItem(`doc_request_${productId}_${documentType}`);
+    };
+
+
+    const handleDocumentClick = (e: React.MouseEvent, pro: any, docType: 'tds' | 'msds', docUrl: string) => {
+        const isLocked = docType === 'tds' ? pro?.is_tds_locked : pro?.is_msds_locked;
+        const hasDoc = docType === 'tds' ? pro?.tds_doc : pro?.msds_doc;
+
+        // If no document exists, don't do anything
+        if (!hasDoc) {
+            e.preventDefault();
+            return;
+        }
+
+        // If document exists and is not locked, open in new tab
+        if (hasDoc && !isLocked) {
+            // Open in new tab (default behavior)
+            return;
+        }
+
+        // If document exists and is locked, show modal
+        if (hasDoc && isLocked) {
+            e.preventDefault();
+            setSelectedDocument({
+                productId: pro?.id,
+                productName: pro?.name,
+                documentType: docType,
+                documentUrl: docUrl
+            });
+            setIsModalOpen(true);
+            setSubmitMessage(null);
+            setFormData({
+                client_name: "",
+                client_email: "",
+                client_phone: "",
+                company_name: "",
+                company_address: "",
+                message: ""
+            });
+        }
+    };
+
+
+    const handleFormChange = React.useCallback((e: any) => {
+        setFormData(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    }, []);
+
+
+    const handleSubmitRequest = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!selectedDocument) return;
+
+        setIsSubmitting(true);
+        setSubmitMessage(null);
+
+        const requestData = {
+            product_id: selectedDocument.productId,
+            client_name: formData.client_name,
+            client_email: formData.client_email,
+            client_phone: formData.client_phone,
+            company_name: formData.company_name,
+            company_address: formData.company_address,
+            message: formData.message,
+            document_type: selectedDocument.documentType,
+            request_status: "pending"
+        };
+
+        try {
+
+            const response = await fetch('/api/request', {
+  method: 'POST',
+  body: JSON.stringify(requestData),
+});
+
+            if (response.ok) {
+                const result = await response.json();
+                saveRequestToLocalStorage(selectedDocument.productId, selectedDocument.documentType);
+                setSubmitMessage({ type: 'success', text: 'Request submitted successfully! You will receive access via email shortly.' });
+
+
+                setTimeout(() => {
+                    setIsModalOpen(false);
+                    setSelectedDocument(null);
+                    setSubmitMessage(null);
+                }, 1000);
+            } else {
+                throw new Error('Failed to submit request');
+            }
+        } catch (error) {
+            console.error('Error submitting request:', error);
+            setSubmitMessage({ type: 'error', text: 'Failed to submit request. Please try again.' });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+
+    const handleReRequest = (productId: number, documentType: string) => {
+        removeRequestFromLocalStorage(productId, documentType);
+
+        if (selectedDocument) {
+            setSelectedDocument({ ...selectedDocument });
+        }
+    };
+
+
+
     const syncFromURL = () => {
         const productname = searchParams.get("productname");
         const productcategoryname = searchParams.get("productcategoryname");
@@ -42,15 +185,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         const subindustryname = searchParams.get("subindustryname");
         const searchQuery = searchParams.get("search");
 
-        console.log("🔄 Syncing from URL:", {
-            searchQuery,
-            productname,
-            industryname,
-            subindustryname,
-            productcategoryname
-        });
-
-        
         let newSearch = "";
         if (searchQuery) {
             newSearch = searchQuery;
@@ -58,14 +192,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
             newSearch = productname;
         }
 
-        
         const newFilters = {
             industry: industryname || "",
             subIndustry: subindustryname || "",
             category: productcategoryname || "",
         };
 
-        
         const searchChanged = prevSearchRef.current !== newSearch;
         const filtersChanged = JSON.stringify(prevFiltersRef.current) !== JSON.stringify(newFilters);
 
@@ -73,7 +205,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
             setSearch(newSearch);
             setFilters(newFilters);
 
-         
             prevSearchRef.current = newSearch;
             prevFiltersRef.current = newFilters;
         }
@@ -81,27 +212,21 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         setIsLoading(false);
     };
 
-   
     useEffect(() => {
-       
         const currentParams = searchParams.toString();
 
-      
         if (prevSearchParamsRef.current !== currentParams) {
             console.log("🔍 URL params changed, syncing...");
             setIsLoading(true);
             syncFromURL();
         }
 
-       
         prevSearchParamsRef.current = currentParams;
-
     }, [searchParams]);
 
-   
     useEffect(() => {
         const handlePopState = () => {
-            console.log("📍 Popstate event detected");
+
             setIsLoading(true);
             setTimeout(() => {
                 syncFromURL();
@@ -115,21 +240,23 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         };
     }, []);
 
- 
-    const filterProduct = product?.data?.filter((pro: any) => {
-        const matchIndustry = !filters.industry || pro?.industry_name === filters.industry;
-        const matchSubIndustry = !filters.subIndustry || pro?.sub_industry_name === filters.subIndustry;
-        const matchCategory = !filters.category || pro?.product_category_name === filters.category;
-        const matchSearch = !search ||
-            pro?.name?.toLowerCase().includes(search.toLowerCase()) ||
-            pro?.description?.toLowerCase().includes(search.toLowerCase());
+    const filterProduct = React.useMemo(() => {
+        return product?.data?.filter((pro: any) => {
+            const matchIndustry = !filters.industry || pro?.industry_name === filters.industry;
+            const matchSubIndustry = !filters.subIndustry || pro?.sub_industry_name === filters.subIndustry;
+            const matchCategory = !filters.category || pro?.product_category_name === filters.category;
+            const matchSearch =
+                !search ||
+                pro?.name?.toLowerCase().includes(search.toLowerCase()) ||
+                pro?.description?.toLowerCase().includes(search.toLowerCase());
 
-        return matchIndustry && matchSubIndustry && matchCategory && matchSearch;
-    }) || [];
+            return matchIndustry && matchSubIndustry && matchCategory && matchSearch;
+        }) || [];
+    }, [product, filters, search]);
+
 
 
     const handleFilterChange = (type: string, value: string) => {
-        setIsInternalUpdate(true);
 
         setFilters(prev => ({
             ...prev,
@@ -139,18 +266,16 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setIsInternalUpdate(true);
+
         setSearch(value);
     };
 
-   
     const clearAllFilters = () => {
-        setIsInternalUpdate(true);
+
         setSearch("");
         setFilters({ industry: "", subIndustry: "", category: "" });
     };
 
- 
     const filteredIndustries = industry?.data?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
@@ -163,123 +288,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
- 
-    const FilterSidebar = () => (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            {/* <div className="relative mb-4">
-                <BiSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" />
-                <input
-                    type="text"
-                    placeholder="Search filters..."
-                    value={filterSearch}
-                    onChange={(e) => setFilterSearch(e.target.value)}
-                    className="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 bg-card text-sm text-gray-500 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-[#cd2626]/30"
-                />
-            </div> */}
 
-            <div className='space-y-4'>
-              
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-3">
-                        <h2 className="font-semibold text-gray-800">Industry</h2>
-                    </div>
-                    <div className="space-y-2 max-h-50 overflow-y-auto">
-                        {filteredIndustries.length > 0 ? (
-                            filteredIndustries.map((item: any) => (
-                                <label
-                                    key={item.id}
-                                    className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
-                                >
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <input
-                                            type="radio"
-                                            name="industry"
-                                            value={item.name}
-                                            checked={filters.industry === item.name}
-                                            onChange={() => handleFilterChange("industry", item.name)}
-                                            className="cursor-pointer accent-[#cd2626]"
-                                        />
-                                        <span className="cursor-pointer">{item.name}</span>
-                                    </div>
-                                    <span className="text-gray-500 text-xs">({item?.products?.length || 0})</span>
-                                </label>
-                            ))
-                        ) : (
-                            <p className="text-gray-400 text-sm text-center py-2">No industries found</p>
-                        )}
-                    </div>
-                </div>
 
-             
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-3">
-                        <h2 className="font-semibold text-gray-800">Sub Industry</h2>
-                    </div>
-                    <div className="space-y-2 max-h-50 overflow-y-auto">
-                        {filteredSubIndustries.length > 0 ? (
-                            filteredSubIndustries.map((item: any) => (
-                                <label
-                                    key={item.id}
-                                    className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
-                                >
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <input
-                                            type="radio"
-                                            name="subIndustry"
-                                            value={item.name}
-                                            checked={filters.subIndustry === item.name}
-                                            onChange={() => handleFilterChange("subIndustry", item.name)}
-                                            className="cursor-pointer accent-[#cd2626]"
-                                        />
-                                        <span className="cursor-pointer">{item.name}</span>
-                                    </div>
-                                    <span className="text-gray-500 text-xs">({item?.products?.length || 0})</span>
-                                </label>
-                            ))
-                        ) : (
-                            <p className="text-gray-400 text-sm text-center py-2">No sub-industries found</p>
-                        )}
-                    </div>
-                </div>
 
-              
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-center mb-3">
-                        <h2 className="font-semibold text-gray-800">Product Category</h2>
-                    </div>
-                    <div className="space-y-2 max-h-50 overflow-y-auto">
-                        {filteredCategories.length > 0 ? (
-                            filteredCategories.map((item: any) => (
-                                <label
-                                    key={item.id}
-                                    className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
-                                >
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <input
-                                            type="radio"
-                                            name="category"
-                                            value={item.name}
-                                            checked={filters.category === item.name}
-                                            onChange={() => handleFilterChange("category", item.name)}
-                                            className="cursor-pointer accent-[#cd2626]"
-                                        />
-                                        <span className="cursor-pointer">{item.name}</span>
-                                    </div>
-                                    <span className="text-gray-500 text-xs">({item?.products?.length || 0})</span>
-                                </label>
-                            ))
-                        ) : (
-                            <p className="text-gray-400 text-sm text-center py-2">No categories found</p>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <>
-          
             {isLoading && (
                 <div className="fixed inset-0 z-50 bg-blue-500/20 backdrop-blur-sm flex items-center justify-center">
                     <div className="bg-white rounded-lg p-4 shadow-xl flex items-center gap-3">
@@ -291,7 +305,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
 
             <div className='py-8 sm:py-12 lg:py-20 px-4 sm:px-6 lg:px-8'>
                 <div className="max-w-6xl mx-auto">
-                  
                     <div className="mb-6 sm:mb-8">
                         <p className="text-[#cd2626] text-xs sm:text-sm font-medium tracking-wider uppercase mb-2">Product Finder</p>
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
@@ -302,7 +315,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         </p>
                     </div>
 
-                    
                     <div className="relative max-w-2xl mb-4 sm:mb-6">
                         <BiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                         <input
@@ -320,13 +332,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         )}
                     </div>
 
-                
                     <div className="flex gap-2 flex-wrap mb-4 sm:mb-6">
                         {search && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Search: "{search}"
                                 <button onClick={() => {
-                                    setIsInternalUpdate(true);
+
                                     setSearch("");
                                 }} className="hover:text-red-500" disabled={isLoading}>
                                     ✕
@@ -368,16 +379,19 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         </button>
                     </div>
 
-                  
                     <div className="flex flex-col lg:flex-row gap-5 lg:gap-6">
-                      
                         <div className="hidden lg:block lg:w-80 xl:w-96 shrink-0">
                             <div className="sticky top-24">
-                                <FilterSidebar />
+                                <FilterSidebar
+                                    filteredIndustries={filteredIndustries}
+                                    filteredSubIndustries={filteredSubIndustries}
+                                    handleFilterChange={handleFilterChange}
+                                    filters={filters}
+                                    filteredCategories={filteredCategories}
+                                />
                             </div>
                         </div>
 
-                       
                         {isFilterOpen && (
                             <>
                                 <div
@@ -395,13 +409,18 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                         </button>
                                     </div>
                                     <div className="p-4">
-                                        <FilterSidebar />
+                                        <FilterSidebar
+                                            filteredIndustries={filteredIndustries}
+                                            filteredSubIndustries={filteredSubIndustries}
+                                            handleFilterChange={handleFilterChange}
+                                            filters={filters}
+                                            filteredCategories={filteredCategories}
+                                        />
                                     </div>
                                 </div>
                             </>
                         )}
 
-                        
                         <div className="flex-1 min-w-0">
                             <h1 className='text-sm sm:text-base text-gray-500 font-semibold mb-3'>
                                 Showing {filterProduct.length} Result{filterProduct.length !== 1 ? 's' : ''}
@@ -446,16 +465,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                                 {pro?.tds_doc && (
                                                                     <a
                                                                         href={!pro?.is_tds_locked ? pro?.tds_doc : "#"}
-                                                                        onClick={(e) => {
-                                                                            if (pro?.is_tds_locked) {
-                                                                                e.preventDefault();
-                                                                            }
-                                                                        }}
-                                                                        target="_blank"
+                                                                        onClick={(e) => handleDocumentClick(e, pro, 'tds', pro?.tds_doc)}
+                                                                        target={!pro?.is_tds_locked ? "_blank" : undefined}
                                                                         rel="noopener noreferrer"
                                                                         className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_tds_locked
-                                                                                ? "bg-gray-400 cursor-not-allowed"
+                                                                                ? "bg-gray-400 cursor-pointer hover:bg-gray-500"
                                                                                 : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
                                                                             }`}
                                                                     >
@@ -467,16 +482,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                                 {pro?.msds_doc && (
                                                                     <a
                                                                         href={!pro?.is_msds_locked ? pro?.msds_doc : "#"}
-                                                                        onClick={(e) => {
-                                                                            if (pro?.is_msds_locked) {
-                                                                                e.preventDefault();
-                                                                            }
-                                                                        }}
-                                                                        target="_blank"
+                                                                        onClick={(e) => handleDocumentClick(e, pro, 'msds', pro?.msds_doc)}
+                                                                        target={!pro?.is_msds_locked ? "_blank" : undefined}
                                                                         rel="noopener noreferrer"
                                                                         className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_msds_locked
-                                                                                ? "bg-gray-400 cursor-not-allowed"
+                                                                                ? "bg-gray-400 cursor-pointer hover:bg-gray-500"
                                                                                 : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
                                                                             }`}
                                                                     >
@@ -508,6 +519,24 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                     </div>
                 </div>
             </div>
+
+            <DocumentRequestModal
+                hasPendingRequest={hasPendingRequest}
+                key={selectedDocument?.productId}
+                handleReRequest={handleReRequest}
+                isModalOpen={isModalOpen}
+                selectedDocument={selectedDocument}
+                formData={formData}
+                handleFormChange={handleFormChange}
+                handleSubmitRequest={handleSubmitRequest}
+                isSubmitting={isSubmitting}
+                submitMessage={submitMessage}
+                closeModal={() => {
+                    setIsModalOpen(false);
+                    setSelectedDocument(null);
+                    setSubmitMessage(null);
+                }}
+            />
         </>
     )
 }
