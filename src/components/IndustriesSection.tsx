@@ -98,11 +98,58 @@ const IndustriesSection = async () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {industries?.map((industry: Industry) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {industries?.slice(0, 8).map((industry: Industry, index: any) => {
 
             const firstSubIndustry = industry.sub_industry[0];
             const imageUrl = industry.feature_file_link || industry.hero_background_file_url;
+
+            if (index === 7) {
+              return (
+              
+                  <Link key={industry.id} href={`/industries`} className="block relative overflow-hidden rounded-xl ">
+                    <div className="aspect-4/3 overflow-hidden ">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={industry.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
+                          <span className="text-gray-400 text-sm">No image</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-5">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
+                        {industry?.name}
+                        <BiChevronRight
+                          size={18}
+                          className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                        />
+                      </h3>
+
+                      {industry.hero_background_description && (
+                        <p
+                          className="text-sm text-gray-400 mt-2 line-clamp-3"
+                          dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}
+                        />
+                      )}
+                    </div>
+
+                    
+                    <div className="absolute inset-0 bg-white/70 flex items-center justify-center opacity-100 rounded-xl">
+                      <span className="text-white font-semibold text-base flex items-center gap-2 border-2 border-white px-6 py-2.5 rounded-full bg-black/30 backdrop-blur-sm">
+                        View All
+                        <BiChevronRight size={20} />
+                      </span>
+                    </div>
+                  </Link>
+               )
+            }
 
             return (
               <Link
@@ -125,8 +172,9 @@ const IndustriesSection = async () => {
                   )}
                 </div>
                 <div className="p-5">
-                  <h3 className="font-semibold text-lg text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors">
+                  <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
                     {industry?.name}
+
                     <BiChevronRight
                       size={18}
                       className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
@@ -135,16 +183,18 @@ const IndustriesSection = async () => {
 
 
                   {industry.hero_background_description && (
-                    <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}/>
+                    <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
 
-                     
 
-                 
+
+
                   )}
                 </div>
               </Link>
             );
           })}
+
+
         </div>
       </div>
     </section>

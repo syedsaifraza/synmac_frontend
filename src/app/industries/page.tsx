@@ -1,0 +1,165 @@
+import Header from '@/components/Header'
+import Link from 'next/link';
+import React from 'react'
+import { BiChevronRight } from 'react-icons/bi';
+
+interface SubIndustry {
+    id: number;
+    subMarketName: string;
+    description: string;
+    slug?: string;
+}
+
+interface Industry {
+    id: number;
+    slug: string;
+    name: string;
+    description: string;
+    image: string | null;
+    hero_background_title: string;
+    hero_background_description: string;
+    hero_background_file_url: string | null;
+    feature_title: string;
+    feature_description: string;
+    feature_sub_title: string;
+    feature_sub_description: string;
+    feature_file_link: string | null;
+    image_id: number;
+    hero_background_file_id: number;
+    feature_file_id: number;
+    features: any[] | null;
+    isSaveInDraft: number;
+    created_at: string;
+    updated_at: string;
+    products: any[];
+    product_technologies: any[];
+    sub_industry: SubIndustry[];
+    videos: any[];
+    guides: any[];
+    resources: any[];
+    faqs: any[];
+}
+
+
+
+async function getIndustries() {
+    try {
+        const res = await fetch("http://synmac.acetians.in/api/industry", {
+            // next: { revalidate: 300 },
+            cache: "no-store"
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch industries: ${res.status}`);
+        }
+
+
+
+
+        const result = await res.json();
+
+
+
+
+        return result?.industries || [];
+    } catch (error) {
+        console.error("Error fetching industries:", error);
+        return [];
+    }
+}
+
+const page = async () => {
+
+    const industries = await getIndustries();
+
+    if (industries.length === 0) {
+        return (
+            <section id="industry-block" className="bg-white py-24 px-6 text-black">
+                <div className="container mx-auto text-center">
+                    <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Industries We Serve</p>
+                    <h2 className="font-display text-3xl md:text-6xl font-bold mb-4">
+                        Coming <span className="text-[#cd2626]">Soon</span>
+                    </h2>
+                    <p className="text-gray-500">Industries data is being loaded. Please check back later.</p>
+                </div>
+            </section>
+        );
+    }
+
+    return (
+        <div>
+            <Header title={"Industries"} description={"We provide high-quality solutions across diverse industries, focusing on innovation, reliability, and performance. Our expertise ensures efficient processes, modern technology integration, and customer-centric services tailored to meet evolving business needs."} background_image={"https://www.hindalco.com/Upload/Images/masthead/solutions-industries-bg-2.webp"} />
+
+            <section id="industry-block" className="bg-white py-24 max-w-6xl mx-auto text-black">
+                <div className="container mx-auto">
+                    <div className="text-center mb-16">
+                        <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">
+                            Industries We Serve
+                        </p>
+                        <h2 className="font-display text-3xl md:text-4xl font-bold">
+                            Powering Industries <span className="text-[#cd2626]">Worldwide</span>
+                        </h2>
+                        <p className="text-gray-500 mt-4 max-w-xl mx-auto">
+                            Click on any industry to explore sub-markets and discover the specialty chemicals we offer.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {industries?.map((industry: Industry, index: any) => {
+
+                        
+                            const imageUrl = industry.feature_file_link || industry.hero_background_file_url;
+
+
+                            return (
+                                <Link
+                                    href={`/industry/${industry.slug}`}
+                                    key={industry.id}
+                                    className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
+                                >
+                                    <div className="aspect-4/3 overflow-hidden bg-gray-100">
+                                        {imageUrl ? (
+                                            <img
+                                                src={imageUrl}
+                                                alt={industry.name}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                loading="lazy"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
+                                                <span className="text-gray-400 text-sm">No image</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="p-5">
+                                        <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
+                                            {industry?.name}
+
+                                            <BiChevronRight
+                                                size={18}
+                                                className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
+                                            />
+                                        </h3>
+
+
+                                        {industry.hero_background_description && (
+                                            <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
+
+
+
+
+                                        )}
+                                    </div>
+                                </Link>
+                            );
+                        })}
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    )
+}
+
+export default page
