@@ -59,7 +59,7 @@ const Related_Product_Category_Section = ({ data }: any) => {
                     />
                   </div>
 
-                  {/* Arrow */}
+             
                   <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-[2px] group-hover:translate-x-1 transition">
                     <IoIosArrowRoundForward className="text-xl text-white" />
                   </div>
@@ -71,7 +71,7 @@ const Related_Product_Category_Section = ({ data }: any) => {
           })}
         </div>
 
-        {/* Button */}
+     
         {data.length > 3 && (
           <div className="flex justify-center mt-12">
             <button

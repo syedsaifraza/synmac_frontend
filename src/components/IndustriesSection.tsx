@@ -98,7 +98,7 @@ const IndustriesSection = async () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {industries?.slice(0, 8).map((industry: Industry, index: any) => {
 
             const firstSubIndustry = industry.sub_industry[0];
@@ -124,7 +124,7 @@ const IndustriesSection = async () => {
                     </div>
 
                     <div className="p-5">
-                      <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
+                      <h3 className="font-semibold text-gray-900 flex items-center line-clamp-2 gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
                         {industry?.name}
                         <BiChevronRight
                           size={18}

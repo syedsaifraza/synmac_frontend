@@ -61,7 +61,7 @@ const Footer = async () => {
           </div>
         </div>
         <div className="mt-6 pt-4 border-t border-white/10 text-center text-sm text-white/50">
-          © {new Date().getFullYear()} Synmac Chemicals. All rights reserved. v1
+          © {new Date().getFullYear()} Synmac Chemicals. All rights reserved. v1.0.2
         </div>
       </div>
     </footer>

@@ -31,13 +31,16 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         documentUrl: string;
     } | null>(null);
     const [formData, setFormData] = useState({
-        client_name: "",
-        client_email: "",
-        client_phone: "",
-        company_name: "",
-        company_address: "",
-        message: ""
-    });
+    client_name: "",
+    client_email: "",
+    client_phone: "",
+    client_country: "",
+    company_name: "",
+    company_address: "",
+    purposes: [],           // Array to store multiple selected 
+    purpose_other_text: "", 
+    message: ""
+});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -99,13 +102,16 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
             setIsModalOpen(true);
             setSubmitMessage(null);
             setFormData({
-                client_name: "",
-                client_email: "",
-                client_phone: "",
-                company_name: "",
-                company_address: "",
-                message: ""
-            });
+    client_name: "",
+    client_email: "",
+    client_phone: "",
+    client_country: "",
+    company_name: "",
+    company_address: "",
+    purposes: [],           // Array to store multiple selected 
+    purpose_other_text: "", 
+    message: ""
+});
         }
     };
 
@@ -126,17 +132,20 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         setIsSubmitting(true);
         setSubmitMessage(null);
 
-        const requestData = {
-            product_id: selectedDocument.productId,
-            client_name: formData.client_name,
-            client_email: formData.client_email,
-            client_phone: formData.client_phone,
-            company_name: formData.company_name,
-            company_address: formData.company_address,
-            message: formData.message,
-            document_type: selectedDocument.documentType,
-            request_status: "pending"
-        };
+     const requestData = {
+    product_id: selectedDocument.productId,
+    client_name: formData.client_name,
+    client_email: formData.client_email,
+    client_phone: formData.client_phone,
+    client_country: formData.client_country,
+    company_name: formData.company_name,
+    company_address: formData.company_address,
+    purposes: formData.purposes,  // Send array of selected purposes
+    purpose_other_text: formData.purpose_other_text,  // Send custom text if "Other" is selected
+    message: formData.message,
+    document_type: selectedDocument.documentType,
+    request_status: "pending"
+};
 
         try {
 
