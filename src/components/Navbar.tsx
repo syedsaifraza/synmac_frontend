@@ -303,7 +303,7 @@ const isProductPage = pathname === '/product';
                             <FiSearch className='cursor-pointer' size={20} />
                         </button>
                         
-                        {/* Language Selector */}
+                     
                         <LanguageSelector />
                     </ul>
 

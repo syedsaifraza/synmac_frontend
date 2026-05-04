@@ -256,7 +256,7 @@ export const DocumentRequestModal = ({
                           onChange={handleOtherTextChange}
                           disabled={!isOtherSelected}
                           placeholder="Please specify"
-                          className={`flex-1 min-w-[200px] px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626] text-sm
+                          className={`flex-1 min-w-50 px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626] text-sm
                             ${!isOtherSelected ? "bg-gray-100 cursor-not-allowed" : ""}`}
                         />
                       </div>

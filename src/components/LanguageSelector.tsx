@@ -98,7 +98,7 @@ const LanguageSelector = () => {
             <button
               key={lang.code}
               onClick={() => selectLanguage(lang.code)}
-              className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${
+              className={`block w-full text-left text-black px-4 py-2 text-sm hover:bg-gray-100 ${
                 currentLang === lang.code ? "font-bold text-blue-600" : ""
               }`}
             >

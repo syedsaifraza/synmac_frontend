@@ -98,7 +98,7 @@ const IndustriesSection = async () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {industries?.slice(0, 10).map((industry: Industry, index: any) => {
 
             const firstSubIndustry = industry.sub_industry[0];
@@ -123,7 +123,7 @@ const IndustriesSection = async () => {
                       )}
                     </div>
 
-                    <div className="p-5">
+                    <div className="p-2">
                       <h3 className="font-semibold text-gray-900 flex items-center line-clamp-2 gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
                         {industry?.name}
                         <BiChevronRight
@@ -134,7 +134,7 @@ const IndustriesSection = async () => {
 
                       {industry.hero_background_description && (
                         <p
-                          className="text-sm text-gray-400 mt-2 line-clamp-3"
+                          className="text-sm text-gray-400 mt-2 line-clamp-2"
                           dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}
                         />
                       )}
@@ -157,7 +157,7 @@ const IndustriesSection = async () => {
                 key={industry.id}
                 className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
               >
-                <div className="aspect-4/3 overflow-hidden bg-gray-100">
+                <div className="aspect-3/2 overflow-hidden bg-gray-100">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -171,7 +171,7 @@ const IndustriesSection = async () => {
                     </div>
                   )}
                 </div>
-                <div className="p-5">
+                <div className="p-3">
                   <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
                     {industry?.name}
 
@@ -183,7 +183,7 @@ const IndustriesSection = async () => {
 
 
                   {industry.hero_background_description && (
-                    <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
+                    <p className="text-sm text-gray-400 mt-2 line-clamp-2" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
 
 
 
