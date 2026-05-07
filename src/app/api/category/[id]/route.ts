@@ -20,8 +20,6 @@ export async function GET(
 
     const data = await res.json();
 
-     console.log("category-info",data)
-
 
     const sub_industry = data.data.find((subin: any) => subin.slug === id);
 

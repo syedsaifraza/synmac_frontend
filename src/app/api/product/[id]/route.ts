@@ -1,7 +1,6 @@
 export async function GET(req: Request, { params }: any) {
   const { id } = await params;
 
-  console.log("a gay kya data",id)
 
   try {
     const res = await fetch(
@@ -18,7 +17,7 @@ export async function GET(req: Request, { params }: any) {
 
     const data = await res.json();
 
-    console.log("yahi hai data",data)
+
 
    
     const industry = data.data.find((item: any) => item.id == id);

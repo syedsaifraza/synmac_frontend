@@ -4,7 +4,7 @@ export async function GET(req: Request, { params }: any) {
   const { id } = await params;
 
 
-  console.log(id)
+
 
   try {
     const res = await fetch(
@@ -32,7 +32,7 @@ export async function GET(req: Request, { params }: any) {
 
 
 
-    console.log("Data", industry)
+
 
 
     if (!industry) {

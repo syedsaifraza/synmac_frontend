@@ -25,7 +25,6 @@ const Page = async ({ params }: any) => {
   const response = await getProduct(resolvedParams.slug);
   const productData = response?.data || null;
 
-  console.log("API Response:", response);
 
   const SolutionsSection = () => {
     const name = productData?.name ?? "Avipol";

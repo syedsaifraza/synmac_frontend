@@ -3,8 +3,7 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useEffect, useRef, useState } from "react";
 import greenPromiseImg from "@/assets/green-promise.jpg";
-import { BiLeaf, BiRecycle, BiTrendingUp } from "react-icons/bi";
-import { TbDropletShare } from "react-icons/tb";
+import { BiLeaf } from "react-icons/bi";
 import Image from "next/image";
 
 const useCountUp = (end: number, duration = 2000, start = false) => {
@@ -31,23 +30,22 @@ const useCountUp = (end: number, duration = 2000, start = false) => {
   return count;
 };
 
+const iconMap: any = {
+  BiLeaf: BiLeaf,
+  // Add other icons as needed
+};
 
 
-const SustainabilitySection = ({ data }: any) => {
+
+const SustainabilitySection = ({ data, data1 }: any) => {
 
 
   const ref = useScrollReveal<HTMLElement>();
   const [visible, setVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
-  //   const stats = [
-  //   { end: 30, suffix: "+", label: "Years of Excellence" },
-  //   { end: 1700, suffix: "+", label: "Products" },
-  //   { end: 17, suffix: "+", label: "Countries Served" },
-  //   { end: 1000, suffix: "+", label: "Happy Clients" },
-  // ];
 
-  const stats = data?.key_no?.map((stats: any) => {
+  const stats = data1?.key_no?.map((stats: any) => {
 
     return {
       end: stats.value,
@@ -77,34 +75,39 @@ const SustainabilitySection = ({ data }: any) => {
             <div>
               <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Sustainability</p>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 text-black">
-                Committed to <span className="text-[#cd2626]">Green Chemistry</span>
+                {data.title}
               </h2>
               <p className="text-gray-500 leading-relaxed mb-8 max-w-lg">
-                We develop eco-friendly formulations that minimize environmental impact while maximizing industrial performance. Our commitment to sustainability drives every innovation.
+                {data.description}
               </p>
               <div className="space-y-5">
-                {[
-                  { icon: BiLeaf, title: "Bio-based Formulations", text: "Biodegradable and sustainable chemical products" },
-                  { icon: TbDropletShare, title: "Water Conservation", text: "Water-saving chemical solutions reducing consumption by up to 40%" },
-                  { icon: BiRecycle, title: "Circular Economy", text: "Recyclable packaging and waste-reduction initiatives" },
-                  { icon: BiTrendingUp, title: "Continuous Innovation", text: "R&D focused on greener, more efficient alternatives" },
-                ].map((item) => (
-                  <div key={item.title} className="flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-xl bg-[#cd2626]/10  flex items-center justify-center shrink-0 mt-0.5">
-                      <item.icon className="text-[#cd2626]" size={20} />
+                {data?.sustainability_lists.map((item: any) => {
+                  
+                  return (
+                    <div key={item.title} className="flex items-start gap-4">
+                      <div className="w-11 h-11 rounded-xl bg-[#cd2626]/10  flex items-center justify-center shrink-0 mt-0.5">
+                        <img
+                          src={item?.url}
+                          alt="Sustainable green chemistry research in laboratory"
+                          className="w-10 h-10 rounded-full  object-cover"
+                          loading="lazy"
+                          width={10}
+                          height={10}
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-display font-semibold text-sm text-black">{item.title}</h4>
+                        <p className="text-gray-500 text-sm">{item.description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-display font-semibold text-sm text-black">{item.title}</h4>
-                      <p className="text-gray-500 text-sm">{item.text}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
             <div className="relative">
               <div className="rounded-2xl overflow-hidden border border-gray-200">
-                <Image
-                  src={greenPromiseImg}
+                <img
+                  src={data?.image_url}
                   alt="Sustainable green chemistry research in laboratory"
                   className="w-full h-64 object-cover"
                   loading="lazy"
@@ -113,9 +116,9 @@ const SustainabilitySection = ({ data }: any) => {
                 />
                 <div className="bg-[#cd2626]/10 p-8 text-center">
                   <BiLeaf className="text-[#cd2626] mx-auto mb-3" size={36} />
-                  <h3 className="font-display text-2xl font-bold mb-2 text-black">Our Green Promise</h3>
+                  <h3 className="font-display text-2xl font-bold mb-2 text-black">{data?.side_title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
-                    By 2030, 100% of our product lines will meet international eco-certification standards. We're investing in research to make every formulation cleaner and greener.
+                    {data?.side_description}
                   </p>
                 </div>
               </div>

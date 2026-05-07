@@ -31,13 +31,26 @@ async function getIndustries() {
   return data.industries || [];
 }
 
+
+async function getAllProducts() {
+  const res = await fetch(`http://localhost:3000/api/all-products/`, {
+    // next: { revalidate: 300 }
+    cache: "no-store"
+  });
+  return res.json();
+}
+
 export default async function RootLayout({ children }: any) {
   const industries = await getIndustries();
+  const allProducts = await getAllProducts();
+
+
+  console.log("All Products", allProducts);
 
   return (
     <html lang="en">
       <body>
-        <Navbar data={industries} />
+        <Navbar data={industries} allProducts={allProducts.data} />
         {children}
         <Footer />
       </body>

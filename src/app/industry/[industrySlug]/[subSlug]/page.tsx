@@ -27,8 +27,7 @@ const Page = async ({ params }: any) => {
 
 
 
-  console.log("data", data)
-
+ 
 
 
 

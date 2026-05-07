@@ -10,10 +10,11 @@ interface SearchOverlayProps {
   onClose: () => void;
 }
 
-const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
+const SearchOverlay = ({ open, onClose, allProducts }: any) => {
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const currentUrlRef = useRef<string>("");
@@ -37,10 +38,25 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
     localStorage.removeItem("recentSearches");
   };
 
+  // Filter suggestions based on query
+  useEffect(() => {
+    if (query.trim().length >= 2 && allProducts && allProducts.length > 0) {
+      const filtered = allProducts
+        .filter((product: any) => 
+          product.name?.toLowerCase().includes(query.toLowerCase().trim())
+        )
+        .slice(0, 4); // Max 4 suggestions
+      setSuggestions(filtered);
+    } else {
+      setSuggestions([]);
+    }
+  }, [query, allProducts]);
+
   useEffect(() => {
     if (open) {
       setQuery("");
       setIsNavigating(false);
+      setSuggestions([]);
       setTimeout(() => inputRef.current?.focus(), 100);
       document.body.style.overflow = "hidden";
       currentUrlRef.current = window.location.href;
@@ -74,6 +90,25 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
     if (open) window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [open, onClose, isNavigating]);
+
+  const handleProductClick = async (product: any) => {
+    if (isNavigating) return;
+    
+    setIsNavigating(true);
+    saveRecentSearch(product.name);
+    
+    const params = new URLSearchParams();
+    
+    if (product?.name) params.set("productname", product.name);
+    if (product?.id) params.set("productid", product.id);
+    if (product?.industry_name) params.set("industryname", product.industry_name);
+    if (product?.sub_industry_name) params.set("subindustryname", product.sub_industry_name);
+    if (product?.product_category_name) params.set("productcategoryname", product.product_category_name);
+    
+    const url = `/product?${params.toString()}`;
+    currentUrlRef.current = window.location.href;
+    await router.push(url);
+  };
 
   const handleSearch = async () => {
     if (query.trim().length >= 2 && !isNavigating) {
@@ -137,8 +172,52 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
           )}
         </div>
 
-        {/* Search Result */}
-        {!isNavigating && query.trim().length >= 2 && (
+        {/* Product Suggestions */}
+        {!isNavigating && suggestions.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+              Product Suggestions ({suggestions.length})
+            </h3>
+            <div className="space-y-2">
+              {suggestions.map((product) => (
+                <button
+                  key={product.id}
+                  onClick={() => handleProductClick(product)}
+                  className="w-full p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-left border border-gray-800 group"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <p className="text-white text-sm font-medium group-hover:text-[#b62126] transition-colors">
+                        {product.name}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {product.industry_name && (
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-300">
+                            {product.industry_name}
+                          </span>
+                        )}
+                        {product.sub_industry_name && (
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-300">
+                            {product.sub_industry_name}
+                          </span>
+                        )}
+                        {product.product_category_name && (
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-gray-300">
+                            {product.product_category_name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <FaSearch className="text-gray-500 group-hover:text-[#b62126] transition-colors flex-shrink-0" size={14} />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Search Result (Manual Search) */}
+        {!isNavigating && query.trim().length >= 2 && suggestions.length === 0 && (
           <button
             onClick={handleSearch}
             className="w-full p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-left border border-gray-800"
@@ -184,8 +263,6 @@ const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
             </div>
           </div>
         )}
-
-    
       </div>
     </div>
   );

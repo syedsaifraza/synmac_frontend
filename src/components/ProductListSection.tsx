@@ -225,7 +225,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         const currentParams = searchParams.toString();
 
         if (prevSearchParamsRef.current !== currentParams) {
-            console.log("🔍 URL params changed, syncing...");
+
             setIsLoading(true);
             syncFromURL();
         }

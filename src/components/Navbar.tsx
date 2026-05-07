@@ -51,7 +51,7 @@ interface Industry {
     [key: string]: any;
 }
 
-const Navbar = ({ data }: { data: Industry[] }) => {
+const Navbar = ({ data, allProducts }: { data: Industry[]; allProducts: Product [] }) => {
 
 
 
@@ -285,7 +285,7 @@ const isProductPage = pathname === '/product';
                             <span>Resources</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <Link href="/about-us" className="relative group">
+                        <Link href="#" className="relative group">
                             <span>About us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
@@ -675,7 +675,7 @@ const isProductPage = pathname === '/product';
                 </div>
             )}
 
-               <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+               <SearchOverlay allProducts={allProducts} open={searchOpen} onClose={() => setSearchOpen(false)} />
         </nav>
     );
 };

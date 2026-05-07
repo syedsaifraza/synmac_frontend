@@ -1,6 +1,5 @@
-'use client'
 
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import Image from "next/image";
 import { BiAward, BiGlobe, BiShieldPlus } from "react-icons/bi";
 import { BsBeaker } from "react-icons/bs";
 import { GiLightBulb } from "react-icons/gi";
@@ -16,11 +15,25 @@ const capabilities = [
   { icon: BiAward, title: "Industry Certified", desc: "ISO certified processes meeting international standards for safety and environmental compliance." },
 ];
 
-const OurStrengths = () => {
-  const ref = useScrollReveal<HTMLElement>();
+async function getUser() {
+  const res = await fetch(`http://localhost:3000/api/our-strengths/`, {
+    // next: { revalidate: 300 }
+    cache: "no-store"
+  });
+  return res.json();
+}
+
+
+const OurStrengths =async () => {
+
+    const data = await getUser()
+
+
+
+  
 
   return (
-    <section ref={ref} className="section-fade-in py-24  bg-muted/40 bg-gray-50">
+    <section  className="section-fade-in py-24  bg-muted/40 bg-gray-50">
       <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Our Strengths</p>
@@ -28,17 +41,17 @@ const OurStrengths = () => {
             Why Choose <span className="text-[#cd2626]">Synmac</span>
           </h2>
           <p className="text-gray-500 mt-4 max-w-xl mx-auto">
-            Decades of expertise, cutting-edge formulations, and a commitment to quality that sets us apart globally.
+           {data?.data?.description}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {capabilities.map((cap) => (
-            <div key={cap.title} className="p-8 text-center rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 group">
+          {data?.data?.strength_lists.map((cap:any) => (
+            <div key={cap.image_id} className="p-8 text-center rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 group">
               <div className="w-16 h-16 rounded-full bg-[#cd2626]/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/15 transition-colors">
-                <cap.icon className="text-[#cd2626]" size={28} />
+                <Image alt={cap.title} height={50} width={50} src={cap?.image_url} className="h-10 w-10 rounded-full object-cover"/>
               </div>
               <h3 className="font-display font-semibold text-xl mb-3 text-black">{cap.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{cap.desc}</p>
+              <p className="text-sm text-gray-500 leading-relaxed">{cap.description}</p>
             </div>
           ))}
         </div>

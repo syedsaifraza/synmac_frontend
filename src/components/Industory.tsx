@@ -16,7 +16,6 @@ import ResourcesSection from "./ResourcesSection";
 
 const Industory = ({ industoryData }: any) => {
 
-  console.log("yahi hia kya ", industoryData)
 
 
 
