@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 async function getUser() {
-  const res = await fetch(`http://localhost:3000/api/footer/`, {
+  const res = await fetch(`http://synmac.acetians.in/api/footer/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

@@ -33,7 +33,7 @@ async function getIndustries() {
 
 
 async function getAllProducts() {
-  const res = await fetch(`http://localhost:3000/api/all-products/`, {
+  const res = await fetch(`http://synmac.acetians.in/api/all-products/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

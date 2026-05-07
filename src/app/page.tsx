@@ -14,7 +14,7 @@ async function getUser() {
 }
 
 async function getSustainability() {
-  const res = await fetch(`http://localhost:3000/api/sustainability/`, {
+  const res = await fetch(`http://synmac.acetians.in/api/sustainability/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -22,7 +22,7 @@ async function getSustainability() {
 }
 
 async function getHeroSection() {
-  const res = await fetch(`http://localhost:3000/api/hero-section/`, {
+  const res = await fetch(`http://synmac.acetians.in/api/hero-section/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

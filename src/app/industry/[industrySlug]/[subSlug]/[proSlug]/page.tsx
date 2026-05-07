@@ -12,7 +12,7 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 
 async function getUser(id: any) {
   const res = await fetch(
-    `http://localhost:3000/api/category/${id}`,
+    `http://synmac.acetians.in/api/category/${id}`,
     {
       // next : { revalidate: 300 }
       cache: "no-store"
