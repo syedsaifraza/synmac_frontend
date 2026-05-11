@@ -25,6 +25,20 @@ const page = async ({ params }: any) => {
   return (
     <div >
       <Industory industoryData={data?.industry}  filterIndus={data?.randomIndustries} />
+      <section  className="section-fade-in py-20  bg-muted/40 bg-gray-50">
+            <div className="container max-w-6xl mx-auto">
+              <div className="text-center ">
+                <h2 className="font-display text-3xl text-black md:text-4xl font-bold">
+                  WHY CHOOSE <span className="text-[#cd2626]">SYNMAC</span>
+                </h2>
+                <p className="text-gray-500 mt-4 max-w-4xl mx-auto text-lg">
+                We combine innovation, reliability, and customer-first service to deliver solutions that truly make a difference. Our team is dedicated to quality, transparency, and building long-term relationships. Choosing us means choosing expertise, trust, and results.
+                </p>
+              </div>
+             
+            </div>
+           
+          </section>
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import Logo from "../../public/favicon.png"
 import Image from 'next/image';
-import { FaAngleRight, FaSearch } from 'react-icons/fa';
+import { FaAngleDoubleDown, FaAngleDown, FaAngleRight, FaSearch } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
@@ -76,21 +76,21 @@ const Navbar = ({ data, allProducts }: { data: Industry[]; allProducts: Product 
 
 const isProductPage = pathname === '/product';
     
-    // Determine navbar text color
+   
     const getNavbarTextColor = () => {
-        // Agar product page hai toh hamesha gray
+      
         if (isProductPage) return "text-gray-700";
         
-        // Warna normal logic
+       
         return !scrolled && !isMenuOpen ? "text-white" : "text-gray-700";
     };
     
-    // Determine navbar background
+  
     const getNavbarBg = () => {
-        // Agar product page hai toh hamesha white background
+        
         if (isProductPage) return "bg-white shadow-md";
         
-        // Warna normal logic
+      
         if (scrolled) return "bg-white shadow-md";
         if (isMenuOpen) return "bg-white text-black";
         return "bg-transparent text-white";
@@ -98,17 +98,17 @@ const isProductPage = pathname === '/product';
 
 
     const getProducts = () => {
-        // 1. Category (subIndustry OR industry)
+       
         if (activeCategory?.products?.length) {
             return activeCategory.products;
         }
 
-        // 2. SubIndustry direct
+      
         if (activeSubIndustry?.products?.length) {
             return activeSubIndustry.products;
         }
 
-        // 3. Industry direct
+        
         if (activeIndustry?.products?.length) {
             return activeIndustry.products;
         }
@@ -274,7 +274,11 @@ const isProductPage = pathname === '/product';
                                 }
                             }}
                         >
-                            <span>Industries</span>
+                            <div className="flex items-center gap-1">
+                                <span>Industries</span>
+                                <FaAngleDown/>
+                        </div>
+                            
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </li>
                         <Link href="/product" className="relative group">
@@ -330,7 +334,7 @@ const isProductPage = pathname === '/product';
 
             {isMenuOpen && typeof window !== 'undefined' && window.innerWidth >= 768 && activeIndustry && (
                 <div
-                    className="hidden md:block fixed left-0 right-0 z-40"
+                    className="hidden bg-white  md:block fixed left-0 right-0 z-40"
                     onMouseEnter={() => {
                         if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
                         setIsMenuOpen(true);
@@ -339,18 +343,17 @@ const isProductPage = pathname === '/product';
                         hoverTimeoutRef.current = setTimeout(() => setIsMenuOpen(false), 200);
                     }}
                 >
-                    <div className="max-w-6xl mx-auto ">
-                        <div className="w-full bg-white shadow-xl rounded-b-2xl overflow-hidden relative">
-                            <div className="grid grid-cols-5 gap-0">
+                    <div className="">
+                        <div className="w-full h-[80vh] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] flex flex-row  overflow-hidden relative">
 
-                                <div className="col-span-1 p-2">
+                            <div className="w-1/3 px-24 py-10 bg-gray-200">
 
                                     {activeIndustry.feature_file_link && (
 
                                         <div className=" overflow-hidden  transition duration-300 flex flex-col h-full">
 
 
-                                            <div className="w-full h-40 overflow-hidden rounded-2xl">
+                                            <div className="w-full h-40 overflow-hidden">
                                                 <img
                                                     src={activeIndustry.feature_file_link}
                                                     alt={activeIndustry.name}
@@ -358,26 +361,26 @@ const isProductPage = pathname === '/product';
                                                 />
                                             </div>
 
-                                            {/* Content */}
+                                         
                                             <div className="p-4 flex flex-col grow">
 
-                                                {/* Title */}
+                                                
                                                 <h1 className="text-lg font-semibold text-gray-800 mb-2">
                                                     {activeIndustry.name}
                                                 </h1>
 
-                                                {/* Description */}
+                                             
                                                 <p
                                                     dangerouslySetInnerHTML={{
                                                         __html: activeIndustry.hero_background_description || ""
                                                     }}
-                                                    className="text-sm text-gray-600 line-clamp-3 mb-4"
+                                                    className="text-sm text-gray-600 line-clamp-8 mb-4"
                                                 />
 
-                                                {/* Button */}
+                                              
                                                 <Link
                                                     href={`/industry/${activeIndustry.slug}`}
-                                                    className="mt-auto inline-block text-center text-[#cd2626] border border-[#cd2626] px-4 py-2 rounded-lg hover:text-white hover:bg-[#cd2626] transition"
+                                                    className="mt-auto inline-block text-center  border border-[#cd2626] px-4 py-2 rounded-full text-white bg-[#cd2626] hover:bg-[#cd2626]/80 transition"
                                                 >
                                                     Explore More
                                                 </Link>
@@ -389,24 +392,27 @@ const isProductPage = pathname === '/product';
                                     )}
 
                                 </div>
+                            <div className="grid grid-cols-4 flex-1 pr-24 pt-10 pl-10 gap-10">
+
+                                
 
 
-                                <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
-                                    <div className="sticky top-0 bg-white px-3 py-2">
-                                        <h3 className="text-[11px] font-semibold text-gray-400">INDUSTRIES</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                <div className="col-span-1 bg-white overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white  pb-2">
+                                        <h3 className="text-sm font-semibold text-gray-400">Main Markets</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
 
                                     </div>
-                                    <div className="p-2">
+                                    <div className="py-2 space-y-1">
                                         {data.map((industry) => (
                                             <Link
                                                 key={industry.id}
                                                 href={getIndustryUrl(industry)}
                                                 onMouseEnter={() => handleIndustryHover(industry)}
-                                                className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs mb-0.5
+                                                className={`flex items-center font-semibold  rounded-lg text-xs
                                                     ${activeIndustry?.id === industry.id
-                                                        ? "bg-[#cd2626]/10 text-[#cd2626]"
-                                                        : "text-gray-700 hover:bg-gray-50"
+                                                        ? " text-[#cd2626] "
+                                                        : "text-gray-700 "
                                                     }
                                                 `}
                                             >
@@ -417,30 +423,33 @@ const isProductPage = pathname === '/product';
                                     </div>
                                 </div>
 
-                                <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
-                                    <div className="sticky top-0 bg-white px-3 py-2">
-                                        <h3 className="text-[11px] font-semibold text-gray-400">SUB INDUSTRIES</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                <div className="col-span-1 bg-white  overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white pb-2">
+                                        <h3 className="text-sm font-semibold text-gray-400">Sub Markets</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
                                     </div>
-                                    <div className="p-2">
+                                    <div className="space-y-1 py-2">
                                         {hasSubIndustries(activeIndustry) ? (
                                             activeIndustry.sub_industry?.map((sub) => (
                                                 <Link
                                                     key={sub.id}
                                                     href={getSubIndustryUrl(activeIndustry, sub)}
                                                     onMouseEnter={() => handleSubIndustryHover(sub)}
-                                                    className={`block px-3 py-2 rounded-lg text-xs mb-0.5
+                                                    className={`  flex font-semibold items-center rounded-lg text-xs
                                                         ${activeSubIndustry?.id === sub.id
-                                                            ? "bg-[#cd2626]/10 text-[#cd2626]"
-                                                            : "text-gray-700 hover:bg-gray-50"
+                                                            ? "text-[#cd2626]"
+                                                            : "text-gray-700 "
                                                         }
                                                     `}
                                                 >
-                                                    {sub.name}
+
+                                                      <span className="truncate"> {sub.name}</span>
+                                                <FaAngleRight className="text-[10px]" />
+                                                   
                                                 </Link>
                                             ))
                                         ) : (
-                                            <div className="px-3 py-4 text-center text-xs text-gray-400">
+                                            <div className=" text-xs text-gray-400">
                                                 No sub industries
                                             </div>
                                         )}
@@ -448,12 +457,12 @@ const isProductPage = pathname === '/product';
                                 </div>
 
 
-                                <div className="col-span-1 bg-white border-r border-gray-200 overflow-y-auto max-h-100">
-                                    <div className="sticky top-0 bg-white px-3 py-2">
-                                        <h3 className="text-[11px] font-semibold text-gray-400">CATEGORIES</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                <div className="col-span-1 bg-white  overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white  pb-2">
+                                        <h3 className="text-sm font-semibold text-gray-400">End Markets</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
                                     </div>
-                                    <div className="p-2">
+                                    <div className="py-2 space-y-1">
 
 
 
@@ -468,14 +477,17 @@ const isProductPage = pathname === '/product';
                                                     key={cat.id}
                                                     href={getCategoryUrl(activeIndustry, activeSubIndustry, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
-                                                    className={`block px-3 py-2 rounded-lg text-xs mb-0.5
+                                                    className={`flex font-semibold items-center rounded-lg text-xs mb-0.5
                                                         ${activeCategory?.id === cat.id
-                                                            ? "bg-[#cd2626]/10 text-[#cd2626]"
-                                                            : "text-gray-700 hover:bg-gray-50"
+                                                            ? "text-[#cd2626]"
+                                                            : "text-gray-700 "
                                                         }
                                                     `}
                                                 >
-                                                    {cat.name}
+
+                                                     <span className="truncate">{cat.name}</span>
+                                                <FaAngleRight className="text-[10px]" />
+                                                    
                                                 </Link>
                                             ))
                                         ) : activeIndustry && hasDirectCategories(activeIndustry) ? (
@@ -484,10 +496,10 @@ const isProductPage = pathname === '/product';
                                                     key={cat.id}
                                                     href={getCategoryUrl(activeIndustry, null, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
-                                                    className={`block px-3 py-2 rounded-lg text-xs mb-0.5
+                                                    className={`block rounded-lg text-xs mb-0.5
                 ${activeCategory?.id === cat.id
-                                                            ? "bg-[#cd2626]/10 text-[#cd2626]"
-                                                            : "text-gray-700 hover:bg-gray-50"
+                                                            ? " text-[#cd2626]"
+                                                            : "text-gray-700 "
                                                         }
             `}
                                                 >
@@ -495,7 +507,7 @@ const isProductPage = pathname === '/product';
                                                 </Link>
                                             ))
                                         ) : (
-                                            <div className="px-3 py-4 text-center text-xs text-gray-400">
+                                            <div className="text-xs text-gray-400">
                                                 No categories
                                             </div>
                                         )}
@@ -504,23 +516,23 @@ const isProductPage = pathname === '/product';
 
 
                                 <div className="col-span-1 bg-white overflow-y-auto max-h-100">
-                                    <div className="sticky top-0 bg-white px-3 py-2">
-                                        <h3 className="text-[11px] font-semibold text-gray-400">PRODUCTS</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-full"></span>
+                                    <div className="sticky top-0 bg-white pb-2">
+                                        <h3 className="text-sm font-semibold text-gray-400">Products</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
                                     </div>
-                                    <div className="p-2">
+                                    <div className="py-2 space-y-1 ">
                                         {products.length > 0 ? (
                                             products.map((product) => (
                                                 <Link
                                                     key={product.id}
                                                     href={getProductUrl(product)}
-                                                    className="block px-3 py-2 rounded-lg text-xs mb-0.5 text-gray-700 hover:bg-gray-50"
+                                                    className="block font-semibold  text-xs mb-0.5 text-gray-700 hover:text-[#cd2626] "
                                                 >
                                                     {product.name}
                                                 </Link>
                                             ))
                                         ) : (
-                                            <div className="px-3 py-4 text-center text-xs text-gray-400">
+                                            <div className="  text-xs text-gray-400">
                                                 No products
                                             </div>
                                         )}
@@ -530,14 +542,14 @@ const isProductPage = pathname === '/product';
 
                             <button
                                 onClick={closeMenu}
-                                className="absolute top-2 right-2 p-1 hover:bg-gray-100 rounded-full"
+                                className="absolute top-2 right-2 p-1 hover:bg-gray-100 bg-gray-200 cursor-pointer rounded-full"
                             >
-                                <IoClose size={18} className="text-gray-400" />
+                                <IoClose size={25} className="text-gray-400" />
                             </button>
                         </div>
                     </div>
                 </div>
-            )}
+             )}
 
 
             {isMenuOpen && typeof window !== 'undefined' && window.innerWidth < 768 && (

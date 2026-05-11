@@ -75,7 +75,7 @@ const HeroSection = ({ data }: { data: any }) => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
 
             {
-              data?.is_active_product_btn && (
+              data?.is_active_product_btn === 1 ? (
                 <Link
                   href={"/product"}
 
@@ -83,17 +83,17 @@ const HeroSection = ({ data }: { data: any }) => {
                 >
                   View Products
                 </Link>
-              )
+              ) : ( "")
             }
 
             {
-              data?.is_active_contactus && (
-                <Link
+              data?.is_active_contactus === 1 ? ( <Link
                   href="/contact-us"
                   className="px-6 sm:px-8 py-3 sm:py-3.5 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors text-center text-sm sm:text-base"
                 >
                   Contact Us
-                </Link>)
+                </Link>) : ( "") 
+               
             }
 
 

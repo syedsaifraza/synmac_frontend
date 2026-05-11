@@ -7,11 +7,11 @@ const SubIndustries = ({ industry }: any) => {
   if (!industry || industry.length === 0) return null;
 
   return (
-    <div className="bg-[#2f3333] text-white py-16 px-4">
+    <div className="bg-white  py-16 px-4">
       <div className="max-w-6xl mx-auto">
 
         {/* Heading */}
-        <h2 className="text-3xl font-semibold mb-10 tracking-tight">
+        <h2 className="text-3xl font-semibold mb-10 text-gray-900 tracking-tight">
           Related Sub Industries
         </h2>
 
@@ -41,8 +41,8 @@ const SubIndustries = ({ industry }: any) => {
                 <div className="p-5 flex items-start gap-4">
  
               
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-gray-300 transition">
+                  <div className="flex-1 text-gray-800">
+                    <h3 className="text-lg font-semibold mb-2  transition">
                       {item.name}
                     </h3>
 

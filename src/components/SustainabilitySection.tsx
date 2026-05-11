@@ -128,12 +128,12 @@ const SustainabilitySection = ({ data, data1 }: any) => {
       </section>
 
 
-      <section ref={statsRef} className="py-20  bg-[#292929]">
+      <section ref={statsRef} className="py-20  bg-[#cd2626]">
         <div className="container mx-auto max-w-6xl ">
           <div className="text-center mb-12">
-            <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Key Numbers</p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white">
-              Our Impact in <span className="text-[#cd2626]">Numbers</span>
+            <p className="text-gray-800 text-sm font-semibold tracking-wider uppercase mb-3">Key Numbers</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-gray-800">
+              Our Impact in <span className="text-white">Numbers</span>
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -153,10 +153,10 @@ const SustainabilitySection = ({ data, data1 }: any) => {
 
               return (
                 <div key={s.label} className="text-center py-6">
-                  <div className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+                  <div className="text-4xl md:text-5xl font-display font-bold text-gray-800 mb-2">
                     {counts[i]}{s.suffix}
                   </div>
-                  <p className="text-sm text-white/60">{label}</p>
+                  <p className="text-lg font-semibold text-gray-800">{label}</p>
                 </div>
               )
 

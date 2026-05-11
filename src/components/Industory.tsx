@@ -74,7 +74,7 @@ function SubIndustry() {
                 </div>
 
                 {/* Arrow (Top aligned) */}
-                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-[2px] group-hover:translate-x-1 transition">
+                <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
                   <IoIosArrowRoundForward className="text-xl" />
                 </div>
 

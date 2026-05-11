@@ -29,34 +29,43 @@ const About_Soluctions = ({
                 />
 
               
-                <div className="bg-white">
-                    <div className="flex flex-col md:flex-row gap-8">
+               <div className="bg-white">
 
-                       
-                        <div className="flex-1 space-y-3">
-                            <h3 className="text-xl sm:text-2xl font-semibold text-gray-900">
-                                {sub_heading}
-                            </h3>
+    <div className="space-y-3">
 
-                            <div
-                                className="text-gray-600 text-sm sm:text-base leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: sub_descriptiion || "" }}
-                            />
-                        </div>
+        <h3 className="text-xl sm:text-2xl font-semibold text-gray-900">
+            {sub_heading}
+        </h3>
 
-                       
-                        {image && (
-                            <div className="md:w-1/2">
-                                <img
-                                    src={image}
-                                    alt="feature"
-                                    className="w-full h-60 sm:h-72 object-cover rounded-lg"
-                                />
-                            </div>
-                        )}
+        {image && (
+            <img
+                src={image}
+                alt="feature"
+                className="
+                    float-none 
+                    md:float-right
+                    w-full 
+                    md:w-1/2
+                    h-60 
+                    sm:h-72
+                    object-cover 
+                    rounded-lg 
+                    mb-4 
+                    md:ml-6
+                "
+            />
+        )}
 
-                    </div>
-                </div>
+        <div
+            className="text-gray-600 text-sm sm:text-base leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: sub_descriptiion || "" }}
+        />
+
+        <div className="clear-both"></div>
+
+    </div>
+
+</div>
             </div>
         </div>
     )
