@@ -16,12 +16,16 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
     const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    
+    // Pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    
     const [filters, setFilters] = useState({
         industry: "",
         subIndustry: "",
         category: "",
     });
-
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<{
@@ -31,23 +35,22 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         documentUrl: string;
     } | null>(null);
     const [formData, setFormData] = useState({
-    client_name: "",
-    client_email: "",
-    client_phone: "",
-    client_country: "",
-    company_name: "",
-    company_address: "",
-    purposes: [],           // Array to store multiple selected 
-    purpose_other_text: "", 
-    message: ""
-});
+        client_name: "",
+        client_email: "",
+        client_phone: "",
+        client_country: "",
+        company_name: "",
+        company_address: "",
+        purposes: [],
+        purpose_other_text: "",
+        message: ""
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
     const prevSearchParamsRef = useRef<string>("");
     const prevSearchRef = useRef<string>("");
     const prevFiltersRef = useRef(filters);
-
 
     const hasPendingRequest = React.useCallback((productId: any, documentType: any) => {
         const pendingRequests = localStorage.getItem(`doc_request_${productId}_${documentType}`);
@@ -59,7 +62,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         return false;
     }, []);
 
-
     const saveRequestToLocalStorage = (productId: number, documentType: string) => {
         const requestData = {
             timestamp: Date.now(),
@@ -68,29 +70,23 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         localStorage.setItem(`doc_request_${productId}_${documentType}`, JSON.stringify(requestData));
     };
 
-
     const removeRequestFromLocalStorage = (productId: number, documentType: string) => {
         localStorage.removeItem(`doc_request_${productId}_${documentType}`);
     };
-
 
     const handleDocumentClick = (e: React.MouseEvent, pro: any, docType: 'tds' | 'msds', docUrl: string) => {
         const isLocked = docType === 'tds' ? pro?.is_tds_locked : pro?.is_msds_locked;
         const hasDoc = docType === 'tds' ? pro?.tds_doc : pro?.msds_doc;
 
-        // If no document exists, don't do anything
         if (!hasDoc) {
             e.preventDefault();
             return;
         }
 
-        // If document exists and is not locked, open in new tab
         if (hasDoc && !isLocked) {
-            // Open in new tab (default behavior)
             return;
         }
 
-        // If document exists and is locked, show modal
         if (hasDoc && isLocked) {
             e.preventDefault();
             setSelectedDocument({
@@ -102,19 +98,18 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
             setIsModalOpen(true);
             setSubmitMessage(null);
             setFormData({
-    client_name: "",
-    client_email: "",
-    client_phone: "",
-    client_country: "",
-    company_name: "",
-    company_address: "",
-    purposes: [],           // Array to store multiple selected 
-    purpose_other_text: "", 
-    message: ""
-});
+                client_name: "",
+                client_email: "",
+                client_phone: "",
+                client_country: "",
+                company_name: "",
+                company_address: "",
+                purposes: [],
+                purpose_other_text: "",
+                message: ""
+            });
         }
     };
-
 
     const handleFormChange = React.useCallback((e: any) => {
         setFormData(prev => ({
@@ -122,7 +117,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
             [e.target.name]: e.target.value
         }));
     }, []);
-
 
     const handleSubmitRequest = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -132,33 +126,31 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         setIsSubmitting(true);
         setSubmitMessage(null);
 
-     const requestData = {
-    product_id: selectedDocument.productId,
-    client_name: formData.client_name,
-    client_email: formData.client_email,
-    client_phone: formData.client_phone,
-    client_country: formData.client_country,
-    company_name: formData.company_name,
-    company_address: formData.company_address,
-    purposes: formData.purposes,  // Send array of selected purposes
-    purpose_other_text: formData.purpose_other_text,  // Send custom text if "Other" is selected
-    message: formData.message,
-    document_type: selectedDocument.documentType,
-    request_status: "pending"
-};
+        const requestData = {
+            product_id: selectedDocument.productId,
+            client_name: formData.client_name,
+            client_email: formData.client_email,
+            client_phone: formData.client_phone,
+            client_country: formData.client_country,
+            company_name: formData.company_name,
+            company_address: formData.company_address,
+            purposes: formData.purposes,
+            purpose_other_text: formData.purpose_other_text,
+            message: formData.message,
+            document_type: selectedDocument.documentType,
+            request_status: "pending"
+        };
 
         try {
-
             const response = await fetch('/api/request', {
-  method: 'POST',
-  body: JSON.stringify(requestData),
-});
+                method: 'POST',
+                body: JSON.stringify(requestData),
+            });
 
             if (response.ok) {
                 const result = await response.json();
                 saveRequestToLocalStorage(selectedDocument.productId, selectedDocument.documentType);
                 setSubmitMessage({ type: 'success', text: 'Request submitted successfully! You will receive access via email shortly.' });
-
 
                 setTimeout(() => {
                     setIsModalOpen(false);
@@ -176,16 +168,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         }
     };
 
-
     const handleReRequest = (productId: number, documentType: string) => {
         removeRequestFromLocalStorage(productId, documentType);
-
         if (selectedDocument) {
             setSelectedDocument({ ...selectedDocument });
         }
     };
-
-
 
     const syncFromURL = () => {
         const productname = searchParams.get("productname");
@@ -213,6 +201,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         if (searchChanged || filtersChanged) {
             setSearch(newSearch);
             setFilters(newFilters);
+            setCurrentPage(1); // Reset to first page when filters change
 
             prevSearchRef.current = newSearch;
             prevFiltersRef.current = newFilters;
@@ -225,7 +214,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         const currentParams = searchParams.toString();
 
         if (prevSearchParamsRef.current !== currentParams) {
-
             setIsLoading(true);
             syncFromURL();
         }
@@ -235,7 +223,6 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
 
     useEffect(() => {
         const handlePopState = () => {
-
             setIsLoading(true);
             setTimeout(() => {
                 syncFromURL();
@@ -263,26 +250,42 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         }) || [];
     }, [product, filters, search]);
 
+    // Pagination calculations
+    const totalProducts = filterProduct.length;
+    const totalPages = Math.ceil(totalProducts / pageSize);
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedProducts = filterProduct.slice(startIndex, endIndex);
 
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newSize = parseInt(e.target.value);
+        setPageSize(newSize);
+        setCurrentPage(1); // Reset to first page when changing page size
+    };
 
     const handleFilterChange = (type: string, value: string) => {
-
         setFilters(prev => ({
             ...prev,
             [type]: prev[type as keyof typeof filters] === value ? "" : value
         }));
+        setCurrentPage(1); // Reset to first page when filter changes
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-
         setSearch(value);
+        setCurrentPage(1); // Reset to first page when search changes
     };
 
     const clearAllFilters = () => {
-
         setSearch("");
         setFilters({ industry: "", subIndustry: "", category: "" });
+        setCurrentPage(1); // Reset to first page when clearing filters
     };
 
     const filteredIndustries = industry?.data?.filter((item: any) =>
@@ -297,9 +300,41 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-
-
-
+    // Generate page numbers to display
+    const getPageNumbers = () => {
+        const pageNumbers = [];
+        const maxPagesToShow = 5;
+        
+        if (totalPages <= maxPagesToShow) {
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            if (currentPage <= 3) {
+                for (let i = 1; i <= 4; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push('...');
+                pageNumbers.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pageNumbers.push(1);
+                pageNumbers.push('...');
+                for (let i = totalPages - 3; i <= totalPages; i++) {
+                    pageNumbers.push(i);
+                }
+            } else {
+                pageNumbers.push(1);
+                pageNumbers.push('...');
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push('...');
+                pageNumbers.push(totalPages);
+            }
+        }
+        
+        return pageNumbers;
+    };
 
     return (
         <>
@@ -324,7 +359,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         </p>
                     </div>
 
-                    <div className="relative max-w-2xl mb-4 sm:mb-6">
+                    <div className="relative mb-4 sm:mb-6">
                         <BiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                         <input
                             type="text"
@@ -346,8 +381,8 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Search: "{search}"
                                 <button onClick={() => {
-
                                     setSearch("");
+                                    setCurrentPage(1);
                                 }} className="hover:text-red-500" disabled={isLoading}>
                                     ✕
                                 </button>
@@ -390,7 +425,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
 
                     <div className="flex flex-col lg:flex-row gap-5 lg:gap-6">
                         <div className="hidden lg:block lg:w-80 xl:w-96 shrink-0">
-                            <div className="sticky top-24">
+                            <div className="sticky top-20">
                                 <FilterSidebar
                                     filteredIndustries={filteredIndustries}
                                     filteredSubIndustries={filteredSubIndustries}
@@ -431,13 +466,32 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         )}
 
                         <div className="flex-1 min-w-0">
-                            <h1 className='text-sm sm:text-base text-gray-500 font-semibold mb-3'>
-                                Showing {filterProduct.length} Result{filterProduct.length !== 1 ? 's' : ''}
-                            </h1>
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                                <h1 className='text-sm sm:text-base text-gray-500 font-semibold'>
+                                    Showing {startIndex + 1}-{Math.min(endIndex, totalProducts)} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
+                                </h1>
+                                
+                                {/* Page Size Selector */}
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm text-gray-600">Show:</label>
+                                    <select
+                                        value={pageSize}
+                                        onChange={handlePageSizeChange}
+                                        className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626]"
+                                        disabled={isLoading}
+                                    >
+                                        <option value={10}>10</option>
+                                        <option value={15}>15</option>
+                                        <option value={20}>20</option>
+                                        <option value={50}>50</option>
+                                    </select>
+                                    <span className="text-sm text-gray-600">per page</span>
+                                </div>
+                            </div>
 
                             <div className='space-y-3 sm:space-y-4'>
-                                {filterProduct.length > 0 ? (
-                                    filterProduct.map((pro: any) => (
+                                {paginatedProducts.length > 0 ? (
+                                    paginatedProducts.map((pro: any) => (
                                         <div
                                             key={pro?.id}
                                             className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-lg transition-all duration-300"
@@ -479,7 +533,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                                         rel="noopener noreferrer"
                                                                         className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_tds_locked
-                                                                                ? "bg-gray-400 cursor-pointer hover:bg-gray-500"
+                                                                                ? "bg-black text-white cursor-pointer hover:bg-gray-500"
                                                                                 : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
                                                                             }`}
                                                                     >
@@ -524,6 +578,44 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                     </div>
                                 )}
                             </div>
+
+                            {/* Pagination Component */}
+                            {totalPages > 1 && paginatedProducts.length > 0 && (
+                                <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+                                    <button
+                                        onClick={() => handlePageChange(currentPage - 1)}
+                                        disabled={currentPage === 1 || isLoading}
+                                        className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        Previous
+                                    </button>
+                                    
+                                    {getPageNumbers().map((page, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => typeof page === 'number' && handlePageChange(page)}
+                                            disabled={typeof page !== 'number' || isLoading}
+                                            className={`min-w-10 px-3 py-2 rounded-md transition-colors ${
+                                                currentPage === page
+                                                    ? 'bg-[#cd2626] text-white'
+                                                    : typeof page === 'number'
+                                                    ? 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                                    : 'border-none text-gray-500 cursor-default'
+                                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                    
+                                    <button
+                                        onClick={() => handlePageChange(currentPage + 1)}
+                                        disabled={currentPage === totalPages || isLoading}
+                                        className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
