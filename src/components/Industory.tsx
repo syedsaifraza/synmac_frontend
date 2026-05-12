@@ -33,7 +33,7 @@ function SubIndustry() {
     <div className="bg-[#2f3333] text-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
 
-        {/* Heading */}
+       
         <h2 className="text-3xl font-semibold mb-10 tracking-tight">
           Sub Industries
         </h2>
