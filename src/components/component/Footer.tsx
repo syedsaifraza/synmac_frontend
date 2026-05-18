@@ -134,7 +134,7 @@ const Footer = async () => {
         </div>
         <div className="grid grid-cols-2 gap-4 items-center mt-6 pt-4 border-t border-white/10">
           <div className=" text-sm text-white/50 fonts">
-          © {new Date().getFullYear()} {data?.data?.copyright_text}v1.0.3
+          © {new Date().getFullYear()} {data?.data?.copyright_text}v1.0.4
         </div>
 
 
