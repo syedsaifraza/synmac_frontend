@@ -1,17 +1,17 @@
 'use client'
-import React, { useEffect, useState, useRef, useCallback } from 'react'
-import Logo from "../../public/favicon.png"
+import { useEffect, useState, useRef, useCallback } from 'react'
+import Logo from "../../../public/newLogo.png"
 import Image from 'next/image';
-import { FaAngleDoubleDown, FaAngleDown, FaAngleRight, FaSearch } from 'react-icons/fa';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
-import SearchOverlay from './SearchOverlay';
-import LanguageSelector from './LanguageSelector';
-import { FaMarsAndVenus } from 'react-icons/fa6';
+import SearchOverlay from '../SearchOverlay';
+import LanguageSelector from '../LanguageSelector';
+
 
 // Types
 interface Product {
@@ -250,13 +250,12 @@ const isProductPage = pathname === '/product';
     }
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 fonts">
       <div className={`${getNavbarBg()} ${isMenuOpen && "border-b border-gray-200"}`}>
-                <div className="max-w-6xl mx-auto flex items-center justify-between py-4">
-                    <Link href="/" className="flex items-center gap-2">
-                        <Image src={Logo} alt="Logo" className="h-10 w-10" />
-                        <span className="font-extrabold text-2xl text-[#cd2626]">SYNMAC</span>
-                        <span className="font-extrabold text-2xl text-black">beta</span>
+                <div className="max-w-6xl mx-auto flex items-center justify-between py-4 ">
+                    <Link href="/" className="flex items-center gap-2 w-1/4">
+                        <Image src={Logo} alt="Logo" className="w-[70%]" /> 
+                        <span className="font-extrabold text-xs text-black">beta</span>
                     </Link>
 
                     <ul className={`hidden md:flex items-center gap-6 text-sm font-medium ${getNavbarTextColor()}`}>
@@ -362,7 +361,7 @@ const isProductPage = pathname === '/product';
                                             </div>
 
                                          
-                                            <div className="p-4 flex flex-col grow">
+                                            <div className="py-4 flex flex-col grow">
 
                                                 
                                                 <h1 className="text-lg font-semibold text-gray-800 mb-2">
@@ -374,13 +373,13 @@ const isProductPage = pathname === '/product';
                                                     dangerouslySetInnerHTML={{
                                                         __html: activeIndustry.hero_background_description || ""
                                                     }}
-                                                    className="text-sm text-gray-600 line-clamp-8 mb-4"
+                                                    className="text-sm text-gray-600 line-clamp-8 fonts mb-4"
                                                 />
 
                                               
                                                 <Link
                                                     href={`/industry/${activeIndustry.slug}`}
-                                                    className="mt-auto inline-block text-center  border border-[#cd2626] px-4 py-2 rounded-full text-white bg-[#cd2626] hover:bg-[#cd2626]/80 transition"
+                                                    className="text-center  border border-[#cd2626] px-4 py-2 rounded-full text-white bg-[#cd2626] hover:bg-[#cd2626]/80 transition"
                                                 >
                                                     Explore More
                                                 </Link>
@@ -404,9 +403,9 @@ const isProductPage = pathname === '/product';
 
                                     </div>
                                     <div className="py-2 space-y-1">
-                                        {data.map((industry) => (
+                                        {data.map((industry,idx:number) => (
                                             <Link
-                                                key={industry.id}
+                                                key={idx}
                                                 href={getIndustryUrl(industry)}
                                                 onMouseEnter={() => handleIndustryHover(industry)}
                                                 className={`flex items-center font-semibold  rounded-lg text-xs
@@ -430,9 +429,9 @@ const isProductPage = pathname === '/product';
                                     </div>
                                     <div className="space-y-1 py-2">
                                         {hasSubIndustries(activeIndustry) ? (
-                                            activeIndustry.sub_industry?.map((sub) => (
+                                            activeIndustry.sub_industry?.map((sub,idx:number) => (
                                                 <Link
-                                                    key={sub.id}
+                                                    key={idx}
                                                     href={getSubIndustryUrl(activeIndustry, sub)}
                                                     onMouseEnter={() => handleSubIndustryHover(sub)}
                                                     className={`  flex font-semibold items-center rounded-lg text-xs
@@ -472,9 +471,9 @@ const isProductPage = pathname === '/product';
 
 
                                         {activeSubIndustry && hasCategories(activeSubIndustry) ? (
-                                            activeSubIndustry.product_category?.map((cat) => (
+                                            activeSubIndustry.product_category?.map((cat,idx:number) => (
                                                 <Link
-                                                    key={cat.id}
+                                                    key={idx}
                                                     href={getCategoryUrl(activeIndustry, activeSubIndustry, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
                                                     className={`flex font-semibold items-center rounded-lg text-xs mb-0.5
@@ -491,9 +490,9 @@ const isProductPage = pathname === '/product';
                                                 </Link>
                                             ))
                                         ) : activeIndustry && hasDirectCategories(activeIndustry) ? (
-                                            activeIndustry.product_category?.map((cat) => (
+                                            activeIndustry.product_category?.map((cat,idx:number) => (
                                                 <Link
-                                                    key={cat.id}
+                                                    key={idx}
                                                     href={getCategoryUrl(activeIndustry, null, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
                                                     className={`block rounded-lg text-xs mb-0.5
@@ -522,9 +521,9 @@ const isProductPage = pathname === '/product';
                                     </div>
                                     <div className="py-2 space-y-1 ">
                                         {products.length > 0 ? (
-                                            products.map((product) => (
+                                            products.map((product,idx:number) => (
                                                 <Link
-                                                    key={product.id}
+                                                    key={idx}
                                                     href={getProductUrl(product)}
                                                     className="block font-semibold  text-xs mb-0.5 text-gray-700 hover:text-[#cd2626] "
                                                 >
@@ -604,9 +603,9 @@ const isProductPage = pathname === '/product';
 
                         {mobileView === 'industries' && (
                             <div>
-                                {data.map((industry) => (
+                                {data.map((industry,idx:number) => (
                                     <button
-                                        key={industry.id}
+                                        key={idx}
                                         onClick={() => {
                                             setSelectedIndustry(industry);
                                             if (hasSubIndustries(industry)) setMobileView('subIndustries');
@@ -624,9 +623,9 @@ const isProductPage = pathname === '/product';
 
                         {mobileView === 'subIndustries' && selectedIndustry && (
                             <div>
-                                {selectedIndustry.sub_industry?.map((sub) => (
+                                {selectedIndustry.sub_industry?.map((sub,idx:number) => (
                                     <button
-                                        key={sub.id}
+                                        key={idx}
                                         onClick={() => {
                                             setSelectedSubIndustry(sub);
                                             if (hasCategories(sub)) setMobileView('categories');
@@ -643,9 +642,9 @@ const isProductPage = pathname === '/product';
 
                         {mobileView === 'categories' && selectedSubIndustry && (
                             <div>
-                                {selectedSubIndustry.product_category?.map((cat) => (
+                                {selectedSubIndustry.product_category?.map((cat,idx:number) => (
                                     <button
-                                        key={cat.id}
+                                        key={idx}
                                         onClick={() => {
                                             setSelectedCategory(cat);
                                             if (hasProductsInCategory(cat)) setMobileView('products');
@@ -661,9 +660,9 @@ const isProductPage = pathname === '/product';
 
                         {mobileView === 'products' && (
                             <div>
-                                {selectedCategory?.products?.map((product) => (
+                                {selectedCategory?.products?.map((product,idx:number) => (
                                     <Link
-                                        key={product.id}
+                                        key={idx}
                                         href={getProductUrl(product)}
                                         onClick={closeMenu}
                                         className="block py-3 border-b"
@@ -671,9 +670,9 @@ const isProductPage = pathname === '/product';
                                         {product.name}
                                     </Link>
                                 ))}
-                                {!selectedCategory && selectedSubIndustry?.products?.map((product) => (
+                                {!selectedCategory && selectedSubIndustry?.products?.map((product,idx:number) => (
                                     <Link
-                                        key={product.id}
+                                        key={idx}
                                         href={getProductUrl(product)}
                                         onClick={closeMenu}
                                         className="block py-3 border-b"

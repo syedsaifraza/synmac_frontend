@@ -77,7 +77,7 @@ const IndustriesSection = async () => {
           <h2 className="font-display text-3xl md:text-6xl font-bold mb-4">
             Coming <span className="text-[#cd2626]">Soon</span>
           </h2>
-          <p className="text-gray-500">Industries data is being loaded. Please check back later.</p>
+          <p className="text-gray-500 fonts">Industries data is being loaded. Please check back later.</p>
         </div>
       </section>
     );
@@ -101,13 +101,13 @@ const IndustriesSection = async () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
           {industries?.slice(0, 10).map((industry: Industry, index: any) => {
 
-            const firstSubIndustry = industry.sub_industry[0];
+
             const imageUrl = industry.feature_file_link || industry.hero_background_file_url;
 
             if (index === 9) {
               return (
               
-                  <Link key={industry.id} href={`/industries`} className="block relative overflow-hidden rounded-xl ">
+                  <Link key={index} href={`/industries`} className="block relative overflow-hidden rounded-xl ">
                     <div className="aspect-4/3 overflow-hidden ">
                       {imageUrl ? (
                         <img
@@ -134,7 +134,7 @@ const IndustriesSection = async () => {
 
                       {industry.hero_background_description && (
                         <p
-                          className="text-sm text-gray-400 mt-2 line-clamp-2"
+                          className="text-sm text-gray-400 mt-2 line-clamp-2 fonts"
                           dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}
                         />
                       )}

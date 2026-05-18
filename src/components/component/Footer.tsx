@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Logo from "../../../public/newLogo.png"
+import Image from "next/image";
 
 async function getUser() {
   const res = await fetch(`http://synmac.acetians.in/api/footer/`, {
@@ -26,10 +28,11 @@ const Footer = async () => {
         <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
 
            <div >
-            <div>
-            <h3 className="font-display text-4xl font-bold mb-4 text-[#cd2626]">
-              SYNMAC<span className="text-primary "></span>
-            </h3>
+            <div className="space-y-4">
+                <Link href="/" className="flex items-center gap-2 ">
+                        <Image src={Logo} alt="Logo" className="w-[35%]" /> 
+                        <span className="font-extrabold text-xs text-black">beta</span>
+                    </Link>
             <p className="text-sm font-semibold text-white/70 leading-relaxed mb-3">
               {/* {data?.data?.description} */}
 
@@ -44,8 +47,8 @@ const Footer = async () => {
                <div>
                   <h4 className="font-display font-semibold mb-4 text-sm tracking-wider uppercase text-white/50">QUICK LINKS</h4>
                   <ul className="space-y-2 text-sm">
-                    {data?.data?.route_list.map((item: any) => (
-                      <li key={item.url}><Link href={item.url} className="text-white/70 hover:text-primary transition-colors">{item.name}</Link></li>
+                    {data?.data?.route_list.map((item: any , idx:number) => (
+                      <li key={idx}><Link href={item.url} className="text-white/70 hover:text-primary transition-colors fonts">{item.name}</Link></li>
                     ))}
                   </ul>
                 </div>
@@ -57,10 +60,10 @@ const Footer = async () => {
 
 
               {
-                data?.data?.social_media_link.map((link: any) => {
+                data?.data?.social_media_link.map((link: any,idx:number) => {
                   if (link.platform === "Facebook") {
                     return (
-                      <Link key={link.platform} href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-primary hover:text-white transition-colors">
+                      <Link key={idx} href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-primary hover:text-white transition-colors">
                         <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
                       </Link>
                     )
@@ -110,8 +113,8 @@ const Footer = async () => {
           <div>
             <h4 className="font-display font-semibold mb-4 text-sm tracking-wider uppercase text-white/50">Company</h4>
             <ul className="space-y-2 text-sm">
-              {data?.data?.route_list.map((item: any) => (
-                <li key={item.url}><Link href={item.url} className="text-white/70 hover:text-primary transition-colors">{item.name}</Link></li>
+              {data?.data?.route_list.map((item: any,idx:number) => (
+                <li key={idx}><Link href={item.url} className="text-white/70 hover:text-primary transition-colors">{item.name}</Link></li>
               ))}
             </ul>
           </div>
@@ -130,12 +133,12 @@ const Footer = async () => {
          
         </div>
         <div className="grid grid-cols-2 gap-4 items-center mt-6 pt-4 border-t border-white/10">
-          <div className=" text-sm text-white/50">
+          <div className=" text-sm text-white/50 fonts">
           © {new Date().getFullYear()} {data?.data?.copyright_text}v1.0.3
         </div>
 
 
-        <div className="  text-sm flex flex-row justify-end items-center gap-5 text-white/50">
+        <div className="  text-sm flex flex-row justify-end items-center gap-5 fonts text-white/50">
          <a className="border-r-2 px-4">TERMS OF SALE</a>
          <a  className="border-r-2 pr-4">PRIVACY STATEMENTS</a>
            <a>DISCLAIMER </a>

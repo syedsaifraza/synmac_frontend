@@ -1,17 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import heroBg1 from "@/assets/hero-bg.jpg";
-import heroBg2 from "@/assets/hero-bg-2.jpg";
-import heroBg3 from "@/assets/hero-bg-3.jpg";
-import heroBg4 from "@/assets/img4.png";
-import heroBg5 from "@/assets/img5.png";
-import heroBg6 from "@/assets/img6.jpeg";
-import heroBg7 from "@/assets/img7.png";
-import heroBg8 from "@/assets/img8.jpeg";
-import heroBg9 from "@/assets/img9.jpeg";
-import heroBg10 from "@/assets/img10.jpeg";
-import heroBg11 from "@/assets/img11.png";
+
 
 
 import Image from "next/image";
@@ -56,7 +46,7 @@ const HeroSection = ({ data }: { data: any }) => {
 
 
 
-      {/* Overlay */}
+    
       <div className="absolute inset-0  bg-[linear-gradient(to_right,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.6)_30%,rgba(0,0,0,0.3)_45%,rgba(0,0,0,0.3)_50%)] z-1" />
 
 
@@ -68,7 +58,7 @@ const HeroSection = ({ data }: { data: any }) => {
 
             
 
-          <p dangerouslySetInnerHTML={{ __html: data?.description || "" }} className="text-white/80 text-sm sm:text-base md:text-lg max-w-xl mb-6 sm:mb-8 md:mb-10 leading-relaxed"
+          <p dangerouslySetInnerHTML={{ __html: data?.description || "" }} className="text-white/80 text-sm sm:text-base md:text-lg fonts max-w-xl mb-6 sm:mb-8 md:mb-10 leading-relaxed"
           
           />
 

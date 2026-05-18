@@ -40,18 +40,18 @@ const OurStrengths =async () => {
           <h2 className="font-display text-3xl text-black md:text-4xl font-bold">
             Why Choose <span className="text-[#cd2626]">Synmac</span>
           </h2>
-          <p className="text-gray-500 mt-4 max-w-xl mx-auto">
+          <p className="text-gray-500 mt-4 max-w-4xl mx-auto fonts">
            {data?.data?.description}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data?.data?.strength_lists.map((cap:any) => (
-            <div key={cap.image_id} className="p-8 text-center rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 group">
+          {data?.data?.strength_lists.map((cap:any,idx:number) => (
+            <div key={idx} className="p-8 text-center rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 group">
               <div className="w-16 h-16 rounded-full bg-[#cd2626]/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/15 transition-colors">
                 <Image alt={cap.title} height={50} width={50} src={cap?.image_url} className="h-10 w-10 rounded-full object-cover"/>
               </div>
               <h3 className="font-display font-semibold text-xl mb-3 text-black">{cap.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{cap.description}</p>
+              <p className="text-sm text-gray-500 leading-relaxed fonts">{cap.description}</p>
             </div>
           ))}
         </div>

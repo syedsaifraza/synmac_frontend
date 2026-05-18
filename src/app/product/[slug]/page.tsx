@@ -3,8 +3,8 @@ import React from 'react';
 import { LiaAngleRightSolid } from 'react-icons/lia';
 
 import { FaLock, FaLockOpen } from "react-icons/fa";
-import Header from '@/components/Header';
-import ProductPage from '@/components/ProductPage';
+import Header from '@/components/component/Header';
+import ProductPage from '@/components/product_page/ProductPage';
 
 async function getProduct(slug: any) {
   const res = await fetch(

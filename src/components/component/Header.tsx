@@ -13,7 +13,7 @@ export default function Header({ title, description, background_image, }: { titl
 
 
 
-      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-cover bg-no-repeat bg-center flex items-center"
+      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-cover bg-no-repeat bg-center flex items-center bg-[#ff0100]"
         style={{ backgroundImage: `url(${background_image})` }} >
 
 
@@ -25,7 +25,7 @@ export default function Header({ title, description, background_image, }: { titl
             <h1 className="text-3xl md:text-5xl font-bold leading-tight">
               {title}
             </h1>
-            <p dangerouslySetInnerHTML={{ __html: description || "" }} className="mt-4 text-lg md:text-xl" />
+            <p dangerouslySetInnerHTML={{ __html: description || "" }} className="mt-4 text-lg md:text-xl fonts" />
           </div>
         </div>
 

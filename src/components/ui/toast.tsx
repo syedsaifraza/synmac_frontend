@@ -1,4 +1,3 @@
-// Placeholder for the toast module
 
 export type ToastActionElement = React.ReactNode;
 

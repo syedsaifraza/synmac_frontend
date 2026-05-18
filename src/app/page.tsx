@@ -1,4 +1,4 @@
-import HeroSection from "@/components/HeroSection";
+import HeroSection from "@/components/component/HeroSection";
 import IndustriesSection from "@/components/IndustriesSection";
 import OurStrengths from "@/components/OurStrengths";
 import SustainabilitySection from "@/components/SustainabilitySection";
@@ -37,16 +37,14 @@ export default async function page() {
 
 
 
-  console.log("Sustainability",sustainability )
-
-  console.log("company",data)
-
-
-
   return (
     <div className="">
-      {/* <Startup/> */}
-      <HeroSection data={heroSection?.data} />
+    
+     {
+  heroSection?.data && (
+    <HeroSection data={heroSection.data} />
+  )
+}
       <IndustriesSection />
       <OurStrengths />
       <SustainabilitySection data={sustainability?.data} data1={data.data} />

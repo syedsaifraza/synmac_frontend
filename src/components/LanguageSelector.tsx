@@ -94,9 +94,9 @@ const LanguageSelector = () => {
 
       {open && (
         <div className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg z-50 max-h-64 overflow-y-auto">
-          {languages.map((lang) => (
+          {languages.map((lang,idx:number) => (
             <button
-              key={lang.code}
+              key={idx}
               onClick={() => selectLanguage(lang.code)}
               className={`block w-full text-left text-black px-4 py-2 text-sm hover:bg-gray-100 ${
                 currentLang === lang.code ? "font-bold text-blue-600" : ""

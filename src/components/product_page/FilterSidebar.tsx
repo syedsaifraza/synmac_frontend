@@ -54,7 +54,7 @@ export const FilterSidebar = ({
                                         key={item.id}
                                         className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
                                     >
-                                        <div className="flex items-center gap-2 flex-1">
+                                        <div className="flex items-center gap-2 flex-1 fonts">
                                             <input
                                                 type="radio"
                                                 name="industry"
@@ -65,7 +65,7 @@ export const FilterSidebar = ({
                                             />
                                             <span className="cursor-pointer">{item.name}</span>
                                         </div>
-                                        <p>{item?.product_count || (0)}</p>
+                                        <p >{item?.product_count || (0)}</p>
                                     </label>
                                 ))
                             ) : (
@@ -99,7 +99,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.subIndustry && (
-                        <div className="space-y-2 max-h-50 overflow-y-auto">
+                        <div className="space-y-2 max-h-50 overflow-y-auto fonts">
                             {filteredSubIndustries.length > 0 ? (
                                 filteredSubIndustries.map((item: any) => (
                                     <label
@@ -151,11 +151,11 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.category && (
-                        <div className="space-y-2 max-h-50 overflow-y-auto">
+                        <div className="space-y-2 max-h-50 overflow-y-auto fonts">
                             {filteredCategories.length > 0 ? (
-                                filteredCategories.map((item: any) => (
+                                filteredCategories.map((item: any , idx:number) => (
                                     <label
-                                        key={item.id}
+                                        key={idx}
                                         className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
                                     >
                                         <div className="flex items-center gap-2 flex-1">

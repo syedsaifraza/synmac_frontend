@@ -1,10 +1,12 @@
-import About_Soluctions from "@/components/About_Soluctions";
-import Header from "@/components/Header";
-import Product_Category_Section from "@/components/Product_Category_Section";
-import Sub_IndustrySection from "@/components/Sub_IndustrySection";
-import SubIndustries from "@/components/SubIndustries";
+import About_Soluctions from "@/components/component/About_Soluctions";
+import Faqs_Section from "@/components/component/Faqs_Section";
+import Header from "@/components/component/Header";
+import Product_Category_Section from "@/components/component/ProductCategory_Card";
+import Product_Section from "@/components/component/Product_Card";
+import ResourcesSection from "@/components/component/ResourcesSection";
 import Link from "next/link";
 import { LiaAngleRightSolid } from "react-icons/lia";
+import { SubIndustry } from "@/components/component/SubIndustry_Card";
 
 async function getUser(id: any) {
   const res = await fetch(
@@ -27,17 +29,6 @@ const Page = async ({ params }: any) => {
 
 
 
- 
-
-
-
-
-
-  const info = {
-    "name": data?.data?.name,
-    "image": data?.data?.image,
-    "description": data?.data?.description
-  }
 
 
   const resources = data?.data?.resources
@@ -71,31 +62,17 @@ const Page = async ({ params }: any) => {
         sub_heading={data?.data?.feature_sub_title}
         sub_descriptiion={data?.data?.feature_sub_description}
         image={data?.data?.feature_file_link} />
+      <ResourcesSection resources={resources} />
+      <Product_Category_Section data={data?.data?.product_category} title={"Product Categories"} />
+      <Product_Section product_list={data.data.products}/>
 
-      <Product_Category_Section data={data?.data?.product_category} />
-     
-      <Sub_IndustrySection
-        data={data.data}
-        faqs={data?.data?.faqs}
-        info={info}
-        Resources={resources}
-      />
 
-       <SubIndustries industry={data?.data?.relatedSubIndustry} />
-  <section  className="section-fade-in py-20  bg-muted/40 bg-gray-50">
-            <div className="container max-w-6xl mx-auto">
-              <div className="text-center ">
-                <h2 className="font-display text-3xl text-black md:text-4xl font-bold">
-                  WHY CHOOSE <span className="text-[#cd2626]">SYNMAC</span>
-                </h2>
-                <p className="text-gray-500 mt-4 max-w-4xl mx-auto text-lg">
-                We combine innovation, reliability, and customer-first service to deliver solutions that truly make a difference. Our team is dedicated to quality, transparency, and building long-term relationships. Choosing us means choosing expertise, trust, and results.
-                </p>
-              </div>
-             
-            </div>
-           
-          </section>
+      <SubIndustry subIndustry={data?.data?.relatedSubIndustry} title={"Related Sub Industries"} />
+
+       <Faqs_Section faqs={data?.data?.faqs} />
+
+      
+  
     </div>
   );
 }

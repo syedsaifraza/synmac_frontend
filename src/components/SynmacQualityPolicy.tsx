@@ -28,7 +28,7 @@ const SynmacQualityPolicy = () => {
           {/* 1. Suppliers */}
           <div className="border-b border-gray-200 pb-6">
             <div className="flex items-start gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center shrink-0 mt-0.5">
                 <BiBuilding className="text-[#cd2626]" size={18} />
               </div>
               <h2 className="text-xl font-semibold text-gray-800">Suppliers</h2>
@@ -45,7 +45,7 @@ const SynmacQualityPolicy = () => {
           {/* 2. Product Quality Improvement */}
           <div className="border-b border-gray-200 pb-6">
             <div className="flex items-start gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center shrink-0 mt-0.5">
                 <BiTrendingUp className="text-[#cd2626]" size={18} />
               </div>
               <h2 className="text-xl font-semibold text-gray-800">Product Quality Improvement</h2>
@@ -66,7 +66,7 @@ const SynmacQualityPolicy = () => {
           {/* 3. Samples */}
           <div className="border-b border-gray-200 pb-6">
             <div className="flex items-start gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center shrink-0 mt-0.5">
                 <BiLogoFlask className="text-[#cd2626]" size={18} />
               </div>
               <h2 className="text-xl font-semibold text-gray-800">Samples</h2>
@@ -85,7 +85,7 @@ const SynmacQualityPolicy = () => {
           {/* 4. Corrective Action */}
           <div className="pb-4">
             <div className="flex items-start gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#cd2626]/10 flex items-center justify-center shrink-0 mt-0.5">
                 <BiChat className="text-[#cd2626]" size={18} />
               </div>
               <h2 className="text-xl font-semibold text-gray-800">Corrective Action</h2>

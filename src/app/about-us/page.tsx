@@ -236,7 +236,7 @@
 'use client'
 import AboutPage from '@/components/AboutPage'
 import CerrierLife from '@/components/CerrierLife'
-import Header from '@/components/Header'
+import Header from '@/components/component/Header'
 import SynmacTeam from '@/components/SynamcTeams'
 import SynmacQualityPolicy from '@/components/SynmacQualityPolicy'
 import WhoWeAre from '@/components/WhoWeAre'

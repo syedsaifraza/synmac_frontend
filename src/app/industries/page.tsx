@@ -1,4 +1,4 @@
-import Header from '@/components/Header'
+import Header from '@/components/component/Header'
 import Link from 'next/link';
 import React from 'react'
 import { BiChevronRight } from 'react-icons/bi';

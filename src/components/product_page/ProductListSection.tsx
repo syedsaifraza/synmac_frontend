@@ -354,12 +354,12 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
                             Find the Right <span className="text-[#cd2626]">Chemical Solution</span>
                         </h1>
-                        <p className="text-gray-500 text-sm sm:text-base max-w-xl">
+                        <p className="text-gray-500 text-sm sm:text-base max-w-xl fonts">
                             Browse our catalog of specialty chemicals. Filter by industry, sub-market, product type, or brand.
                         </p>
                     </div>
 
-                    <div className="relative mb-4 sm:mb-6">
+                    <div className="relative mb-4 sm:mb-6 fonts">
                         <BiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
                         <input
                             type="text"
@@ -376,7 +376,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                         )}
                     </div>
 
-                    <div className="flex gap-2 flex-wrap mb-4 sm:mb-6">
+                    <div className="flex gap-2 flex-wrap mb-4 sm:mb-6 fonts">
                         {search && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Search: "{search}"
@@ -503,10 +503,10 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
                                                         {pro?.name}
                                                     </Link>
                                                     <p dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
-                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4" />
+                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4 fonts" />
                                                     <div className="flex flex-wrap gap-1.5">
                                                         <div className='flex flex-row w-full justify-between'>
-                                                            <div>
+                                                            <div className="space-x-2">
                                                                 {pro?.industry_name && (
                                                                     <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
                                                                         {pro?.industry_name}

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
-const Product_Category_Section = ({ data }: any) => {
+const Product_Category_Section = ({ data,title }: any) => {
 
   const [showAll, setShowAll] = useState(false);
 
@@ -17,7 +17,7 @@ const Product_Category_Section = ({ data }: any) => {
 
     
         <h2 className="text-3xl font-semibold mb-10 tracking-tight">
-          Product Categories
+         {title}
         </h2>
 
  
@@ -46,11 +46,11 @@ console.log("product category item ", item)
                 </div>
 
                 
-                <div className="p-5 flex items-start gap-4">
+                <div className="py-5 flex items-start gap-4">
 
                
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-gray-300 transition">
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-[#ff0100] transition">
                       {item.name}
                     </h3>
 
@@ -58,12 +58,12 @@ console.log("product category item ", item)
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-400 text-sm line-clamp-3"
+                      className="text-gray-400 text-sm line-clamp-3 fonts"
                     />
                   </div>
 
                  
-                  <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
+                  <div className="w-9 h-9 flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
                     <IoIosArrowRoundForward className="text-xl text-white" />
                   </div>
 

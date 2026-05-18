@@ -77,14 +77,14 @@ const SustainabilitySection = ({ data, data1 }: any) => {
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 text-black">
                 {data.title}
               </h2>
-              <p className="text-gray-500 leading-relaxed mb-8 max-w-lg">
+              <p className="text-gray-500 leading-relaxed mb-8 max-w-lg fonts">
                 {data.description}
               </p>
               <div className="space-y-5">
-                {data?.sustainability_lists.map((item: any) => {
+                {data?.sustainability_lists.map((item: any,idx:number) => {
                   
                   return (
-                    <div key={item.title} className="flex items-start gap-4">
+                    <div key={idx} className="flex items-start gap-4">
                       <div className="w-11 h-11 rounded-xl bg-[#cd2626]/10  flex items-center justify-center shrink-0 mt-0.5">
                         <img
                           src={item?.url}
@@ -97,7 +97,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
                       </div>
                       <div>
                         <h4 className="font-display font-semibold text-sm text-black">{item.title}</h4>
-                        <p className="text-gray-500 text-sm">{item.description}</p>
+                        <p className="text-gray-500 text-sm fonts">{item.description}</p>
                       </div>
                     </div>
                   );
@@ -117,7 +117,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
                 <div className="bg-[#cd2626]/10 p-8 text-center">
                   <BiLeaf className="text-[#cd2626] mx-auto mb-3" size={36} />
                   <h3 className="font-display text-2xl font-bold mb-2 text-black">{data?.side_title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
+                  <p className="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto fonts">
                     {data?.side_description}
                   </p>
                 </div>
@@ -129,7 +129,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
 
 
       <section ref={statsRef} className="py-20  bg-[#cd2626]">
-        <div className="container mx-auto max-w-6xl ">
+        <div className="container mx-auto max-w-8xl ">
           <div className="text-center mb-12">
             <p className="text-gray-800 text-sm font-semibold tracking-wider uppercase mb-3">Key Numbers</p>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-gray-800">
@@ -152,7 +152,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
               }
 
               return (
-                <div key={s.label} className="text-center py-6">
+                <div key={i} className="text-center py-6">
                   <div className="text-4xl md:text-5xl font-display font-bold text-gray-800 mb-2">
                     {counts[i]}{s.suffix}
                   </div>
@@ -164,6 +164,18 @@ const SustainabilitySection = ({ data, data1 }: any) => {
           </div>
         </div>
       </section>
+      {/* <section  className="section-fade-in py-20  bg-muted/40 bg-gray-50">
+        <div className="container max-w-6xl mx-auto">
+          <div className="text-center ">
+            <h2 className="font-display text-3xl text-black md:text-4xl font-bold">
+              WHY CHOOSE <span className="text-[#cd2626]">SYNMAC</span>
+            </h2>
+            <p className="text-gray-500 mt-4 max-w-4xl mx-auto text-lg">
+              We combine innovation, reliability, and customer-first service to deliver solutions that truly make a difference. Our team is dedicated to quality, transparency, and building long-term relationships. Choosing us means choosing expertise, trust, and results.
+            </p>
+          </div>
+        </div>
+      </section> */}
     </>
   );
 };

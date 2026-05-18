@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io'
 import Link from "next/link"
 
-const Product_Section = ({ product_list }: any) => {
+const Product_Section = ({ product_list  ,title = "Products"}: any) => {
 
   const [showAll, setShowAll] = useState(false);
 
@@ -20,7 +20,7 @@ const Product_Section = ({ product_list }: any) => {
 
         
         <h2 className="text-3xl font-semibold mb-10 tracking-tight">
-          Products
+          {title} 
         </h2>
 
       
@@ -42,10 +42,11 @@ const Product_Section = ({ product_list }: any) => {
               <Link
                 key={i}
                 href={url}
-                className="group block bg-white rounded-xl overflow-hidden"
+                className="group block  rounded-xl overflow-hidden"
               >
 
-                {/* Image */}
+             {
+              item.image ? (
                 <div className="h-52 overflow-hidden">
                   <img
                     src={item.image}
@@ -53,27 +54,45 @@ const Product_Section = ({ product_list }: any) => {
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                   />
                 </div>
+              ) : (
+                 <></>
+              )
+             }
+                
 
               
-                <div className="p-5 flex items-start gap-4">
+                <div className="py-5 flex items-start gap-4">
 
                   
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-gray-700 transition">
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-[#ff0100] transition">
                       {item.name}
                     </h3>
 
-                    <p
+                    {
+                      item.image ?  (
+<p
+                    
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-3"
+                      className="text-gray-500 text-sm line-clamp-3 fonts"
                     />
+                      ) : (<p
+                      
+                      dangerouslySetInnerHTML={{
+                        __html: item.hero_background_description || ""
+                      }}
+                      className="text-gray-500 text-sm line-clamp-6 fonts"
+                    />)
+                    }
+
+                    
                   </div>
 
                  
-                  <div className="w-9 h-9 flex items-center justify-center rounded-full bg-[#cd2626] shrink-0 mt-[2px] group-hover:translate-x-1 transition">
-                    <IoIosArrowRoundForward className="text-xl text-white" />
+                  <div className="w-9 h-9 flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
+                    <IoIosArrowRoundForward size={30} className="text-xl text-white" />
                   </div>
 
                 </div>

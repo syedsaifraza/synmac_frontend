@@ -179,9 +179,9 @@ const SearchOverlay = ({ open, onClose, allProducts }: any) => {
               Product Suggestions ({suggestions.length})
             </h3>
             <div className="space-y-2">
-              {suggestions.map((product) => (
+              {suggestions.map((product,idx:number) => (
                 <button
-                  key={product.id}
+                  key={idx}
                   onClick={() => handleProductClick(product)}
                   className="w-full p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-left border border-gray-800 group"
                 >
@@ -208,7 +208,7 @@ const SearchOverlay = ({ open, onClose, allProducts }: any) => {
                         )}
                       </div>
                     </div>
-                    <FaSearch className="text-gray-500 group-hover:text-[#b62126] transition-colors flex-shrink-0" size={14} />
+                    <FaSearch className="text-gray-500 group-hover:text-[#b62126] transition-colors shrink-0" size={14} />
                   </div>
                 </button>
               ))}
