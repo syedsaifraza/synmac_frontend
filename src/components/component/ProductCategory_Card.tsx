@@ -24,9 +24,6 @@ const Product_Category_Section = ({ data,title }: any) => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {visibleData.map((item: any, i: number) => {
 
-
-console.log("product category item ", item)
-
             const url = `/industry/${item.industry_slug}/${item?.sub_industry_slug || " "}/${item.slug}`;
 
             return (
@@ -39,7 +36,7 @@ console.log("product category item ", item)
               
                 <div className="h-52 overflow-hidden">
                   <img
-                    src={item.feature_file_link}
+                    src={item.feature_file_link || null}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                   />

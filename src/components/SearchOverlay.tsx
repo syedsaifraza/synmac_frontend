@@ -4,13 +4,16 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
 interface SearchOverlayProps {
   open: boolean;
   onClose: () => void;
 }
 
-const SearchOverlay = ({ open, onClose, allProducts }: any) => {
+const SearchOverlay = ({ open, onClose }: any) => {
+
+  const {product} = useSelector((state:any)=>state.resources)
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isNavigating, setIsNavigating] = useState(false);
@@ -38,10 +41,9 @@ const SearchOverlay = ({ open, onClose, allProducts }: any) => {
     localStorage.removeItem("recentSearches");
   };
 
-  // Filter suggestions based on query
   useEffect(() => {
-    if (query.trim().length >= 2 && allProducts && allProducts.length > 0) {
-      const filtered = allProducts
+    if (query.trim().length >= 2 && product && product.length > 0) {
+      const filtered = product
         .filter((product: any) => 
           product.name?.toLowerCase().includes(query.toLowerCase().trim())
         )
@@ -50,7 +52,7 @@ const SearchOverlay = ({ open, onClose, allProducts }: any) => {
     } else {
       setSuggestions([]);
     }
-  }, [query, allProducts]);
+  }, [query, product]);
 
   useEffect(() => {
     if (open) {

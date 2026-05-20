@@ -5,12 +5,8 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-  
-
-
-
     const res = await fetch(
-      `https://synmac-backend.serverscripts.in/api/v1/user/sub-industry/view`,
+      `https://synmac-backend.serverscripts.in/api/v1/user/sub-industry/view/${id}`,
       { method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -21,17 +17,9 @@ export async function GET(
 
     const data = await res.json();
 
-
-    const sub_industry = data.data.find((subin: any) => subin.slug === id);
-
-
-   
-
-
-
     return NextResponse.json({
       success: true,
-      data: sub_industry,
+      data: data.data,
     });
 
   } catch (error) {

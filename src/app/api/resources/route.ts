@@ -1,12 +1,8 @@
-export async function GET(req: Request, { params }: any) {
-  const { id } = await params;
-
-
+export async function GET() {
   try {
     const res = await fetch(
-      `https://synmac-backend.serverscripts.in/api/v1/user/product/viewbyslug/${id}`,
-      {
-         method: "GET",
+      "https://synmac-backend.serverscripts.in/api/v1/user/resources/view",
+      { method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -17,15 +13,13 @@ export async function GET(req: Request, { params }: any) {
 
     const data = await res.json();
 
-
     return Response.json({
-      success: true,
-      product : data.data 
+      resources: data.data,
     });
 
   } catch (error) {
     return Response.json(
-      { message: "Error fetching industry" },
+      { success: false, message: "Error fetching industries" },
       { status: 500 }
     );
   }

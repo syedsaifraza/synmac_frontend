@@ -87,7 +87,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
                     <div key={idx} className="flex items-start gap-4">
                       <div className="w-11 h-11 rounded-xl bg-[#cd2626]/10  flex items-center justify-center shrink-0 mt-0.5">
                         <img
-                          src={item?.url}
+                          src={item?.url || null}
                           alt="Sustainable green chemistry research in laboratory"
                           className="w-10 h-10 rounded-full  object-cover"
                           loading="lazy"
@@ -107,7 +107,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
             <div className="relative">
               <div className="rounded-2xl overflow-hidden border border-gray-200">
                 <img
-                  src={data?.image_url}
+                  src={data?.image_url || null}
                   alt="Sustainable green chemistry research in laboratory"
                   className="w-full h-64 object-cover"
                   loading="lazy"

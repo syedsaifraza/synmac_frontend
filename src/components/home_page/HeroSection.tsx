@@ -34,7 +34,7 @@ const HeroSection = ({ data }: { data: any }) => {
             }`}
         >
           <img
-            src={src}
+            src={src || null}
             alt="Synmac Chemicals laboratory and manufacturing"
             className="w-full h-full object-cover hero-zoom"
             width={1920}
@@ -52,13 +52,13 @@ const HeroSection = ({ data }: { data: any }) => {
 
       <div className="relative z-10 container mx-auto max-w-6xl">
         <div className="max-w-2xl animate-fade-in-up">
-          <p dangerouslySetInnerHTML={{ __html: data?.title || "" }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 text-white"/>
+          <div dangerouslySetInnerHTML={{ __html: data?.title || "" }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 text-white"/>
             
 
 
             
 
-          <p dangerouslySetInnerHTML={{ __html: data?.description || "" }} className="text-white/80 text-sm sm:text-base md:text-lg fonts max-w-xl mb-6 sm:mb-8 md:mb-10 leading-relaxed"
+          <div  dangerouslySetInnerHTML={{ __html: data?.description || "" }} className="text-white/80 text-sm sm:text-base md:text-lg fonts ql-editor max-w-xl mb-6 sm:mb-8 md:mb-10 leading-relaxed"
           
           />
 

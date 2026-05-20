@@ -13,8 +13,8 @@ export default function Header({ title, description, background_image, }: { titl
 
 
 
-      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-cover bg-no-repeat bg-center flex items-center bg-[#ff0100]"
-        style={{ backgroundImage: `url(${background_image})` }} >
+      <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh ] bg-fixed bg-cover bg-no-repeat bg-center flex items-center bg-[#ff0100]"
+        style={{ backgroundImage: `url(${background_image || null})` }} >
 
 
 

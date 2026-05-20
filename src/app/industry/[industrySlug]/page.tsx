@@ -1,11 +1,8 @@
-import Industory from "@/components/Industory";
-
-
-
+import Industory from "@/components/component/Industory";
 
 
 async function getUser(industrySlug: any) {
-  const res = await fetch(`http://synmac.acetians.in/api/industry/${industrySlug}`, {
+  const res = await fetch(`http://localhost:3000/api/industry/${industrySlug}`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -24,7 +21,7 @@ const page = async ({ params }: any) => {
 
   return (
     <div >
-      <Industory industoryData={data?.industry}  filterIndus={data?.randomIndustries} />
+      <Industory industoryData={data?.industry} />
   
     </div>
   );

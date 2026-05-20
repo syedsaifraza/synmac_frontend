@@ -11,9 +11,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 import SearchOverlay from '../SearchOverlay';
 import LanguageSelector from '../LanguageSelector';
+import { useDispatch } from 'react-redux';
+import { setCompanyInfoDataFromApi, setIndustoryFromApi, setProductCategoryFromApi, setProductsFromApi, setResourcesFromApi, setSubIndustoryFromApi } from '@/features/synmacdata.slice';
 
 
-// Types
+
+
 interface Product {
     id: number;
     slug: string;
@@ -51,8 +54,22 @@ interface Industry {
     [key: string]: any;
 }
 
-const Navbar = ({ data, allProducts }: { data: Industry[]; allProducts: Product [] }) => {
+const Navbar = ({getCompanyData, data,allResources ,product,subIndustory,productCategory }: { data: Industry[]; allResources:any,product:any,subIndustory:any,productCategory:any,getCompanyData:any}) => {
 
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+    dispatch(setResourcesFromApi(allResources))
+    dispatch(setProductsFromApi(product.data))
+    dispatch(setIndustoryFromApi(data))
+    dispatch(setSubIndustoryFromApi(subIndustory.subIndustory))
+    dispatch(setProductCategoryFromApi(productCategory.productCategory))
+    dispatch(setCompanyInfoDataFromApi(getCompanyData))
+;
+  }, []);
+
+ 
 
 
     const router = useRouter();
@@ -69,8 +86,8 @@ const Navbar = ({ data, allProducts }: { data: Industry[]; allProducts: Product 
     const hoverTimeoutRef = useRef<any>(null);
     const [isClient, setIsClient] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [megaMenuOpen, setMegaMenuOpen] = useState(false);
 
 
 
@@ -354,7 +371,7 @@ const isProductPage = pathname === '/product';
 
                                             <div className="w-full h-40 overflow-hidden">
                                                 <img
-                                                    src={activeIndustry.feature_file_link}
+                                                    src={activeIndustry?.feature_file_link}
                                                     alt={activeIndustry.name}
                                                     className="w-full h-full object-cover hover:scale-105 transition duration-300"
                                                 />
@@ -686,7 +703,7 @@ const isProductPage = pathname === '/product';
                 </div>
             )}
 
-               <SearchOverlay allProducts={allProducts} open={searchOpen} onClose={() => setSearchOpen(false)} />
+               <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
         </nav>
     );
 };

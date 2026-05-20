@@ -234,7 +234,7 @@
 
 
 'use client'
-import AboutPage from '@/components/AboutPage'
+import AboutPage from '@/components/about_page/AboutPage'
 import CerrierLife from '@/components/CerrierLife'
 import Header from '@/components/component/Header'
 import SynmacTeam from '@/components/SynamcTeams'
@@ -293,7 +293,7 @@ const page = () => {
     }
   };
 
-  // Function to handle active link highlighting while scrolling
+ 
   useEffect(() => {
     const handleScroll = () => {
       const sections = [

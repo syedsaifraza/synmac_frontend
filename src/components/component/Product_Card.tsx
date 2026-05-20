@@ -49,7 +49,7 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
               item.image ? (
                 <div className="h-52 overflow-hidden">
                   <img
-                    src={item.image}
+                    src={item.image || null}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                   />

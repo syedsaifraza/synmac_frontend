@@ -31,10 +31,10 @@ export function SubIndustry({subIndustry ,title}:any) {
               className="group block  rounded-xl overflow-hidden transition"
             >
 
-              {/* Image */}
+            
               <div className="h-52 overflow-hidden">
                 <img
-                  src={item.feature_file_link}
+                  src={item.feature_file_link || null}
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                 />

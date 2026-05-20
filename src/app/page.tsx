@@ -1,12 +1,10 @@
-import HeroSection from "@/components/component/HeroSection";
-import IndustriesSection from "@/components/IndustriesSection";
-import OurStrengths from "@/components/OurStrengths";
-import SustainabilitySection from "@/components/SustainabilitySection";
-// import Startup from "@/hooks/Startup";
-import Image from "next/image";
+import HeroSection from "@/components/home_page/HeroSection";
+import IndustriesSection from "@/components/home_page/IndustriesSection";
+import OurStrengths from "@/components/home_page/OurStrengths";
+import SustainabilitySection from "@/components/home_page/SustainabilitySection";
 
 async function getUser() {
-  const res = await fetch(`http://synmac.acetians.in/api/company-info/`, {
+  const res = await fetch(`http://localhost:3000/api/company-info`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -14,7 +12,7 @@ async function getUser() {
 }
 
 async function getSustainability() {
-  const res = await fetch(`http://synmac.acetians.in/api/sustainability/`, {
+  const res = await fetch(`http://localhost:3000/api/sustainability`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -22,18 +20,44 @@ async function getSustainability() {
 }
 
 async function getHeroSection() {
-  const res = await fetch(`http://synmac.acetians.in/api/hero-section/`, {
+  const res = await fetch(`http://localhost:3000/api/hero-section`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
   return res.json();
 }
 
+async function getIndustries() {
+  try {
+    const res = await fetch("http://localhost:3000/api/industry", {
+      // next: { revalidate: 300 },
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch industries: ${res.status}`);
+    }
+
+
+
+
+    const result = await res.json();
+
+
+
+
+    return result?.industries || [];
+  } catch (error) {
+    console.error("Error fetching industries:", error);
+    return [];
+  }
+}
 export default async function page() {
 
   const data = await getUser()
   const heroSection = await getHeroSection()
   const sustainability = await getSustainability()
+  const industries = await getIndustries();
 
 
 
@@ -45,7 +69,7 @@ export default async function page() {
     <HeroSection data={heroSection.data} />
   )
 }
-      <IndustriesSection />
+      <IndustriesSection industries={industries} />
       <OurStrengths />
       <SustainabilitySection data={sustainability?.data} data1={data.data} />
     </div>

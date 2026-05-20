@@ -7,8 +7,8 @@ import Link from "next/link";
 import { LiaAngleRightSolid } from "react-icons/lia";
 import ResourcesSection from "@/components/component/ResourcesSection";
 
-async function getUser(id: any) {
-  const res = await fetch(`http://synmac.acetians.in/api/category/${id}`, {
+async function getUser(slug: any) {
+  const res = await fetch(`http://localhost:3000/api/category/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -20,10 +20,6 @@ const Page = async ({ params }: any) => {
   const resolvedParams = await params;
 
   const data = await getUser(resolvedParams.proSlug);
-
-
-
-
 
   return (
     <div>

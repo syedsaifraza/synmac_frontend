@@ -1,29 +1,20 @@
-import Link from 'next/link';
-import React from 'react';
-import { LiaAngleRightSolid } from 'react-icons/lia';
-
-import { FaLock, FaLockOpen } from "react-icons/fa";
 import Header from '@/components/component/Header';
 import ProductPage from '@/components/product_page/ProductPage';
 
+
 async function getProduct(slug: any) {
-  const res = await fetch(
-    `https://synmac-backend.serverscripts.in/api/v1/user/product/viewbyslug/${slug}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    }
-  );
+  const res = await fetch(`http://localhost:3000/api/product/${slug}`, {
+    // next : { revalidate: 300 }
+    cache: "no-store",
+  });
+
   return res.json();
 }
 
 const Page = async ({ params }: any) => {
   const resolvedParams = await params;
   const response = await getProduct(resolvedParams.slug);
-  const productData = response?.data || null;
+  const productData = response?.product || null;
 
 
   const SolutionsSection = () => {

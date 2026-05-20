@@ -6,18 +6,20 @@ import { useSearchParams, usePathname } from 'next/navigation'
 import React, { useState, useEffect, useRef } from 'react'
 import { BiSearch } from 'react-icons/bi'
 import { FaX } from 'react-icons/fa6'
-import { useRouter } from "next/navigation";
 import { DocumentRequestModal } from "./DocumentRequestModal";
 import { FilterSidebar } from "./FilterSidebar";
+import { useSelector } from "react-redux";
 
-const ProductListSection = ({ industry, sub_industry, product_category, product }: any) => {
+const ProductListSection = () => {
+
+    const {product ,industories,sub_industries,product_category} = useSelector((state:any)=>state.resources)
     const searchParams = useSearchParams();
     const [search, setSearch] = useState<string>("");
     const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     
-    // Pagination states
+  
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     
@@ -237,7 +239,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
     }, []);
 
     const filterProduct = React.useMemo(() => {
-        return product?.data?.filter((pro: any) => {
+        return product?.filter((pro: any) => {
             const matchIndustry = !filters.industry || pro?.industry_name === filters.industry;
             const matchSubIndustry = !filters.subIndustry || pro?.sub_industry_name === filters.subIndustry;
             const matchCategory = !filters.category || pro?.product_category_name === filters.category;
@@ -250,7 +252,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         }) || [];
     }, [product, filters, search]);
 
-    // Pagination calculations
+    
     const totalProducts = filterProduct.length;
     const totalPages = Math.ceil(totalProducts / pageSize);
     const startIndex = (currentPage - 1) * pageSize;
@@ -288,15 +290,15 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
         setCurrentPage(1); // Reset to first page when clearing filters
     };
 
-    const filteredIndustries = industry?.data?.filter((item: any) =>
+    const filteredIndustries = industories.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    const filteredSubIndustries = sub_industry?.data?.filter((item: any) =>
+    const filteredSubIndustries = sub_industries?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    const filteredCategories = product_category?.data?.filter((item: any) =>
+    const filteredCategories = product_category?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
@@ -467,7 +469,7 @@ const ProductListSection = ({ industry, sub_industry, product_category, product 
 
                         <div className="flex-1 min-w-0">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                                <h1 className='text-sm sm:text-base text-gray-500 font-semibold'>
+                                <h1 onClick={()=>console.log(product ,industories,sub_industries ,product_category)} className='text-sm sm:text-base text-gray-500 font-semibold'>
                                     Showing {startIndex + 1}-{Math.min(endIndex, totalProducts)} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
                                 </h1>
                                 

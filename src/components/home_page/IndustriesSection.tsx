@@ -39,34 +39,10 @@ interface Industry {
   faqs: any[];
 }
 
-async function getIndustries() {
-  try {
-    const res = await fetch("http://synmac.acetians.in/api/industry", {
-      // next: { revalidate: 300 },
-      cache: "no-store"
-    });
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch industries: ${res.status}`);
-    }
 
 
-
-
-    const result = await res.json();
-
-
-
-
-    return result?.industries || [];
-  } catch (error) {
-    console.error("Error fetching industries:", error);
-    return [];
-  }
-}
-
-const IndustriesSection = async () => {
-  const industries = await getIndustries();
+const IndustriesSection = async ({industries}:any) => {
+ 
 
 
   if (industries.length === 0) {
@@ -107,7 +83,7 @@ const IndustriesSection = async () => {
             if (index === 9) {
               return (
               
-                  <Link key={index} href={`/industries`} className="block relative overflow-hidden rounded-xl ">
+                  <Link key={index} href={`/industries`} className="block relative border bg-red-50 hover:bg-red-100 border-gray-200 overflow-hidden rounded-xl ">
                     <div className="aspect-4/3 overflow-hidden ">
                       {imageUrl ? (
                         <img
@@ -117,7 +93,7 @@ const IndustriesSection = async () => {
                           loading="lazy"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
+                        <div className="w-full h-full flex items-center justify-center bg-red-50 hover:bg-red-100">
                           <span className="text-gray-400 text-sm">No image</span>
                         </div>
                       )}
@@ -132,12 +108,12 @@ const IndustriesSection = async () => {
                         />
                       </h3>
 
-                      {industry.hero_background_description && (
+                      {/* {industry.hero_background_description && (
                         <p
                           className="text-sm text-gray-400 mt-2 line-clamp-2 fonts"
                           dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}
                         />
-                      )}
+                      )} */}
                     </div>
 
                     
@@ -155,9 +131,9 @@ const IndustriesSection = async () => {
               <Link
                 href={`/industry/${industry.slug}`}
                 key={industry.id}
-                className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
+                className="group rounded-xl overflow-hidden border border-gray-200 bg-red-50 hover:bg-red-100 hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
               >
-                <div className="aspect-3/2 overflow-hidden bg-gray-100">
+                <div className="aspect-4/3  overflow-hidden bg-gray-100">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -171,8 +147,8 @@ const IndustriesSection = async () => {
                     </div>
                   )}
                 </div>
-                <div className="p-3">
-                  <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
+                <div className="p-3 ">
+                  <h3 className="font-semibold text-gray-900 flex justify-between items-center gap-1 group-hover:text-[#cd2626] transition-colors text-xs">
                     {industry?.name}
 
                     <BiChevronRight
@@ -182,13 +158,13 @@ const IndustriesSection = async () => {
                   </h3>
 
 
-                  {industry.hero_background_description && (
+                  {/* {industry.hero_background_description && (
                     <p className="text-sm text-gray-400 mt-2 line-clamp-2" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
 
 
 
 
-                  )}
+                  )} */}
                 </div>
               </Link>
             );

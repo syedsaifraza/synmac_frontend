@@ -32,7 +32,7 @@ const ResourcesSection = ({ resources }: any) => {
                                        dangerouslySetInnerHTML={{ __html: res.description || "" }} />
 
                                     {res.file && (
-                                        <a href={res.file} 
+                                        <a href={res.file || null} 
                                            target="_blank" 
                                            rel="noopener noreferrer"
                                            className="text-[#cd2626] text-sm sm:text-base mt-3 inline-block font-medium hover:underline">

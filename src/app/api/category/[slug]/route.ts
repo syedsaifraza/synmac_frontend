@@ -4,10 +4,11 @@ export async function GET(
   req: Request, { params }: any
 ) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
+
 
     const res = await fetch(
-      `https://synmac-backend.serverscripts.in/api/v1/user/product-category/view`,
+      `https://synmac-backend.serverscripts.in/api/v1/user/product-category/view/${slug}`,
 
 
       { method: "GET",
@@ -21,13 +22,10 @@ export async function GET(
     const data = await res.json();
 
 
-    const sub_industry = data.data.find((subin: any) => subin.slug === id);
-
-
 
     return NextResponse.json({
       success: true,
-      data: sub_industry,
+      data: data.data,
     });
 
   } catch (error) {

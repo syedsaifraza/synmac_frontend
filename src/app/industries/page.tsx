@@ -44,7 +44,7 @@ interface Industry {
 
 async function getIndustries() {
     try {
-        const res = await fetch("http://synmac.acetians.in/api/industry", {
+        const res = await fetch("http://localhost:3000/api/industry", {
             // next: { revalidate: 300 },
             cache: "no-store"
         });
@@ -115,13 +115,13 @@ const page = async () => {
                                 <Link
                                     href={`/industry/${industry.slug}`}
                                     key={industry.id}
-                                    className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
+                                    className="group rounded-xl overflow-hidden border border-gray-200 bg-red-50 hover:bg-red-100 hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
                                 >
                                     <div className="aspect-4/3 overflow-hidden bg-gray-100">
                                         {imageUrl ? (
                                             <img
                                                 src={imageUrl}
-                                                alt={industry.name}
+                                                alt={industry.name }
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                 loading="lazy"
                                             />
@@ -131,8 +131,8 @@ const page = async () => {
                                             </div>
                                         )}
                                     </div>
-                                    <div className="p-5">
-                                        <h3 className="font-semibold text-gray-900 flex items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
+                                    <div className="p-3">
+                                        <h3 className="font-semibold text-gray-900 flex justify-between items-center gap-1 group-hover:text-[#cd2626] transition-colors text-sm">
                                             {industry?.name}
 
                                             <BiChevronRight
@@ -141,14 +141,14 @@ const page = async () => {
                                             />
                                         </h3>
 
-
+{/* 
                                         {industry.hero_background_description && (
                                             <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
 
 
 
 
-                                        )}
+                                        )} */}
                                     </div>
                                 </Link>
                             );
