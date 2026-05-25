@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useRef, useCallback } from 'react'
-import Logo from "../../../public/newLogo.png"
+import Logo from "../../../public/Img.png"
 import Image from 'next/image';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';

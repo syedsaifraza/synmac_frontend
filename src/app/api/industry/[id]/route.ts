@@ -21,6 +21,8 @@ export async function GET(req: Request, { params }: any) {
 
     const data = await res.json();
 
+    
+
 
 
     if (!data.data) {

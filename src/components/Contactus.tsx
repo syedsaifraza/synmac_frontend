@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { LiaAngleRightSolid } from "react-icons/lia";
 import Header from "./component/Header";
+// @ts-ignore: react-google-recaptcha has no declaration file
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   HiOutlineClock,
   HiOutlineLocationMarker,
@@ -14,14 +16,16 @@ import {
 import { useSelector } from "react-redux";
 
 export default function Contactus() {
-
-
-  const {industories ,company_info} = useSelector((state:any)=>state.resources)
+  const [captchaValue, setCaptchaValue] = useState<any>("");
+  const captchaRef = useRef<any>(null);
+  const { industories, company_info } = useSelector(
+    (state: any) => state.resources,
+  );
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     company: "",
-    industries: [] as number[],
+    industry: [] as number[],
     phone: "",
     requirements: "",
     reach_time: "",
@@ -37,6 +41,10 @@ export default function Contactus() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    if (!captchaValue) {
+      toast.error("Please verify captcha");
+      return;
+    }
     setIsSubmitting(true);
 
     if (typeof window !== "undefined" && (window as any).dataLayer) {
@@ -56,15 +64,17 @@ export default function Contactus() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({ ...formData, captchaToken: captchaValue }),
           },
         ).then((res) => {
           if (!res.ok) throw new Error("Failed");
+          setCaptchaValue("");
+          captchaRef.current.reset();
           setFormData({
             name: "",
             email: "",
             company: "",
-            industries: [],
+            industry: [],
             phone: "",
             requirements: "",
             reach_time: "",
@@ -88,12 +98,12 @@ export default function Contactus() {
     if (checked) {
       setFormData((prev) => ({
         ...prev,
-        industries: [...prev.industries, numValue],
+        industry: [...prev.industry, numValue],
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        industries: prev.industries.filter((id) => id !== numValue),
+        industry: prev.industry.filter((id) => id !== numValue),
       }));
     }
   };
@@ -188,7 +198,7 @@ export default function Contactus() {
                         <input
                           value={ind.id}
                           onChange={handleIndustriesSelect}
-                          checked={formData.industries.includes(ind.id)}
+                          checked={formData.industry.includes(ind.id)}
                           type="checkbox"
                         />
                         <label>{ind.name}</label>
@@ -247,10 +257,23 @@ export default function Contactus() {
                     onChange={handleChange}
                   />
 
+                  <ReCAPTCHA
+                    ref={captchaRef}
+                    sitekey="6LeVmfssAAAAAFNZidDT3B2RWy2xYawxd5CkoP3Y"
+                    onChange={(value: any) => setCaptchaValue(value)}
+                  />
+
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="bg-black text-white px-6 py-3 font-semibold hover:bg-gray-800 transition"
+                    disabled={isSubmitting || captchaValue === ""}
+                    className={`
+    px-6 py-3 font-semibold transition text-white
+    ${
+      captchaValue === ""
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-black hover:bg-gray-800"
+    }
+  `}
                   >
                     {isSubmitting ? "Sending..." : "Submit"}
                   </button>
@@ -259,7 +282,7 @@ export default function Contactus() {
             </div>
 
             <div className="w-full lg:w-1/3">
-              <div className="bg-gray-50 rounded-2xl p-6 sticky top-25">
+              <div className="bg-gray-50 rounded-2xl p-6">
                 {/* Headquarter */}
                 <div className="mb-8">
                   <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">

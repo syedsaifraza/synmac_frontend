@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Rokkitt:ital,wght@0,100..900;1,100..900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Rokkitt:ital,wght@0,100..900;1,100..900&display=swap'); */
 @import "tailwindcss";
 
 
@@ -103,6 +103,15 @@ body {
 
 
 
-.fonts {
-    font-family: "Rokkitt", serif;
+/* .fonts {
+   
+} */
+
+
+
+
+
+.text-editor-effects ol {
+    list-style:inherit;
+
 }

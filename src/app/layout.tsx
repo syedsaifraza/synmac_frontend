@@ -3,7 +3,6 @@ import "./globals.css";
 import Navbar from "@/components/component/Navbar";
 import Footer from "@/components/component/Footer";
 import { Providers } from "./providers";
-import Startup from "@/hooks/Startup";
 
 
 

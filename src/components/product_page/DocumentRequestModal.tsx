@@ -1,10 +1,14 @@
 import { FaX } from "react-icons/fa6";
+// @ts-ignore: react-google-recaptcha has no declaration file
+import ReCAPTCHA from "react-google-recaptcha";
 
 export const DocumentRequestModal = ({
   isModalOpen,
+  captchaRef,
   selectedDocument,
   hasPendingRequest,
   handleReRequest,
+  setCaptchaValue,
   formData,
   handleFormChange,
   handleSubmitRequest,
@@ -46,7 +50,7 @@ export const DocumentRequestModal = ({
     });
   };
 
-  // Check if Other is selected
+
   const isOtherSelected = formData.purposes?.includes("Other");
 
   return (
@@ -277,6 +281,12 @@ export const DocumentRequestModal = ({
                     />
                   </div>
                 </div>
+
+                 <ReCAPTCHA
+                 ref={captchaRef}
+                        sitekey=" 6LeVmfssAAAAAFNZidDT3B2RWy2xYawxd5CkoP3Y"
+                        onChange={(value:any) => setCaptchaValue(value)}
+                      />
 
                 <button
                   type="submit"

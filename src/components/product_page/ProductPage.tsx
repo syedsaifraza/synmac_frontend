@@ -1,13 +1,13 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { FaLock, FaLockOpen } from "react-icons/fa";
 import { DocumentRequestModal } from "./DocumentRequestModal";
 import Product_Section from "../component/Product_Card";
-import Link from "next/link";
-import { IoIosArrowRoundForward } from "react-icons/io";
 
 const ProductPage = ({ productData }: any) => {
+  const captchaRef = useRef<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState("");
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
   const [formData, setFormData] = useState({
     client_name: "",
@@ -140,6 +140,7 @@ const ProductPage = ({ productData }: any) => {
       message: formData.message,
       document_type: selectedDocument.documentType,
       request_status: "pending",
+      captchaToken: captchaValue,
     };
 
     try {
@@ -163,8 +164,10 @@ const ProductPage = ({ productData }: any) => {
 
         setTimeout(() => {
           setIsModalOpen(false);
+          captchaRef.current.reset();
           setSelectedDocument(null);
           setSubmitMessage(null);
+          setCaptchaValue("");
         }, 2000);
       } else {
         throw new Error("Failed to submit request");
@@ -267,12 +270,11 @@ const ProductPage = ({ productData }: any) => {
         </div>
 
         <div className="w-1/4  space-y-3 border bg-gray-50 rounded-md border-[#ff0100]/10 my-20 inline-block p-5">
-        <h1 className="text-xl text-gray-900 font-semibold">
-              Product Information
-            </h1>
+          <h1 className="text-xl text-gray-900 font-semibold">
+            Product Information
+          </h1>
           {(productData?.tds_doc || productData?.msds_doc) && (
             <div className="flex flex-wrap gap-3 sm:gap-4 mb-8 sm:mb-12 fonts ">
-            
               {productData?.tds_doc && (
                 <a
                   href={!productData?.is_tds_locked ? productData.tds_doc : "#"}
@@ -289,7 +291,6 @@ const ProductPage = ({ productData }: any) => {
                   }`}
                 >
                   {productData?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
-               
                   Technical Data Sheet (TDS)
                   {hasPendingRequest(productData?.id, "tds") &&
                     productData?.is_tds_locked && (
@@ -300,7 +301,6 @@ const ProductPage = ({ productData }: any) => {
                 </a>
               )}
 
-            
               {productData?.msds_doc && (
                 <a
                   href={
@@ -319,7 +319,6 @@ const ProductPage = ({ productData }: any) => {
                   }`}
                 >
                   {productData?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
-                  
                   Material Safety Data Sheet (MSDS)
                   {hasPendingRequest(productData?.id, "msds") &&
                     productData?.is_msds_locked && (
@@ -341,6 +340,7 @@ const ProductPage = ({ productData }: any) => {
 
       <DocumentRequestModal
         isModalOpen={isModalOpen}
+        ref={captchaRef}
         selectedDocument={selectedDocument}
         hasPendingRequest={hasPendingRequest}
         handleReRequest={handleReRequest}
@@ -349,6 +349,7 @@ const ProductPage = ({ productData }: any) => {
         handleSubmitRequest={handleSubmitRequest}
         isSubmitting={isSubmitting}
         submitMessage={submitMessage}
+        setCaptchaValue={setCaptchaValue}
         closeModal={closeModal}
       />
     </div>

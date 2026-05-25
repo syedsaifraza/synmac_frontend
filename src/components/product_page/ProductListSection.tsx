@@ -11,8 +11,9 @@ import { FilterSidebar } from "./FilterSidebar";
 import { useSelector } from "react-redux";
 
 const ProductListSection = () => {
-
+const captchaRef = useRef<any>(null);
     const {product ,industories,sub_industries,product_category} = useSelector((state:any)=>state.resources)
+    const [captchaValue, setCaptchaValue] = useState("");
     const searchParams = useSearchParams();
     const [search, setSearch] = useState<string>("");
     const [filterSearch, setFilterSearch] = useState("");
@@ -45,7 +46,8 @@ const ProductListSection = () => {
         company_address: "",
         purposes: [],
         purpose_other_text: "",
-        message: ""
+        message: "",
+        
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -140,7 +142,8 @@ const ProductListSection = () => {
             purpose_other_text: formData.purpose_other_text,
             message: formData.message,
             document_type: selectedDocument.documentType,
-            request_status: "pending"
+            request_status: "pending",
+            captchaToken:captchaValue
         };
 
         try {
@@ -155,9 +158,11 @@ const ProductListSection = () => {
                 setSubmitMessage({ type: 'success', text: 'Request submitted successfully! You will receive access via email shortly.' });
 
                 setTimeout(() => {
+                     captchaRef.current.reset();
                     setIsModalOpen(false);
                     setSelectedDocument(null);
                     setSubmitMessage(null);
+                    setCaptchaValue("")
                 }, 1000);
             } else {
                 throw new Error('Failed to submit request');
@@ -427,7 +432,7 @@ const ProductListSection = () => {
 
                     <div className="flex flex-col lg:flex-row gap-5 lg:gap-6">
                         <div className="hidden lg:block lg:w-80 xl:w-96 shrink-0">
-                            <div className="sticky top-20">
+                            <div className="">
                                 <FilterSidebar
                                     filteredIndustries={filteredIndustries}
                                     filteredSubIndustries={filteredSubIndustries}
@@ -628,11 +633,13 @@ const ProductListSection = () => {
                 key={selectedDocument?.productId}
                 handleReRequest={handleReRequest}
                 isModalOpen={isModalOpen}
+                setCaptchaValue={setCaptchaValue}
                 selectedDocument={selectedDocument}
                 formData={formData}
                 handleFormChange={handleFormChange}
                 handleSubmitRequest={handleSubmitRequest}
                 isSubmitting={isSubmitting}
+                captchaRef={captchaRef}
                 submitMessage={submitMessage}
                 closeModal={() => {
                     setIsModalOpen(false);

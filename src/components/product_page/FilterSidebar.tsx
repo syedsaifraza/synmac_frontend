@@ -21,9 +21,9 @@ export const FilterSidebar = ({
     };
 
     return (
-        <div className="bg-gray-50 border h-[86vh] overflow-y-scroll sticky top-20 border-gray-200 rounded-lg p-4">
+        <div className="bg-gray-50 border sticky top-20 border-gray-200 rounded-lg p-4">
             <div className='space-y-4'>
-                {/* Industry Accordion */}
+               
                 <div className="bg-white border border-gray-200 rounded-lg p-4">
                     <div 
                         className="flex justify-between items-center mb-3 cursor-pointer"
@@ -47,7 +47,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.industry && (
-                        <div className="space-y-2 max-h-50 overflow-y-auto">
+                        <div className="space-y-2  overflow-y-auto">
                             {filteredIndustries.length > 0 ? (
                                 filteredIndustries.map((item: any) => (
                                     <label
@@ -99,7 +99,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.subIndustry && (
-                        <div className="space-y-2 max-h-50 overflow-y-auto fonts">
+                        <div className="space-y-2  overflow-y-auto fonts">
                             {filteredSubIndustries.length > 0 ? (
                                 filteredSubIndustries.map((item: any) => (
                                     <label
@@ -151,7 +151,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.category && (
-                        <div className="space-y-2 max-h-50 overflow-y-auto fonts">
+                        <div className="space-y-2  overflow-y-auto fonts">
                             {filteredCategories.length > 0 ? (
                                 filteredCategories.map((item: any , idx:number) => (
                                     <label
