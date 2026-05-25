@@ -40,7 +40,7 @@ const Faqs_Section = ({ faqs }: Props) => {
               >
                 <span
                   dangerouslySetInnerHTML={{ __html: faq.question || "" }}
-                  className="pr-4"
+                  className="pr-4 ql-editor"
                 />
                 <span className="text-xl shrink-0">
                   {activeIndex === index ? (
@@ -60,7 +60,7 @@ const Faqs_Section = ({ faqs }: Props) => {
               >
                 <span
                   dangerouslySetInnerHTML={{ __html: faq.answer || "" }}
-                  className="text-gray-600 text-sm sm:text-base leading-relaxed fonts"
+                  className="text-gray-600 text-sm sm:text-base leading-relaxed fonts ql-editor"
                 />
               </div>
             </div>

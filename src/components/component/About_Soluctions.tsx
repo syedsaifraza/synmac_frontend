@@ -24,7 +24,7 @@ const About_Soluctions = ({
 
               
                 <div
-                    className="text-gray-600 text-sm sm:text-base leading-relaxed fonts mb-8"
+                    className="text-gray-600 text-sm sm:text-base leading-relaxed fonts mb-8 ql-editor"
                     dangerouslySetInnerHTML={{ __html: description || "" }}
                 />
 
@@ -57,7 +57,7 @@ const About_Soluctions = ({
         )}
 
         <div
-            className="text-gray-600 text-sm sm:text-base leading-relaxed fonts"
+            className="text-gray-600 text-sm sm:text-base leading-relaxed fonts ql-editor"
             dangerouslySetInnerHTML={{ __html: sub_descriptiion || "" }}
         />
 

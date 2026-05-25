@@ -71,19 +71,19 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
 
                     {
                       item.image ?  (
-<p
+<div
                     
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-3 fonts"
+                      className="text-gray-500 text-sm line-clamp-3 fonts ql-editor"
                     />
-                      ) : (<p
+                      ) : (<div
                       
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-6 fonts"
+                      className="text-gray-500 text-sm line-clamp-6 fonts ql-editor"
                     />)
                     }
 

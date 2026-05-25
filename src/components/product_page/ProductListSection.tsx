@@ -509,8 +509,8 @@ const captchaRef = useRef<any>(null);
                                                         className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">
                                                         {pro?.name}
                                                     </Link>
-                                                    <p dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
-                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4 fonts" />
+                                                    <div dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
+                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4 fonts ql-editor" />
                                                     <div className="flex flex-wrap gap-1.5">
                                                         <div className='flex flex-row w-full justify-between'>
                                                             <div className="space-x-2">

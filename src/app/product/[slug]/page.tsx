@@ -24,7 +24,7 @@ const Page = async ({ params }: any) => {
     return (
       <div className="text-black py-8 sm:py-12 lg:py-16">
 
-        <p className="text-gray-600 text-base sm:text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: description || "" }} />
+        <div className="text-gray-600 text-base sm:text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: description || "" }} />
 
       </div>
     );

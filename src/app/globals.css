@@ -108,10 +108,14 @@ body {
 } */
 
 
+.custom-content li[data-list="ordered"] {
+  list-style-type: decimal;
+}
 
+.custom-content li[data-list="bullet"] {
+  list-style-type: disc;
+}
 
-
-.text-editor-effects ol {
-    list-style:inherit;
-
+.custom-content li {
+  margin-left: 20px;
 }

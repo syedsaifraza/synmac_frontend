@@ -49,11 +49,11 @@ export function SubIndustry({subIndustry ,title}:any) {
                     {item.name}
                   </h3>
 
-                  <p
+                  <div
                     dangerouslySetInnerHTML={{
                       __html: item.hero_background_description || ""
                     }}
-                    className="text-gray-500 text-sm line-clamp-3 fonts"
+                    className="text-gray-500 text-sm line-clamp-3 fonts ql-editor"
                   />
                 </div>
 

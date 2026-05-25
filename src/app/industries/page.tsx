@@ -141,14 +141,7 @@ const page = async () => {
                                             />
                                         </h3>
 
-{/* 
-                                        {industry.hero_background_description && (
-                                            <p className="text-sm text-gray-400 mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
 
-
-
-
-                                        )} */}
                                     </div>
                                 </Link>
                             );

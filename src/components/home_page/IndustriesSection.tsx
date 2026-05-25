@@ -108,12 +108,7 @@ const IndustriesSection = async ({industries}:any) => {
                         />
                       </h3>
 
-                      {/* {industry.hero_background_description && (
-                        <p
-                          className="text-sm text-gray-400 mt-2 line-clamp-2 fonts"
-                          dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }}
-                        />
-                      )} */}
+                  
                     </div>
 
                     
@@ -156,15 +151,6 @@ const IndustriesSection = async ({industries}:any) => {
                       className="text-[#cd2626] opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1"
                     />
                   </h3>
-
-
-                  {/* {industry.hero_background_description && (
-                    <p className="text-sm text-gray-400 mt-2 line-clamp-2" dangerouslySetInnerHTML={{ __html: industry.hero_background_description || " " }} />
-
-
-
-
-                  )} */}
                 </div>
               </Link>
             );

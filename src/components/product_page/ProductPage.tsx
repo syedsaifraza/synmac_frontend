@@ -217,8 +217,8 @@ const ProductPage = ({ productData }: any) => {
             <h1 className="text-3xl text-gray-900 font-semibold">
               Product Applications
             </h1>
-            <p
-              className="text-gray-600 text-base text-justify sm:text-lg leading-relaxed fonts"
+            <div
+              className="text-gray-600 text-base text-justify sm:text-lg leading-relaxed fonts ql-editor"
               dangerouslySetInnerHTML={{
                 __html: productData?.description || "",
               }}
@@ -239,7 +239,7 @@ const ProductPage = ({ productData }: any) => {
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0"></span>
                     <span
                       dangerouslySetInnerHTML={{ __html: use.title || "" }}
-                      className="flex-1 fonts"
+                      className="flex-1 fonts ql-editor"
                     ></span>
                   </li>
                 ))}
@@ -260,7 +260,7 @@ const ProductPage = ({ productData }: any) => {
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0 fonts"></span>
                     <span
                       dangerouslySetInnerHTML={{ __html: prod.title || "" }}
-                      className="flex-1"
+                      className="flex-1 ql-editor"
                     ></span>
                   </li>
                 ))}

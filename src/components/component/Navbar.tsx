@@ -386,11 +386,11 @@ const isProductPage = pathname === '/product';
                                                 </h1>
 
                                              
-                                                <p
+                                                <div
                                                     dangerouslySetInnerHTML={{
                                                         __html: activeIndustry.hero_background_description || ""
                                                     }}
-                                                    className="text-sm text-gray-600 line-clamp-8 fonts mb-4"
+                                                    className="text-sm text-gray-600 line-clamp-8 fonts mb-4 ql-editor"
                                                 />
 
                                               

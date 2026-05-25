@@ -349,7 +349,7 @@ const Resources = () => {
               <div key={res.id} className='bg-gray-100 border border-gray-200 p-5 aspect-square relative flex flex-col'>
                 <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>BROCHURE</h1>
                 <p className='font-semibold text-gray-800 mb-2 line-clamp-3'>{res.title}</p>
-                <p dangerouslySetInnerHTML={{ __html: res.description || "" }} className='line-clamp-4 text-sm font-light text-gray-500 flex-1'/>
+                <div dangerouslySetInnerHTML={{ __html: res.description || "" }} className='line-clamp-4 text-sm font-light text-gray-500 flex-1 ql-editor'/>
                 <a href={res.file} target='_blank' rel="noopener noreferrer" className='mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block'>
                   Download Document
                 </a>
