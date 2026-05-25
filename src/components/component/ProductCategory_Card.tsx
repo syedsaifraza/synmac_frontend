@@ -55,7 +55,7 @@ const Product_Category_Section = ({ data,title }: any) => {
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-400 text-sm line-clamp-3 fonts ql-editor"
+                      className="text-gray-400 text-sm line-clamp-3 fonts "
                     />
                   </div>
 

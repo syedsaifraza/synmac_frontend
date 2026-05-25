@@ -76,14 +76,14 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-3 fonts ql-editor"
+                      className="text-gray-500 text-sm line-clamp-3 fonts"
                     />
                       ) : (<div
                       
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-6 fonts ql-editor"
+                      className="text-gray-500 text-sm line-clamp-6 fonts "
                     />)
                     }
 

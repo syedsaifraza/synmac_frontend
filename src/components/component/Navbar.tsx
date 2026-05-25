@@ -272,7 +272,7 @@ const isProductPage = pathname === '/product';
                 <div className="max-w-6xl mx-auto flex items-center justify-between py-4 ">
                     <Link href="/" className="flex items-center gap-2 w-1/4">
                         <Image src={Logo} alt="Logo" className="w-[70%]" /> 
-                        <span className="font-extrabold text-xs text-black">beta</span>
+                        <span className={`font-extrabold text-xs text-black ${getNavbarTextColor()}`}>beta</span>
                     </Link>
 
                     <ul className={`hidden md:flex items-center gap-6 text-sm font-medium ${getNavbarTextColor()}`}>
@@ -390,7 +390,7 @@ const isProductPage = pathname === '/product';
                                                     dangerouslySetInnerHTML={{
                                                         __html: activeIndustry.hero_background_description || ""
                                                     }}
-                                                    className="text-sm text-gray-600 line-clamp-8 fonts mb-4 ql-editor"
+                                                    className="text-sm text-gray-600 line-clamp-8 fonts mb-4 "
                                                 />
 
                                               

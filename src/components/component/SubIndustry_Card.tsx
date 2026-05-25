@@ -53,7 +53,7 @@ export function SubIndustry({subIndustry ,title}:any) {
                     dangerouslySetInnerHTML={{
                       __html: item.hero_background_description || ""
                     }}
-                    className="text-gray-500 text-sm line-clamp-3 fonts ql-editor"
+                    className="text-gray-500 text-sm line-clamp-3 fonts"
                   />
                 </div>
 
