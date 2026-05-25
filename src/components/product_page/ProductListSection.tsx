@@ -510,7 +510,7 @@ const captchaRef = useRef<any>(null);
                                                         {pro?.name}
                                                     </Link>
                                                     <div dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
-                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 line-clamp-4 fonts ql-editor" />
+                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3  fonts  line-clamp-5" />
                                                     <div className="flex flex-wrap gap-1.5">
                                                         <div className='flex flex-row w-full justify-between'>
                                                             <div className="space-x-2">
