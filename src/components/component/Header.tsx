@@ -1,8 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { LiaAngleRightSolid } from 'react-icons/lia';
 
 export default function Header({ title, description, background_image, }: { title: string, description: string, background_image: string ,   }) {
   return (
@@ -25,7 +22,7 @@ export default function Header({ title, description, background_image, }: { titl
             <h1 className="text-3xl md:text-5xl font-bold leading-tight">
               {title}
             </h1>
-            <div dangerouslySetInnerHTML={{ __html: description || "" }} className="mt-4 text-lg md:text-xl fonts ql-editor" />
+            <div dangerouslySetInnerHTML={{ __html: description || "" }} className="mt-4 text-lg md:text-xl fonts" />
           </div>
         </div>
 

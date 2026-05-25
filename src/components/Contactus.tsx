@@ -26,6 +26,7 @@ export default function Contactus() {
     email: "",
     company: "",
     industry: [] as number[],
+    services: [] as string[],
     phone: "",
     requirements: "",
     reach_time: "",
@@ -75,6 +76,7 @@ export default function Contactus() {
             email: "",
             company: "",
             industry: [],
+            services: [],
             phone: "",
             requirements: "",
             reach_time: "",
@@ -90,22 +92,22 @@ export default function Contactus() {
       )
       .finally(() => setIsSubmitting(false));
   };
+  const handleIndustriesSelect = (value :any) => {
+    setFormData((prev:any) => {
+      const alreadySelected = prev.services.includes(value);
 
-  const handleIndustriesSelect = (e: any) => {
-    const { checked, value } = e.target;
-    const numValue = Number(value);
-
-    if (checked) {
-      setFormData((prev) => ({
-        ...prev,
-        industry: [...prev.industry, numValue],
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        industry: prev.industry.filter((id) => id !== numValue),
-      }));
-    }
+      if (alreadySelected) {
+        return {
+          ...prev,
+          services: prev.services.filter((item:any) => item !== value),
+        };
+      } else {
+        return {
+          ...prev,
+          services: [...prev.services, value],
+        };
+      }
+    });
   };
 
   const handleSelectChange = (e: any) => {
@@ -113,6 +115,14 @@ export default function Contactus() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const service = [
+    "Green Chemistry Consulting",
+    "Technical Services",
+    "TDS/MSDS",
+    "Basic and Fine chemicals",
+    "Regulatory Compliance",
+    "Cleaning Services",
+  ];
   return (
     <>
       <div>
@@ -135,11 +145,11 @@ export default function Contactus() {
         <div className="max-w-6xl mx-auto py-16">
           <div className="flex flex-col lg:flex-row box-border gap-10">
             <div className="space-y-5 w-full flex-1 box-content">
-              <h1 className="text-4xl text-gray-900 font-semibold">
-                Request for Services
+              <h1 className="text-4xl text-blue-500 font-semibold">
+                Contact Us
               </h1>
               <div className="max-w-4xl">
-                <p className="text-gray-600 text-lg fonts">
+                <p className="text-gray-500 text-md  mt-4 max-w-4xl mx-auto fonts">
                   Use the following form below to place an order, receive a
                   price quote, request samples, check product availability or
                   for general questions. Synmac Team will immediately start
@@ -149,95 +159,102 @@ export default function Contactus() {
 
               <div className="space-y-4">
                 <form onSubmit={handleSubmit} className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                     <input
-                      placeholder="Enter Name"
+                      placeholder="Name *"
                       onChange={handleChange}
                       name="name"
+                      required
                       value={formData.name}
                       type="text"
-                      className="border border-gray-300 p-2 rounded-md"
+                      className="border border-gray-300 p-2 rounded-md  text-sm bg-gray-100 text-gray-600"
                     />
+
                     <input
-                      placeholder="Email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      type="email"
-                      className="border p-2 border-gray-300 rounded-md"
-                    />
-                    <input
-                      placeholder="Company Name"
+                      placeholder="Company"
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
                       type="text"
-                      className="border p-2 border-gray-300 rounded-md"
+                      className="border p-2 border-gray-300 rounded-md bg-gray-100 text-sm text-gray-600"
                     />
                     <input
-                      placeholder="Phone"
+                      placeholder="Email *"
+                      name="email"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      type="email"
+                      className="border p-2 border-gray-300 rounded-md bg-gray-100 text-sm text-gray-600"
+                    />
+                    <input
+                      placeholder="Phone *"
                       name="phone"
+                      required
                       value={formData.phone}
                       onChange={handleChange}
                       type="tel"
-                      className="border p-2 border-gray-300 rounded-md"
+                      className="border p-2 border-gray-300 rounded-md bg-gray-100 text-sm text-gray-600"
                     />
                   </div>
 
-                  <p className="text-xl font-semibold text-gray-600">
-                    Service you interested in{" "}
-                    <span className="text-red-700">*</span>
+                  <p className="text-lg font-semibold text-gray-600">
+                    Service you interested
+                    <span className="text-red-700"> *</span>
                   </p>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-300 rounded-xl p-4">
-                    {industories?.map((ind: any) => (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
+                    {service?.map((ind: any, idx: any) => (
                       <div
-                        key={ind.id}
-                        className="space-x-3 bg-gray-200 p-2 rounded-md fonts"
+                        key={idx}
+                        onClick={() => handleIndustriesSelect(ind)}
+                        className="space-x-2 text-sm flex flex-row items-center text-gray-600 rounded-md fonts cursor-pointer  p-3"
                       >
                         <input
-                          value={ind.id}
-                          onChange={handleIndustriesSelect}
-                          checked={formData.industry.includes(ind.id)}
                           type="checkbox"
+                          checked={formData.services.includes(ind)}
+                          readOnly
                         />
-                        <label>{ind.name}</label>
+
+                        <label>{ind}</label>
                       </div>
                     ))}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex flex-col">
-                      <label className="text-sm text-gray-700 font-semibold mb-2">
+                      <label className="text-sm text-gray-600 font-semibold mb-2">
                         Best Time to Reach
                       </label>
                       <select
                         name="reach_time"
-                        className="border p-2 border-gray-300 rounded-md"
+                        required
+                        className="border text-gray-600 p-2 text-sm border-gray-300 rounded-md bg-gray-100"
                         onChange={handleSelectChange}
                         value={formData.reach_time}
                       >
                         <option value="">Please select</option>
                         <option value="Morning (9AM - 12PM)">
-                          Morning (9AM - 12PM)
+                          Morning (9 AM - 12 PM)
                         </option>
                         <option value="Afternoon (12PM - 3PM)">
-                          Afternoon (12PM - 3PM)
+                          Afternoon (12 PM - 3 PM)
                         </option>
                         <option value="Evening (3PM - 6PM)">
-                          Evening (3PM - 6PM)
+                          Evening (3 PM - 6 PM)
                         </option>
                       </select>
                     </div>
                     <div className="flex flex-col">
-                      <label className="text-sm text-gray-700 font-semibold mb-2">
+                      <label className="text-sm text-gray-600 font-semibold mb-2">
                         Hear About Us
                       </label>
                       <select
+                        required
                         name="hear_about_us"
                         value={formData.hear_about_us}
                         onChange={handleSelectChange}
-                        className="border p-2 border-gray-300 rounded-md"
+                        className="border p-2 text-sm text-gray-600 border-gray-300 rounded-md bg-gray-100"
                       >
                         <option value="">Please select</option>
                         <option value="Google Search">Google Search</option>
@@ -252,7 +269,7 @@ export default function Contactus() {
                   <textarea
                     name="requirements"
                     placeholder="Message*"
-                    className="border border-gray-300 w-full h-40 resize-none p-4 rounded-xl"
+                    className="border border-gray-300 bg-gray-100 text-gray-600 text-sm w-full h-40 resize-none p-4 rounded-xl"
                     value={formData.requirements}
                     onChange={handleChange}
                   />
@@ -263,6 +280,8 @@ export default function Contactus() {
                     onChange={(value: any) => setCaptchaValue(value)}
                   />
 
+                  {/* <h1 onClick={()=>console.log(formData)}>Helo</h1> */}
+
                   <button
                     type="submit"
                     disabled={isSubmitting || captchaValue === ""}
@@ -271,7 +290,7 @@ export default function Contactus() {
     ${
       captchaValue === ""
         ? "bg-gray-400 cursor-not-allowed"
-        : "bg-black hover:bg-gray-800"
+        : "bg-blue-500 hover:bg-blue-800"
     }
   `}
                   >
@@ -282,14 +301,15 @@ export default function Contactus() {
             </div>
 
             <div className="w-full lg:w-1/3">
-              <div className="bg-gray-50 rounded-2xl p-6">
+              <div className=" p-6">
                 {/* Headquarter */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-blue-500 mb-2 flex items-center gap-2">
                     <HiOutlineLocationMarker className="text-blue-600" />
                     Our Headquarter
                   </h2>
-                  <p className="text-gray-600 leading-relaxed fonts">
+
+                  <p className="text-gray-500 text-md">
                     {company_info?.head_office?.address}
                   </p>
                 </div>
@@ -297,50 +317,49 @@ export default function Contactus() {
                 {/* Contact Details */}
                 <div className="space-y-4">
                   <div>
-                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <h2 className="text-sm font-semibold text-blue-500 uppercase tracking-wide mb-2">
                       Telephone
                     </h2>
                     <a
                       href={`tel:${company_info?.regional_headquarter?.phone}`}
-                      className="text-blue-600 font-medium flex items-center gap-2 hover:underline"
+                      className="text-gray-500 font-medium text-sm flex items-center gap-2 hover:underline"
                     >
-                      <HiOutlinePhone className="text-gray-400" />
+                      <HiOutlinePhone className="text-gray-500" />
                       {company_info?.regional_headquarter?.phone}
                     </a>
                   </div>
 
                   <div>
-                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <h2 className="text-sm font-semibold text-blue-500 uppercase tracking-wide mb-2">
                       Mobile
                     </h2>
                     <a
                       href={`tel:${company_info?.head_office?.phone}`}
-                      className="text-blue-600 font-medium flex items-center gap-2 hover:underline"
+                      className="text-gray-500 font-medium text-sm flex items-center gap-2 hover:underline"
                     >
-                      <HiOutlinePhone className="text-gray-400" />
+                      <HiOutlinePhone className="text-gray-500" />
                       {company_info?.head_office?.phone}
                     </a>
                   </div>
 
                   <div>
-                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <h2 className="text-sm font-semibold text-blue-500 uppercase tracking-wide mb-2">
                       Email
                     </h2>
                     <a
                       href={`mailto:${company_info?.contact_by_email?.general_enquiries_email}`}
-                      className="text-blue-600 font-medium flex items-center gap-2 hover:underline break-all"
+                      className="text-gray-500 font-medium text-sm flex items-center gap-2 hover:underline break-all"
                     >
-                      <HiOutlineMail className="text-gray-400" />
+                      <HiOutlineMail className="text-gray-500" />
                       {company_info?.contact_by_email?.general_enquiries_email}
                     </a>
                   </div>
 
-                  <div className="pt-2">
-                    <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 flex items-center gap-2">
-                      <HiOutlineClock className="text-gray-400" />
+                  <div className="">
+                    <h2 className="text-sm font-semibold text-blue-500 uppercase tracking-wide mb-3 flex items-center gap-2">
                       Opening Hours
                     </h2>
-                    <div className="space-y-1 text-sm text-gray-700 fonts">
+                    <div className="space-y-1 text-sm text-gray-600 fonts">
                       <p>Monday - Friday: 9:30AM - 5:30PM</p>
                       <p>Saturday: 10:30AM - 3:30PM</p>
                       <p className="text-red-500">Sunday: Closed</p>
@@ -352,7 +371,7 @@ export default function Contactus() {
           </div>
         </div>
 
-        <div className="bg-gray-200">
+        <div className="bg-gray-100">
           <div className="py-10 max-w-6xl mx-auto">
             <h1
               className="text-center text-3xl font-bold"
@@ -371,7 +390,7 @@ export default function Contactus() {
               {company_info?.global_contacts.map((res: any, idx: number) => (
                 <div
                   key={idx}
-                  className="bg-gray-100 border border-gray-200 p-5 relative min-h-50"
+                  className="bg-gray-100 border border-gray-300 p-5 relative min-h-50"
                 >
                   <p className="font-semibold text-gray-800 mb-2">
                     {res.country_name}
