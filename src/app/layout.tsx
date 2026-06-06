@@ -60,6 +60,16 @@ async function getAllResources() {
   return res.json();
 }
 
+
+async function getAllBlogs() {
+  const res = await fetch(`http://localhost:3000/api/blogs`, {
+    // next : { revalidate: 300 }
+    cache: "no-store",
+  });
+
+  return res.json();
+}
+
 async function getProduct() {
     const res = await fetch(
         `http://localhost:3000/api/product`,
@@ -91,6 +101,26 @@ async function getCompanyInfo() {
 }
 
 
+async function getAllNews() {
+  const res = await fetch(`http://localhost:3000/api/news`, {
+    // next : { revalidate: 300 }
+    cache: "no-store",
+  });
+
+  return res.json();
+}
+async function getAllStories() {
+  const res = await fetch(`http://localhost:3000/api/success`, {
+    // next : { revalidate: 300 }
+    cache: "no-store",
+  });
+
+  return res.json();
+}
+
+
+
+
 
 export default async function RootLayout({ children }: any) {
   const industries = await getIndustries();
@@ -99,6 +129,9 @@ export default async function RootLayout({ children }: any) {
   const allResources = await getAllResources();
   const getProducts = await getProduct();
   const getCompanyData = await getCompanyInfo();
+  const getBlogs = await getAllBlogs()
+  const getStories = await getAllStories()
+  const getNews = await getAllNews()
 
 
   return (
@@ -106,7 +139,7 @@ export default async function RootLayout({ children }: any) {
       <body>
        
         <Providers>
-           <Navbar getCompanyData={getCompanyData} productCategory={getAllProuductCategory}  subIndustory={getAllSubIndustory} data={industries} product={getProducts} allResources={allResources} />
+           <Navbar getStories={getStories} getNews={getNews} getBlogs={getBlogs} getCompanyData={getCompanyData} productCategory={getAllProuductCategory}  subIndustory={getAllSubIndustory} data={industries} product={getProducts} allResources={allResources} />
    {children}
         </Providers>
      

@@ -85,11 +85,11 @@ const SustainabilitySection = ({ data, data1 }: any) => {
                   
                   return (
                     <div key={idx} className="flex items-start gap-4">
-                      <div className="w-11 h-11 rounded-xl bg-[#cd2626]/10  flex items-center justify-center shrink-0 mt-0.5">
+                      <div className="w-11 h-11 rounded-xl  flex items-center justify-center shrink-0 mt-0.5">
                         <img
                           src={item?.url || null}
                           alt="Sustainable green chemistry research in laboratory"
-                          className="w-10 h-10 rounded-full  object-cover"
+                          className="w-10 h-10 object-cover"
                           loading="lazy"
                           width={10}
                           height={10}
@@ -128,7 +128,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
       </section>
 
 
-      <section ref={statsRef} className="py-20  bg-[#cd2626]">
+      <section ref={statsRef} className="py-20  bg-[#b0c4b1]/80">
         <div className="container mx-auto max-w-8xl ">
           <div className="text-center mb-12">
             <p className="text-gray-800 text-sm font-semibold tracking-wider uppercase mb-3">Key Numbers</p>
@@ -136,7 +136,7 @@ const SustainabilitySection = ({ data, data1 }: any) => {
               Our Impact in <span className="text-white">Numbers</span>
             </h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-gray-900">
             {stats?.map((s: any, i: any) => {
 
               let label;
@@ -153,10 +153,10 @@ const SustainabilitySection = ({ data, data1 }: any) => {
 
               return (
                 <div key={i} className="text-center py-6">
-                  <div className="text-4xl md:text-5xl font-display font-bold text-gray-800 mb-2">
+                  <div className="text-4xl md:text-5xl font-display font-bold  mb-2">
                     {counts[i]}{s.suffix}
                   </div>
-                  <p className="text-lg font-semibold text-gray-800">{label}</p>
+                  <p className="text-lg font-semibold ">{label}</p>
                 </div>
               )
 

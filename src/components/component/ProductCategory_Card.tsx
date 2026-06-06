@@ -76,7 +76,7 @@ const Product_Category_Section = ({ data,title }: any) => {
           <div className="flex justify-center mt-12">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="border border-gray-400 px-6 py-2 rounded-full text-sm hover:bg-white hover:text-black transition"
+                className=" bg-[#ff0100] px-6 py-2 rounded-full text-sm hover:bg-white hover:border hover:border-gray-300 cursor-pointer  hover:text-black transition"
             >
               {showAll ? "Show Less" : "Show All"}
             </button>

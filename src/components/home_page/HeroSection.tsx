@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 
 import Image from "next/image";
-import { BiChevronDown, BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { BiChevronDown, } from "react-icons/bi";
 import Link from "next/link";
 
 
@@ -52,7 +52,7 @@ const HeroSection = ({ data }: { data: any }) => {
 
       <div className="relative z-10 container mx-auto max-w-6xl">
         <div className="max-w-2xl animate-fade-in-up">
-          <div dangerouslySetInnerHTML={{ __html: data?.title || "" }} className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 text-white ql-editor"/>
+          <div dangerouslySetInnerHTML={{ __html: data?.title || "" }} className="font-display ql-editor"/>
             
 
 

@@ -1,12 +1,14 @@
-'use client'
-import Header from '@/components/component/Header'
-import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
-import { LiaAngleRightSolid } from 'react-icons/lia'
-import { useSelector } from 'react-redux'
+"use client";
+import Header from "@/components/component/Header";
+import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+import { LiaAngleRightSolid } from "react-icons/lia";
+import { useSelector } from "react-redux";
 
-const Resources = () => {
-  const { resources, industories, sub_industries } = useSelector((state: any) => state?.resources)
+const Blogs = () => {
+  const { industories, sub_industries, blogs } = useSelector(
+    (state: any) => state?.resources,
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -15,25 +17,26 @@ const Resources = () => {
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [filteredResources, setFilteredResources] = useState<any[]>([]);
   const [activeFilterType, setActiveFilterType] = useState<string | null>(null);
-  
-  // State for expand/collapse - initially all collapsed
+
   const [isIndustriesExpanded, setIsIndustriesExpanded] = useState(false);
   const [isTopicsExpanded, setIsTopicsExpanded] = useState(false);
   const [isYearsExpanded, setIsYearsExpanded] = useState(false);
-  
+
   const itemsPerPage = 8;
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (resources?.resources) {
-      setFilteredResources(resources.resources);
+    if (blogs) {
+      setFilteredResources(blogs);
     }
-  }, [resources]);
+  }, [blogs]);
 
-  // Handle click outside to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         setIsFilterOpen(false);
         setActiveFilterType(null);
         // Reset all expanded states
@@ -44,71 +47,73 @@ const Resources = () => {
     };
 
     if (isFilterOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isFilterOpen]);
 
-  // Filter function - applies directly when selection changes
   const applyFiltersDirectly = (
-    industries: number[], 
-    topics: number[], 
-    years: number[]
+    industries: number[],
+    topics: number[],
+    years: number[],
   ) => {
-    let filtered = [...resources.resources];
-    
+    let filtered = [...blogs];
+
     const hasIndustries = industries.length > 0;
     const hasTopics = topics.length > 0;
     const hasYears = years.length > 0;
-    
+
     if (!hasIndustries && !hasTopics && !hasYears) {
-      setFilteredResources(resources.resources);
+      setFilteredResources(blogs);
       setCurrentPage(1);
       return;
     }
-    
+
     filtered = filtered.filter((resource: any) => {
       let matches = false;
-      
+
       if (hasIndustries && industries.includes(resource.industry_id)) {
         matches = true;
       }
-      
-      if (!matches && hasTopics && resource.sub_industry_id && topics.includes(resource.sub_industry_id)) {
+
+      if (
+        !matches &&
+        hasTopics &&
+        resource.sub_industry_id &&
+        topics.includes(resource.sub_industry_id)
+      ) {
         matches = true;
       }
-      
+
       if (!matches && hasYears) {
         const resourceYear = new Date(resource.created_at).getFullYear();
         if (years.includes(resourceYear)) {
           matches = true;
         }
       }
-      
+
       return matches;
     });
-    
+
     setFilteredResources(filtered);
     setCurrentPage(1);
   };
 
-  // Clear all filters
   const clearFilters = () => {
     setSelectedIndustries([]);
     setSelectedTopics([]);
     setSelectedYears([]);
-    setFilteredResources(resources?.resources || []);
+    setFilteredResources(blogs || []);
     setCurrentPage(1);
   };
 
-  // Handle industry checkbox change
   const handleIndustryChange = (industryId: number) => {
     let newIndustries: number[];
     if (selectedIndustries.includes(industryId)) {
-      newIndustries = selectedIndustries.filter(id => id !== industryId);
+      newIndustries = selectedIndustries.filter((id) => id !== industryId);
     } else {
       newIndustries = [...selectedIndustries, industryId];
     }
@@ -116,11 +121,10 @@ const Resources = () => {
     applyFiltersDirectly(newIndustries, selectedTopics, selectedYears);
   };
 
-  // Handle topic checkbox change
   const handleTopicChange = (topicId: number) => {
     let newTopics: number[];
     if (selectedTopics.includes(topicId)) {
-      newTopics = selectedTopics.filter(id => id !== topicId);
+      newTopics = selectedTopics.filter((id) => id !== topicId);
     } else {
       newTopics = [...selectedTopics, topicId];
     }
@@ -128,11 +132,10 @@ const Resources = () => {
     applyFiltersDirectly(selectedIndustries, newTopics, selectedYears);
   };
 
-  // Handle year checkbox change
   const handleYearChange = (year: number) => {
     let newYears: number[];
     if (selectedYears.includes(year)) {
-      newYears = selectedYears.filter(y => y !== year);
+      newYears = selectedYears.filter((y) => y !== year);
     } else {
       newYears = [...selectedYears, year];
     }
@@ -140,23 +143,21 @@ const Resources = () => {
     applyFiltersDirectly(selectedIndustries, selectedTopics, newYears);
   };
 
-  // Open sidebar with specific filter expanded, others collapsed
   const openFilterSidebar = (filterType: string) => {
     setActiveFilterType(filterType);
-    // Set expanded states - only the clicked one expands, others collapse
-    setIsIndustriesExpanded(filterType === 'industry');
-    setIsTopicsExpanded(filterType === 'topic');
-    setIsYearsExpanded(filterType === 'year');
+
+    setIsIndustriesExpanded(filterType === "industry");
+    setIsTopicsExpanded(filterType === "topic");
+    setIsYearsExpanded(filterType === "year");
     setIsFilterOpen(true);
   };
 
-  // Toggle individual sections (for manual expand/collapse)
   const toggleIndustries = () => {
     setIsIndustriesExpanded(!isIndustriesExpanded);
     if (!isIndustriesExpanded) {
       setIsTopicsExpanded(false);
       setIsYearsExpanded(false);
-      setActiveFilterType('industry');
+      setActiveFilterType("industry");
     }
   };
 
@@ -165,7 +166,7 @@ const Resources = () => {
     if (!isTopicsExpanded) {
       setIsIndustriesExpanded(false);
       setIsYearsExpanded(false);
-      setActiveFilterType('topic');
+      setActiveFilterType("topic");
     }
   };
 
@@ -174,7 +175,7 @@ const Resources = () => {
     if (!isYearsExpanded) {
       setIsIndustriesExpanded(false);
       setIsTopicsExpanded(false);
-      setActiveFilterType('year');
+      setActiveFilterType("year");
     }
   };
 
@@ -187,7 +188,7 @@ const Resources = () => {
   const getPageNumbers = () => {
     const maxPagesToShow = 4;
     let pages = [];
-    
+
     if (totalPages <= maxPagesToShow) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -195,35 +196,41 @@ const Resources = () => {
     } else {
       let startPage = Math.max(1, currentPage - 2);
       let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-  
+
       if (endPage - startPage + 1 < maxPagesToShow) {
         startPage = Math.max(1, endPage - maxPagesToShow + 1);
       }
-      
+
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
     }
-    
+
     return pages;
   };
 
   const visiblePages = getPageNumbers() || [];
 
-  const next = () => { 
-    if(currentPage === totalPages) return;
+  const next = () => {
+    if (currentPage === totalPages) return;
     setCurrentPage(currentPage + 1);
-  }
+  };
 
   const prev = () => {
-    if(currentPage === 1) return;
+    if (currentPage === 1) return;
     setCurrentPage(currentPage - 1);
-  }
+  };
 
-  if(!resources?.resources?.length){
+  if (!blogs?.length) {
     return (
       <div>
-        <Header title={"Brochure"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
+        <Header
+          title={"Blogs"}
+          description={
+            "Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."
+          }
+          background_image={""}
+        />
         <div className="max-w-6xl mx-auto py-16 text-center">
           <p>Loading resources...</p>
         </div>
@@ -231,136 +238,198 @@ const Resources = () => {
     );
   }
 
-  const availableYears = [...new Set<number>(resources.resources.map((resource: any) => 
-    new Date(resource.created_at).getFullYear()
-  ))].sort((a: number, b: number) => b - a);
+  const availableYears = [
+    ...new Set<number>(
+      blogs.map((resource: any) => new Date(resource.created_at).getFullYear()),
+    ),
+  ].sort((a: number, b: number) => b - a);
 
   // Get selected filters count
   const getSelectedCount = (filterType: string) => {
-    if (filterType === 'industry') return selectedIndustries.length;
-    if (filterType === 'topic') return selectedTopics.length;
-    if (filterType === 'year') return selectedYears.length;
+    if (filterType === "industry") return selectedIndustries.length;
+    if (filterType === "topic") return selectedTopics.length;
+    if (filterType === "year") return selectedYears.length;
     return 0;
   };
 
   const getSelectedDisplay = (filterType: string) => {
     const count = getSelectedCount(filterType);
-    if (count === 0) return '';
+    if (count === 0) return "";
     return `(${count})`;
   };
 
   return (
     <div>
-      <Header title={"Brochure"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
-      
+      <Header
+        title={"Blogs"}
+        description={
+          "Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."
+        }
+        background_image={""}
+      />
+
       <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
-          <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
+          <Link href="/" className="hover:text-[#cd2626] transition">
+            Home
+          </Link>
           <LiaAngleRightSolid size={12} />
-          <h1 className="text-gray-600">Brochure</h1>
+          <h1 className="text-gray-600">Blogs</h1>
         </div>
       </div>
 
-      <div className="flex max-w-6xl mx-auto py-8 px-4 relative">
-       
+      <div className="flex max-w-6xl mx-auto py-8  relative">
         <div className="flex-1">
-          <div className='border-b border-gray-400 mb-4'>
-            <div className='text-3xl font-medium py-2'>
-              Results ({filteredResources.length}) <span className='text-lg font-semibold text-gray-500'>total</span>
+          <div className="border-b border-gray-400 mb-4">
+            <div className="text-3xl font-medium py-2">
+              Results ({filteredResources.length}){" "}
+              <span className="text-lg font-semibold text-gray-500">total</span>
             </div>
 
-            
-            <div className=' space-x-3 flex flex-row mb-2'>
-              <button 
-                onClick={() => openFilterSidebar('industry')}
-                className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
+            <div className=" space-x-3 flex flex-row mb-2">
+              <button
+                onClick={() => openFilterSidebar("industry")}
+                className="border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2"
               >
-                Industry {getSelectedDisplay('industry')}
-              </button> 
-              <button 
-                onClick={() => openFilterSidebar('topic')}
-                className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
-              >
-                Topic {getSelectedDisplay('topic')}
+                Industry {getSelectedDisplay("industry")}
               </button>
-              <button 
-                onClick={() => openFilterSidebar('year')}
-                className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
+              <button
+                onClick={() => openFilterSidebar("topic")}
+                className="border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2"
               >
-                Year {getSelectedDisplay('year')}
+                Topic {getSelectedDisplay("topic")}
+              </button>
+              <button
+                onClick={() => openFilterSidebar("year")}
+                className="border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2"
+              >
+                Authors {getSelectedDisplay("year")}
               </button>
             </div>
 
-            <div className='flex flex-wrap flex-row gap-2'>
-
-
-      
-
-         
-           
-
-          
-            {(selectedIndustries.length > 0 || selectedTopics.length > 0 || selectedYears.length > 0) && (
-              <div className='flex flex-wrap gap-2 mb-4'>
-                {selectedIndustries.map(id => {
-                  const industry = industories?.find((ind: any) => ind.id === id);
-                  return industry && (
-                    <span key={`ind-${id}`} className='bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center gap-1'>
-                      {industry.name}
-                      <button onClick={() => handleIndustryChange(id)} className="hover:text-blue-900">×</button>
+            <div className="flex flex-wrap flex-row gap-2">
+              {(selectedIndustries.length > 0 ||
+                selectedTopics.length > 0 ||
+                selectedYears.length > 0) && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {selectedIndustries.map((id) => {
+                    const industry = industories?.find(
+                      (ind: any) => ind.id === id,
+                    );
+                    return (
+                      industry && (
+                        <span
+                          key={`ind-${id}`}
+                          className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {industry.name}
+                          <button
+                            onClick={() => handleIndustryChange(id)}
+                            className="hover:text-blue-900"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      )
+                    );
+                  })}
+                  {selectedTopics.map((id) => {
+                    const topic = sub_industries?.find(
+                      (sub: any) => sub.id === id,
+                    );
+                    return (
+                      topic && (
+                        <span
+                          key={`topic-${id}`}
+                          className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                        >
+                          {topic.name}
+                          <button
+                            onClick={() => handleTopicChange(id)}
+                            className="hover:text-green-900"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      )
+                    );
+                  })}
+                  {selectedYears.map((year) => (
+                    <span
+                      key={`year-${year}`}
+                      className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center gap-1"
+                    >
+                      {year}
+                      <button
+                        onClick={() => handleYearChange(year)}
+                        className="hover:text-purple-900"
+                      >
+                        ×
+                      </button>
                     </span>
-                  );
-                })}
-                {selectedTopics.map(id => {
-                  const topic = sub_industries?.find((sub: any) => sub.id === id);
-                  return topic && (
-                    <span key={`topic-${id}`} className='bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center gap-1'>
-                      {topic.name}
-                      <button onClick={() => handleTopicChange(id)} className="hover:text-green-900">×</button>
-                    </span>
-                  );
-                })}
-                {selectedYears.map(year => (
-                  <span key={`year-${year}`} className='bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center gap-1'>
-                    {year}
-                    <button onClick={() => handleYearChange(year)} className="hover:text-purple-900">×</button>
-                  </span>
-                ))}
-              </div>
-            )}
-             <div className='pb-4 flex flex-wrap items-center gap-3'>
-              {(selectedIndustries.length > 0 || selectedTopics.length > 0 || selectedYears.length > 0) && (
-                <button 
-                  onClick={clearFilters}
-                  className='text-sm text-red-600 hover:text-red-800'
-                >
-                  Clear all filters
-                </button>
+                  ))}
+                </div>
               )}
+              <div className="pb-4 flex flex-wrap items-center gap-3">
+                {(selectedIndustries.length > 0 ||
+                  selectedTopics.length > 0 ||
+                  selectedYears.length > 0) && (
+                  <button
+                    onClick={clearFilters}
+                    className="text-sm text-red-600 hover:text-red-800"
+                  >
+                    Clear all filters
+                  </button>
+                )}
+              </div>
             </div>
-
-
-                  </div>
           </div>
 
-        
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5'>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {currentProducts?.map((res: any) => (
-              <div key={res.id} className='bg-gray-100 border border-gray-200 p-5 aspect-square relative flex flex-col'>
-                <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>BROCHURE</h1>
-                <p className='font-semibold text-gray-800 mb-2 line-clamp-3'>{res.title}</p>
-                <div dangerouslySetInnerHTML={{ __html: res.description || "" }} className='line-clamp-4 text-sm font-light text-gray-500 flex-1 '/>
-                <a href={res.file} target='_blank' rel="noopener noreferrer" className='mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block'>
-                  Download Document
-                </a>
+              <div
+                key={res.id}
+                className="bg-gray-100 h-130  p-5  flex flex-col relative"
+              >
+                <img
+                  className="object-contain aspect-video  border-gray-200 rounded-sm mb-2"
+                  src={res.blog_image_url}
+                />
+                <div className="px-3">
+                  <div className="flex flex-row justify-between ">
+                    <h1 className="text-xs font-semibold text-gray-500 line-clamp-2">
+                      by : {res.author}
+                    </h1>
+                    <h1 className="text-xs font-semibold text-gray-500 mb-2 line-clamp-2">
+                      {res.date.split("-")[2]}/{res.date.split("-")[1]}/
+                      {res.date.split("-")[0]}
+                    </h1>
+                  </div>
+
+                  <p className="font-semibold text-gray-900 text-md mb-2 line-clamp-4">
+                    {res.title}
+                  </p>
+                  <div className=" text-sm line-clamp-6 font-semibold text-gray-500 flex-1 ">
+                    {res.description}
+                  </div>
+                  <Link
+                    href={`/blog/${res.slug}`}
+                    rel="noopener noreferrer"
+                    className=" border-b-2 py-1  hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block absolute bottom-6"
+                  >
+                    View more
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
 
           {filteredResources.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500">No resources found with the selected filters.</p>
-              <button 
+              <p className="text-gray-500">
+                No resources found with the selected filters.
+              </p>
+              <button
                 onClick={clearFilters}
                 className="mt-4 text-[#b62126] hover:underline"
               >
@@ -369,21 +438,20 @@ const Resources = () => {
             </div>
           )}
 
-       
           {totalPages > 1 && (
             <div className="flex gap-2 justify-center items-center text-xs mt-8 p-3">
               <button
                 onClick={prev}
                 disabled={currentPage === 1}
                 className={`h-6 w-12 border rounded-sm cursor-pointer ${
-                  currentPage === 1 
-                    ? 'bg-gray-300 text-gray-800 border-gray-300 cursor-not-allowed' 
-                    : 'bg-[#b62126] text-white border-[#b62126]'
+                  currentPage === 1
+                    ? "bg-gray-300 text-gray-800 border-gray-300 cursor-not-allowed"
+                    : "bg-[#b62126] text-white border-[#b62126]"
                 }`}
               >
                 Prev
               </button>
-              
+
               {visiblePages.map((pageNum) => (
                 <button
                   key={pageNum}
@@ -397,14 +465,14 @@ const Resources = () => {
                   {pageNum}
                 </button>
               ))}
-              
+
               <button
                 onClick={next}
                 disabled={currentPage === totalPages}
                 className={`h-6 w-12 border rounded-sm cursor-pointer ${
                   currentPage === totalPages
-                    ? 'bg-gray-300 text-gray-800 border-gray-300 cursor-not-allowed'
-                    : 'bg-[#b62126] text-white border-[#b62126]'
+                    ? "bg-gray-300 text-gray-800 border-gray-300 cursor-not-allowed"
+                    : "bg-[#b62126] text-white border-[#b62126]"
                 }`}
               >
                 Next
@@ -414,10 +482,9 @@ const Resources = () => {
         </div>
       </div>
 
-   
       {isFilterOpen && (
         <>
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-50 transition-opacity duration-300"
             onClick={() => {
               setIsFilterOpen(false);
@@ -427,36 +494,43 @@ const Resources = () => {
               setIsYearsExpanded(false);
             }}
           />
-          <div 
+          <div
             ref={sidebarRef}
             className="fixed right-30 top-0 w-96 bg-white h-full z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out"
           >
-                <div className="flex justify-between sticky top-0 bg-white items-center  p-4 ">
-                <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
-                <button 
-                  onClick={() => {
-                    setIsFilterOpen(false);
-                    setActiveFilterType(null);
-                    setIsIndustriesExpanded(false);
-                    setIsTopicsExpanded(false);
-                    setIsYearsExpanded(false);
-                  }}
-                  className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
+            <div className="flex justify-between sticky top-0 bg-white items-center  p-4 ">
+              <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
+              <button
+                onClick={() => {
+                  setIsFilterOpen(false);
+                  setActiveFilterType(null);
+                  setIsIndustriesExpanded(false);
+                  setIsTopicsExpanded(false);
+                  setIsYearsExpanded(false);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
             <div className="p-5">
-            
-          
-
-              
               <div className="mb-6 border border-gray-400 overflow-hidden">
-                <button 
+                <button
                   onClick={toggleIndustries}
-                  className={`flex justify-between items-center w-full p-4  transition-colors`} >
+                  className={`flex justify-between items-center w-full p-4  transition-colors`}
+                >
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-gray-700">Industries</h3>
                     {selectedIndustries.length > 0 && (
@@ -466,30 +540,34 @@ const Resources = () => {
                     )}
                   </div>
                   <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
-                    {isIndustriesExpanded ? '−' : '+'}
+                    {isIndustriesExpanded ? "−" : "+"}
                   </span>
                 </button>
                 {isIndustriesExpanded && (
                   <div className="space-y-2  overflow-y-auto p-4 pt-2 bg-white">
                     {industories?.map((indus: any) => (
-                      <label key={indus.id} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                      <label
+                        key={indus.id}
+                        className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedIndustries.includes(indus.id)}
                           onChange={() => handleIndustryChange(indus.id)}
                           className="w-4 h-4 text-[#b62126] rounded border-gray-300 focus:ring-[#b62126] focus:ring-2"
                         />
-                        <span className="text-sm text-gray-700">{indus.name}</span>
+                        <span className="text-sm text-gray-700">
+                          {indus.name}
+                        </span>
                       </label>
                     ))}
                   </div>
                 )}
               </div>
 
-             
               {sub_industries && sub_industries.length > 0 && (
-                 <div className="mb-6 border border-gray-400 overflow-hidden">
-                  <button 
+                <div className="mb-6 border border-gray-400 overflow-hidden">
+                  <button
                     onClick={toggleTopics}
                     className={`flex justify-between items-center w-full p-4`}
                   >
@@ -502,20 +580,25 @@ const Resources = () => {
                       )}
                     </div>
                     <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
-                      {isTopicsExpanded ? '−' : '+'}
+                      {isTopicsExpanded ? "−" : "+"}
                     </span>
                   </button>
                   {isTopicsExpanded && (
                     <div className="space-y-2 max-h-60 overflow-y-auto p-4 pt-2 bg-white">
                       {sub_industries.map((sub: any) => (
-                        <label key={sub.id} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                        <label
+                          key={sub.id}
+                          className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                        >
                           <input
                             type="checkbox"
                             checked={selectedTopics.includes(sub.id)}
                             onChange={() => handleTopicChange(sub.id)}
                             className="w-4 h-4 text-[#b62126] rounded border-gray-300 focus:ring-[#b62126] focus:ring-2"
                           />
-                          <span className="text-sm text-gray-700">{sub.name}</span>
+                          <span className="text-sm text-gray-700">
+                            {sub.name}
+                          </span>
                         </label>
                       ))}
                     </div>
@@ -523,8 +606,8 @@ const Resources = () => {
                 </div>
               )}
 
-               <div className="mb-6 border border-gray-400 overflow-hidden">
-                <button 
+              <div className="mb-6 border border-gray-400 overflow-hidden">
+                <button
                   onClick={toggleYears}
                   className={`flex justify-between items-center w-full p-4 `}
                 >
@@ -537,13 +620,16 @@ const Resources = () => {
                     )}
                   </div>
                   <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
-                    {isYearsExpanded ? '−' : '+'}
+                    {isYearsExpanded ? "−" : "+"}
                   </span>
                 </button>
                 {isYearsExpanded && (
                   <div className="space-y-2 max-h-60 overflow-y-auto p-4 pt-2 bg-white">
                     {availableYears.map((year: number) => (
-                      <label key={year} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                      <label
+                        key={year}
+                        className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedYears.includes(year)}
@@ -556,14 +642,12 @@ const Resources = () => {
                   </div>
                 )}
               </div>
-
-             
             </div>
           </div>
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Resources
+export default Blogs;

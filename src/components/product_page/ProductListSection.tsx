@@ -540,8 +540,8 @@ const captchaRef = useRef<any>(null);
                                                                         rel="noopener noreferrer"
                                                                         className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_tds_locked
-                                                                                ? "bg-black text-white cursor-pointer hover:bg-gray-500"
-                                                                                : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
+                                                                                ? "bg-[#cd2626] text-white cursor-pointer "
+                                                                                : "bg-green-800  text-white"
                                                                             }`}
                                                                     >
                                                                         {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
@@ -555,14 +555,16 @@ const captchaRef = useRef<any>(null);
                                                                         onClick={(e) => handleDocumentClick(e, pro, 'msds', pro?.msds_doc)}
                                                                         target={!pro?.is_msds_locked ? "_blank" : undefined}
                                                                         rel="noopener noreferrer"
-                                                                        className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
+                                                                        className={`text-xs h-8 px-3 gap-1 flex items-center text-white 
+                                                                         font-semibold rounded-md 
+                                                                             whitespace-nowrap
                                                                             ${pro?.is_msds_locked
-                                                                                ? "bg-gray-400 cursor-pointer hover:bg-gray-500"
-                                                                                : "bg-[#cd2626] hover:bg-[#a31e1e] text-white"
+                                                                                ? "bg-[#cd2626] cursor-pointer "
+                                                                                : "bg-green-800"
                                                                             }`}
                                                                     >
                                                                         {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
-                                                                        MSDS
+                                                                        SDS
                                                                     </a>
                                                                 )}
                                                             </div>

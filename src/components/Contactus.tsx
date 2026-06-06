@@ -149,7 +149,7 @@ export default function Contactus() {
                 Contact Us
               </h1>
               <div className="max-w-4xl">
-                <p className="text-gray-500 text-md  mt-4 max-w-4xl mx-auto fonts">
+                <p className="text-gray-500 text-md  mt-4 max-w-4xl mx-auto text-sm">
                   Use the following form below to place an order, receive a
                   price quote, request samples, check product availability or
                   for general questions. Synmac Team will immediately start
@@ -198,17 +198,17 @@ export default function Contactus() {
                     />
                   </div>
 
-                  <p className="text-lg font-semibold text-gray-600">
+                  <p className="text-sm font-semibold text-gray-600">
                     Service you interested
                     <span className="text-red-700"> *</span>
                   </p>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-1 items-center mb-4">
                     {service?.map((ind: any, idx: any) => (
                       <div
                         key={idx}
                         onClick={() => handleIndustriesSelect(ind)}
-                        className="space-x-2 text-sm flex flex-row items-center text-gray-600 rounded-md fonts cursor-pointer  p-3"
+                        className="space-x-2 text-sm flex  flex-row items-center  text-gray-600 rounded-md fonts cursor-pointer"
                       >
                         <input
                           type="checkbox"

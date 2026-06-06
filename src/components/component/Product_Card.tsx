@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io'
 import Link from "next/link"
+import { FiArrowRight } from 'react-icons/fi'
 
 const Product_Section = ({ product_list  ,title = "Products"}: any) => {
 
@@ -42,10 +43,10 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
               <Link
                 key={i}
                 href={url}
-                className="group block  rounded-xl overflow-hidden"
+                className="group block  rounded-sm overflow-hidden min-h-80  p-8  relative bg-white hover:bg-blue-500"
               >
 
-             {
+             {/* {
               item.image ? (
                 <div className="h-52 overflow-hidden">
                   <img
@@ -57,7 +58,7 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
               ) : (
                  <></>
               )
-             }
+             } */}
                 
 
               
@@ -65,7 +66,7 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
 
                   
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-[#ff0100] transition">
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-white ">
                       {item.name}
                     </h3>
 
@@ -76,14 +77,14 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-3 fonts"
+                      className="group-hover:text-white text-sm  fonts"
                     />
                       ) : (<div
                       
                       dangerouslySetInnerHTML={{
                         __html: item.hero_background_description || ""
                       }}
-                      className="text-gray-500 text-sm line-clamp-6 fonts "
+                      className="group-hover:text-white  text-sm  fonts "
                     />)
                     }
 
@@ -91,11 +92,16 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
                   </div>
 
                  
-                  <div className="w-9 h-9 flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
-                    <IoIosArrowRoundForward size={30} className="text-xl text-white" />
-                  </div>
-
+               
                 </div>
+                <div className='flex justify-end absolute bottom-5 right-10'>
+
+
+                    <FiArrowRight size={50} className="text-xl text-black group-hover:text-white group-hover:font-light group-hover:translate-x-4 transition " />
+              
+                </div>
+                 
+
               </Link>
             );
           })}

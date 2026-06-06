@@ -1,5 +1,6 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Rokkitt:ital,wght@0,100..900;1,100..900&display=swap'); */
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 
 
@@ -118,4 +119,21 @@ body {
 
 .custom-content li {
   margin-left: 20px;
+}
+
+.resouce-Section{
+    position: relative;
+}
+
+.resouce-Section-panel{
+display: none;
+width: 130px;
+position: absolute;
+background:white;
+}
+
+.resouce-Section:hover .resouce-Section-panel {
+    display: flex;
+    flex-direction: column;
+
 }

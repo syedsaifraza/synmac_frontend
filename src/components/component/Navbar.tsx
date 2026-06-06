@@ -12,7 +12,7 @@ import { FiSearch } from 'react-icons/fi';
 import SearchOverlay from '../SearchOverlay';
 import LanguageSelector from '../LanguageSelector';
 import { useDispatch } from 'react-redux';
-import { setCompanyInfoDataFromApi, setIndustoryFromApi, setProductCategoryFromApi, setProductsFromApi, setResourcesFromApi, setSubIndustoryFromApi } from '@/features/synmacdata.slice';
+import { setBlogsFromApi, setCompanyInfoDataFromApi, setIndustoryFromApi, setNewFromApi, setProductCategoryFromApi, setProductsFromApi, setResourcesFromApi, setSubIndustoryFromApi, setSuccessFromApi } from '@/features/synmacdata.slice';
 
 
 
@@ -54,10 +54,13 @@ interface Industry {
     [key: string]: any;
 }
 
-const Navbar = ({getCompanyData, data,allResources ,product,subIndustory,productCategory }: { data: Industry[]; allResources:any,product:any,subIndustory:any,productCategory:any,getCompanyData:any}) => {
+const Navbar = ({getCompanyData,getBlogs,getStories, getNews, data,allResources ,product,subIndustory,productCategory }: { data: Industry[];getBlogs:any,getStories:any, getNews:any, allResources:any,product:any,subIndustory:any,productCategory:any,getCompanyData:any}) => {
 
 
     const dispatch = useDispatch()
+
+
+    console.log("getBlogs", getStories,getNews)
 
     useEffect(() => {
     dispatch(setResourcesFromApi(allResources))
@@ -66,13 +69,13 @@ const Navbar = ({getCompanyData, data,allResources ,product,subIndustory,product
     dispatch(setSubIndustoryFromApi(subIndustory.subIndustory))
     dispatch(setProductCategoryFromApi(productCategory.productCategory))
     dispatch(setCompanyInfoDataFromApi(getCompanyData))
+    dispatch(setBlogsFromApi(getBlogs.blogs))
+    dispatch(setNewFromApi(getNews.news))
+    dispatch(setSuccessFromApi(getStories.stories))
 ;
   }, []);
 
- 
 
-
-    const router = useRouter();
     const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,9 +89,8 @@ const Navbar = ({getCompanyData, data,allResources ,product,subIndustory,product
     const hoverTimeoutRef = useRef<any>(null);
     const [isClient, setIsClient] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [megaMenuOpen, setMegaMenuOpen] = useState(false);
 
+   
 
 
 const isProductPage = pathname === '/product';
@@ -301,10 +303,21 @@ const isProductPage = pathname === '/product';
                             <span>Products</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        <Link href="/resources" className="relative group">
+                        <div className='relative group resouce-Section flex flex-row items-center gap-1'>
                             <span>Resources</span>
+                            <FaAngleDown/>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-                        </Link>
+
+                            <div className='resouce-Section-panel top-5 text-gray-600 font-semibold p-2 text-xs space-y-2  '>
+                                <Link href="/blog" className='cursor-pointer hover:text-[#cd2626]'>Blogs</Link>
+                                <Link href="/brochure" className='cursor-pointer hover:text-[#cd2626]'>Brochures</Link>
+                                 
+                                  <Link className='cursor-pointer hover:text-[#cd2626]' href={"/success-stories"}>Success Stories</Link>
+                                <Link className='cursor-pointer hover:text-[#cd2626]' href={"/news-releases"}>News Releases</Link>
+                                  <p></p>
+                            </div>
+                           
+                        </div>
                         <Link href="#" className="relative group">
                             <span>About us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
@@ -362,8 +375,7 @@ const isProductPage = pathname === '/product';
                     <div className="">
                         <div className="w-full h-[80vh] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] flex flex-row  overflow-hidden relative">
 
-                            <div className="w-1/3 px-24 py-10 bg-gray-200">
-
+                            <div className="w-1/3 px-24 py-10 bg-gray-00">
                                     {activeIndustry.feature_file_link && (
 
                                         <div className=" overflow-hidden  transition duration-300 flex flex-col h-full">
@@ -408,32 +420,32 @@ const isProductPage = pathname === '/product';
                                     )}
 
                                 </div>
-                            <div className="grid grid-cols-4 flex-1 pr-24 pt-10 pl-10 gap-10">
+                            <div className="grid grid-cols-4 flex-1 pr-24 pt-10 pl-10">
 
                                 
 
 
                                 <div className="col-span-1 bg-white overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white  pb-2">
-                                        <h3 className="text-sm font-semibold text-gray-400">Main Markets</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
+                                        <h3 className="text-sm font-medium text-gray-500">Main Markets</h3>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
 
                                     </div>
-                                    <div className="py-2 space-y-1">
+                                    <div className="py-2 space-y-1 pr-8">
                                         {data.map((industry,idx:number) => (
                                             <Link
                                                 key={idx}
                                                 href={getIndustryUrl(industry)}
                                                 onMouseEnter={() => handleIndustryHover(industry)}
-                                                className={`flex items-center font-semibold  rounded-lg text-xs
+                                                className={`flex justify-between  font-medium  rounded-lg text-xs
                                                     ${activeIndustry?.id === industry.id
                                                         ? " text-[#cd2626] "
                                                         : "text-gray-700 "
                                                     }
                                                 `}
                                             >
-                                                <span className="truncate">{industry.name}</span>
-                                                <FaAngleRight className="text-[10px]" />
+                                                <span className="">{industry.name}</span>
+                                                <FaAngleRight className="text-[10px] relative top-1" />
                                             </Link>
                                         ))}
                                     </div>
@@ -441,17 +453,17 @@ const isProductPage = pathname === '/product';
 
                                 <div className="col-span-1 bg-white  overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white pb-2">
-                                        <h3 className="text-sm font-semibold text-gray-400">Sub Markets</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
+                                        <h3 className="text-sm font-medium text-gray-500">Sub Markets</h3>
+                                          <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
                                     </div>
-                                    <div className="space-y-1 py-2">
+                                    <div className="space-y-1 py-2 pr-8">
                                         {hasSubIndustries(activeIndustry) ? (
                                             activeIndustry.sub_industry?.map((sub,idx:number) => (
                                                 <Link
                                                     key={idx}
                                                     href={getSubIndustryUrl(activeIndustry, sub)}
                                                     onMouseEnter={() => handleSubIndustryHover(sub)}
-                                                    className={`  flex font-semibold items-center rounded-lg text-xs
+                                                    className={`  flex font-medium justify-between items-top rounded-lg text-xs
                                                         ${activeSubIndustry?.id === sub.id
                                                             ? "text-[#cd2626]"
                                                             : "text-gray-700 "
@@ -459,8 +471,8 @@ const isProductPage = pathname === '/product';
                                                     `}
                                                 >
 
-                                                      <span className="truncate"> {sub.name}</span>
-                                                <FaAngleRight className="text-[10px]" />
+                                                      <span className=""> {sub.name}</span>
+                                     <FaAngleRight className="text-[10px] relative top-1" />
                                                    
                                                 </Link>
                                             ))
@@ -475,10 +487,10 @@ const isProductPage = pathname === '/product';
 
                                 <div className="col-span-1 bg-white  overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white  pb-2">
-                                        <h3 className="text-sm font-semibold text-gray-400">End Markets</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
+                                        <h3 className="text-sm font-medium text-gray-500">End Markets</h3>
+    <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
                                     </div>
-                                    <div className="py-2 space-y-1">
+                                    <div className="py-2 space-y-1 pr-8">
 
 
 
@@ -493,7 +505,7 @@ const isProductPage = pathname === '/product';
                                                     key={idx}
                                                     href={getCategoryUrl(activeIndustry, activeSubIndustry, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
-                                                    className={`flex font-semibold items-center rounded-lg text-xs mb-0.5
+                                                    className={`flex font-medium items-top justify-between  rounded-lg text-xs mb-0.5
                                                         ${activeCategory?.id === cat.id
                                                             ? "text-[#cd2626]"
                                                             : "text-gray-700 "
@@ -501,8 +513,8 @@ const isProductPage = pathname === '/product';
                                                     `}
                                                 >
 
-                                                     <span className="truncate">{cat.name}</span>
-                                                <FaAngleRight className="text-[10px]" />
+                                                     <span className="">{cat.name}</span>
+                                                  <FaAngleRight className="text-[10px] relative top-1" />
                                                     
                                                 </Link>
                                             ))
@@ -533,8 +545,8 @@ const isProductPage = pathname === '/product';
 
                                 <div className="col-span-1 bg-white overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white pb-2">
-                                        <h3 className="text-sm font-semibold text-gray-400">Products</h3>
-                                        <span className="absolute left-0 bottom-0 h-0.5 bg-[#cd2626] transition-all duration-300 w-20"></span>
+                                        <h3 className="text-sm font-medium text-gray-500">Products</h3>
+                                           <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
                                     </div>
                                     <div className="py-2 space-y-1 ">
                                         {products.length > 0 ? (
@@ -542,9 +554,10 @@ const isProductPage = pathname === '/product';
                                                 <Link
                                                     key={idx}
                                                     href={getProductUrl(product)}
-                                                    className="block font-semibold  text-xs mb-0.5 text-gray-700 hover:text-[#cd2626] "
+                                                    className="block font-medium  text-xs mb-0.5 text-gray-700 hover:text-[#cd2626] "
                                                 >
                                                     {product.name}
+                                                    
                                                 </Link>
                                             ))
                                         ) : (

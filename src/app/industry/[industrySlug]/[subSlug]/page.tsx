@@ -62,14 +62,15 @@ const Page = async ({ params }: any) => {
         sub_heading={data?.data?.feature_sub_title}
         sub_descriptiion={data?.data?.feature_sub_description}
         image={data?.data?.feature_file_link} />
-      <ResourcesSection resources={resources} />
+    
       <Product_Category_Section data={data?.data?.product_category} title={"Product Categories"} />
+       
       <Product_Section product_list={data.data.products}/>
 
 
       <SubIndustry subIndustry={data?.data?.relatedSubIndustry} title={"Related Sub Industries"} />
-
-       <Faqs_Section faqs={data?.data?.faqs} />
+ <ResourcesSection resources={resources} />
+      <Faqs_Section faqs={data?.data?.faqs} />
 
       
   

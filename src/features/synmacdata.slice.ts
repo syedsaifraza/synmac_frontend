@@ -3,6 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState:any = {
     resources : [],
     product:[],
+    blogs:[],
+    news:[],
+    success:[],
     industories:[],
     sub_industries:[],
     product_category:[],
@@ -17,6 +20,21 @@ const synmaceSlice = createSlice({
         setResourcesFromApi : (state,action) => {
             state.resources = action.payload
         },
+         setBlogsFromApi : (state,action) => {
+            state.blogs = action.payload
+        },
+
+
+           setNewFromApi : (state,action) => {
+            state.news = action.payload
+        },
+
+           setSuccessFromApi : (state,action) => {
+            state.success = action.payload
+        },
+
+
+
         setProductsFromApi:(state,action) =>{
 
             console.log("Proudctdata",action.payload)
@@ -47,6 +65,6 @@ const synmaceSlice = createSlice({
 })
 
 
-export const {setResourcesFromApi,setProductsFromApi,setIndustoryFromApi,setSubIndustoryFromApi,setProductCategoryFromApi , setCompanyInfoDataFromApi} = synmaceSlice.actions
+export const {setResourcesFromApi,setProductsFromApi,setIndustoryFromApi,setSubIndustoryFromApi,setProductCategoryFromApi,setNewFromApi,setSuccessFromApi ,setBlogsFromApi, setCompanyInfoDataFromApi} = synmaceSlice.actions
 
 export default synmaceSlice.reducer

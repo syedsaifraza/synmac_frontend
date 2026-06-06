@@ -5,8 +5,8 @@ import { useState, useEffect, useRef } from 'react'
 import { LiaAngleRightSolid } from 'react-icons/lia'
 import { useSelector } from 'react-redux'
 
-const Resources = () => {
-  const { resources, industories, sub_industries } = useSelector((state: any) => state?.resources)
+const NewsReleases = () => {
+  const { industories, sub_industries, news } = useSelector((state: any) => state?.resources)
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -16,7 +16,7 @@ const Resources = () => {
   const [filteredResources, setFilteredResources] = useState<any[]>([]);
   const [activeFilterType, setActiveFilterType] = useState<string | null>(null);
   
-  // State for expand/collapse - initially all collapsed
+  
   const [isIndustriesExpanded, setIsIndustriesExpanded] = useState(false);
   const [isTopicsExpanded, setIsTopicsExpanded] = useState(false);
   const [isYearsExpanded, setIsYearsExpanded] = useState(false);
@@ -25,12 +25,11 @@ const Resources = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (resources?.resources) {
-      setFilteredResources(resources.resources);
+    if (news) {
+      setFilteredResources(news);
     }
-  }, [resources]);
+  }, [news]);
 
-  // Handle click outside to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
@@ -52,20 +51,20 @@ const Resources = () => {
     };
   }, [isFilterOpen]);
 
-  // Filter function - applies directly when selection changes
+  
   const applyFiltersDirectly = (
     industries: number[], 
     topics: number[], 
     years: number[]
   ) => {
-    let filtered = [...resources.resources];
+    let filtered = [...news];
     
     const hasIndustries = industries.length > 0;
     const hasTopics = topics.length > 0;
     const hasYears = years.length > 0;
     
     if (!hasIndustries && !hasTopics && !hasYears) {
-      setFilteredResources(resources.resources);
+      setFilteredResources(news);
       setCurrentPage(1);
       return;
     }
@@ -95,16 +94,16 @@ const Resources = () => {
     setCurrentPage(1);
   };
 
-  // Clear all filters
+
   const clearFilters = () => {
     setSelectedIndustries([]);
     setSelectedTopics([]);
     setSelectedYears([]);
-    setFilteredResources(resources?.resources || []);
+    setFilteredResources(news || []);
     setCurrentPage(1);
   };
 
-  // Handle industry checkbox change
+  
   const handleIndustryChange = (industryId: number) => {
     let newIndustries: number[];
     if (selectedIndustries.includes(industryId)) {
@@ -116,7 +115,7 @@ const Resources = () => {
     applyFiltersDirectly(newIndustries, selectedTopics, selectedYears);
   };
 
-  // Handle topic checkbox change
+  
   const handleTopicChange = (topicId: number) => {
     let newTopics: number[];
     if (selectedTopics.includes(topicId)) {
@@ -128,7 +127,7 @@ const Resources = () => {
     applyFiltersDirectly(selectedIndustries, newTopics, selectedYears);
   };
 
-  // Handle year checkbox change
+
   const handleYearChange = (year: number) => {
     let newYears: number[];
     if (selectedYears.includes(year)) {
@@ -140,17 +139,17 @@ const Resources = () => {
     applyFiltersDirectly(selectedIndustries, selectedTopics, newYears);
   };
 
-  // Open sidebar with specific filter expanded, others collapsed
+  
   const openFilterSidebar = (filterType: string) => {
     setActiveFilterType(filterType);
-    // Set expanded states - only the clicked one expands, others collapse
+   
     setIsIndustriesExpanded(filterType === 'industry');
     setIsTopicsExpanded(filterType === 'topic');
     setIsYearsExpanded(filterType === 'year');
     setIsFilterOpen(true);
   };
 
-  // Toggle individual sections (for manual expand/collapse)
+  
   const toggleIndustries = () => {
     setIsIndustriesExpanded(!isIndustriesExpanded);
     if (!isIndustriesExpanded) {
@@ -220,10 +219,10 @@ const Resources = () => {
     setCurrentPage(currentPage - 1);
   }
 
-  if(!resources?.resources?.length){
+  if(!news?.length){
     return (
       <div>
-        <Header title={"Brochure"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
+        <Header title={"News Releases"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
         <div className="max-w-6xl mx-auto py-16 text-center">
           <p>Loading resources...</p>
         </div>
@@ -231,7 +230,7 @@ const Resources = () => {
     );
   }
 
-  const availableYears = [...new Set<number>(resources.resources.map((resource: any) => 
+  const availableYears = [...new Set<number>(news.map((resource: any) => 
     new Date(resource.created_at).getFullYear()
   ))].sort((a: number, b: number) => b - a);
 
@@ -251,17 +250,17 @@ const Resources = () => {
 
   return (
     <div>
-      <Header title={"Brochure"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
+      <Header title={"News Releases"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
       
       <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
           <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
           <LiaAngleRightSolid size={12} />
-          <h1 className="text-gray-600">Brochure</h1>
+          <h1 className="text-gray-600">News Releases</h1>
         </div>
       </div>
 
-      <div className="flex max-w-6xl mx-auto py-8 px-4 relative">
+      <div className="flex max-w-6xl mx-auto py-8 relative">
        
         <div className="flex-1">
           <div className='border-b border-gray-400 mb-4'>
@@ -271,18 +270,7 @@ const Resources = () => {
 
             
             <div className=' space-x-3 flex flex-row mb-2'>
-              <button 
-                onClick={() => openFilterSidebar('industry')}
-                className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
-              >
-                Industry {getSelectedDisplay('industry')}
-              </button> 
-              <button 
-                onClick={() => openFilterSidebar('topic')}
-                className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
-              >
-                Topic {getSelectedDisplay('topic')}
-              </button>
+          
               <button 
                 onClick={() => openFilterSidebar('year')}
                 className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
@@ -344,16 +332,27 @@ const Resources = () => {
           </div>
 
         
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
             {currentProducts?.map((res: any) => (
-              <div key={res.id} className='bg-gray-100 border border-gray-200 p-5 aspect-square relative flex flex-col'>
-                <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>BROCHURE</h1>
-                <p className='font-semibold text-gray-800 mb-2 line-clamp-3'>{res.title}</p>
-                <div dangerouslySetInnerHTML={{ __html: res.description || "" }} className='line-clamp-4 text-sm font-light text-gray-500 flex-1 '/>
-                <a href={res.file} target='_blank' rel="noopener noreferrer" className='mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block'>
-                  Download Document
-                </a>
+              <div key={res.id} className='bg-gray-100 border border-gray-200 p-5 relative flex flex-col'>
+                <img className='object-contain aspect-3/2 border border-gray-200 rounded-sm mb-4' src={res.blog_image_url}/>
+                <div className='px-5'>
+
+
+             
+                <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>BY: {res.author}</h1>
+                  <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>{res.date}</h1>
+                <p className='font-semibold text-gray-800 mb-2 line-clamp-4'>{res.title}</p>
+                <div className='line-clamp-4 text-sm font-light text-gray-500 flex-1 '>
+                    {res.description}
+                </div>
+                <Link href={`/news-releases/${res.slug}`}  rel="noopener noreferrer" className='mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block'>
+                  View more
+                </Link>
+
+                  </div>
               </div>
+
             ))}
           </div>
 
@@ -453,76 +452,9 @@ const Resources = () => {
           
 
               
-              <div className="mb-6 border border-gray-400 overflow-hidden">
-                <button 
-                  onClick={toggleIndustries}
-                  className={`flex justify-between items-center w-full p-4  transition-colors`} >
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-700">Industries</h3>
-                    {selectedIndustries.length > 0 && (
-                      <span className="bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
-                        {selectedIndustries.length}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
-                    {isIndustriesExpanded ? '−' : '+'}
-                  </span>
-                </button>
-                {isIndustriesExpanded && (
-                  <div className="space-y-2  overflow-y-auto p-4 pt-2 bg-white">
-                    {industories?.map((indus: any) => (
-                      <label key={indus.id} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={selectedIndustries.includes(indus.id)}
-                          onChange={() => handleIndustryChange(indus.id)}
-                          className="w-4 h-4 text-[#b62126] rounded border-gray-300 focus:ring-[#b62126] focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-700">{indus.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-
+          
              
-              {sub_industries && sub_industries.length > 0 && (
-                 <div className="mb-6 border border-gray-400 overflow-hidden">
-                  <button 
-                    onClick={toggleTopics}
-                    className={`flex justify-between items-center w-full p-4`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-gray-700">Topics</h3>
-                      {selectedTopics.length > 0 && (
-                        <span className="bg-green-500 text-white text-xs rounded-full px-2 py-0.5">
-                          {selectedTopics.length}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
-                      {isTopicsExpanded ? '−' : '+'}
-                    </span>
-                  </button>
-                  {isTopicsExpanded && (
-                    <div className="space-y-2 max-h-60 overflow-y-auto p-4 pt-2 bg-white">
-                      {sub_industries.map((sub: any) => (
-                        <label key={sub.id} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                          <input
-                            type="checkbox"
-                            checked={selectedTopics.includes(sub.id)}
-                            onChange={() => handleTopicChange(sub.id)}
-                            className="w-4 h-4 text-[#b62126] rounded border-gray-300 focus:ring-[#b62126] focus:ring-2"
-                          />
-                          <span className="text-sm text-gray-700">{sub.name}</span>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
+              
                <div className="mb-6 border border-gray-400 overflow-hidden">
                 <button 
                   onClick={toggleYears}
@@ -566,4 +498,4 @@ const Resources = () => {
   )
 }
 
-export default Resources
+export default NewsReleases

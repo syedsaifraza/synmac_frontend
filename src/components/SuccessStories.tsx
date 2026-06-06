@@ -5,8 +5,8 @@ import { useState, useEffect, useRef } from 'react'
 import { LiaAngleRightSolid } from 'react-icons/lia'
 import { useSelector } from 'react-redux'
 
-const Resources = () => {
-  const { resources, industories, sub_industries } = useSelector((state: any) => state?.resources)
+const SuccessStories = () => {
+  const { industories, sub_industries, success } = useSelector((state: any) => state?.resources)
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -16,7 +16,7 @@ const Resources = () => {
   const [filteredResources, setFilteredResources] = useState<any[]>([]);
   const [activeFilterType, setActiveFilterType] = useState<string | null>(null);
   
-  // State for expand/collapse - initially all collapsed
+  
   const [isIndustriesExpanded, setIsIndustriesExpanded] = useState(false);
   const [isTopicsExpanded, setIsTopicsExpanded] = useState(false);
   const [isYearsExpanded, setIsYearsExpanded] = useState(false);
@@ -25,12 +25,11 @@ const Resources = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (resources?.resources) {
-      setFilteredResources(resources.resources);
+    if (success) {
+      setFilteredResources(success);
     }
-  }, [resources]);
+  }, [success]);
 
-  // Handle click outside to close sidebar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
@@ -52,20 +51,20 @@ const Resources = () => {
     };
   }, [isFilterOpen]);
 
-  // Filter function - applies directly when selection changes
+  
   const applyFiltersDirectly = (
     industries: number[], 
     topics: number[], 
     years: number[]
   ) => {
-    let filtered = [...resources.resources];
+    let filtered = [...success];
     
     const hasIndustries = industries.length > 0;
     const hasTopics = topics.length > 0;
     const hasYears = years.length > 0;
     
     if (!hasIndustries && !hasTopics && !hasYears) {
-      setFilteredResources(resources.resources);
+      setFilteredResources(success);
       setCurrentPage(1);
       return;
     }
@@ -95,16 +94,16 @@ const Resources = () => {
     setCurrentPage(1);
   };
 
-  // Clear all filters
+
   const clearFilters = () => {
     setSelectedIndustries([]);
     setSelectedTopics([]);
     setSelectedYears([]);
-    setFilteredResources(resources?.resources || []);
+    setFilteredResources(success || []);
     setCurrentPage(1);
   };
 
-  // Handle industry checkbox change
+  
   const handleIndustryChange = (industryId: number) => {
     let newIndustries: number[];
     if (selectedIndustries.includes(industryId)) {
@@ -116,7 +115,7 @@ const Resources = () => {
     applyFiltersDirectly(newIndustries, selectedTopics, selectedYears);
   };
 
-  // Handle topic checkbox change
+  
   const handleTopicChange = (topicId: number) => {
     let newTopics: number[];
     if (selectedTopics.includes(topicId)) {
@@ -128,29 +127,17 @@ const Resources = () => {
     applyFiltersDirectly(selectedIndustries, newTopics, selectedYears);
   };
 
-  // Handle year checkbox change
-  const handleYearChange = (year: number) => {
-    let newYears: number[];
-    if (selectedYears.includes(year)) {
-      newYears = selectedYears.filter(y => y !== year);
-    } else {
-      newYears = [...selectedYears, year];
-    }
-    setSelectedYears(newYears);
-    applyFiltersDirectly(selectedIndustries, selectedTopics, newYears);
-  };
 
-  // Open sidebar with specific filter expanded, others collapsed
+  
   const openFilterSidebar = (filterType: string) => {
     setActiveFilterType(filterType);
-    // Set expanded states - only the clicked one expands, others collapse
+   
     setIsIndustriesExpanded(filterType === 'industry');
     setIsTopicsExpanded(filterType === 'topic');
-    setIsYearsExpanded(filterType === 'year');
     setIsFilterOpen(true);
   };
 
-  // Toggle individual sections (for manual expand/collapse)
+  
   const toggleIndustries = () => {
     setIsIndustriesExpanded(!isIndustriesExpanded);
     if (!isIndustriesExpanded) {
@@ -174,7 +161,7 @@ const Resources = () => {
     if (!isYearsExpanded) {
       setIsIndustriesExpanded(false);
       setIsTopicsExpanded(false);
-      setActiveFilterType('year');
+    
     }
   };
 
@@ -220,10 +207,10 @@ const Resources = () => {
     setCurrentPage(currentPage - 1);
   }
 
-  if(!resources?.resources?.length){
+  if(!success?.length){
     return (
       <div>
-        <Header title={"Brochure"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
+        <Header title={"Success Stories"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
         <div className="max-w-6xl mx-auto py-16 text-center">
           <p>Loading resources...</p>
         </div>
@@ -231,7 +218,7 @@ const Resources = () => {
     );
   }
 
-  const availableYears = [...new Set<number>(resources.resources.map((resource: any) => 
+  const availableYears = [...new Set<number>(success.map((resource: any) => 
     new Date(resource.created_at).getFullYear()
   ))].sort((a: number, b: number) => b - a);
 
@@ -239,7 +226,7 @@ const Resources = () => {
   const getSelectedCount = (filterType: string) => {
     if (filterType === 'industry') return selectedIndustries.length;
     if (filterType === 'topic') return selectedTopics.length;
-    if (filterType === 'year') return selectedYears.length;
+  
     return 0;
   };
 
@@ -251,17 +238,17 @@ const Resources = () => {
 
   return (
     <div>
-      <Header title={"Brochure"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
+      <Header title={"Success Stories"} description={"Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."} background_image={""} />
       
       <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
           <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
           <LiaAngleRightSolid size={12} />
-          <h1 className="text-gray-600">Brochure</h1>
+          <h1 className="text-gray-600">Success Stories</h1>
         </div>
       </div>
 
-      <div className="flex max-w-6xl mx-auto py-8 px-4 relative">
+      <div className="flex max-w-6xl mx-auto py-8  relative">
        
         <div className="flex-1">
           <div className='border-b border-gray-400 mb-4'>
@@ -283,12 +270,7 @@ const Resources = () => {
               >
                 Topic {getSelectedDisplay('topic')}
               </button>
-              <button 
-                onClick={() => openFilterSidebar('year')}
-                className='border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2'
-              >
-                Year {getSelectedDisplay('year')}
-              </button>
+           
             </div>
 
             <div className='flex flex-wrap flex-row gap-2'>
@@ -320,12 +302,7 @@ const Resources = () => {
                     </span>
                   );
                 })}
-                {selectedYears.map(year => (
-                  <span key={`year-${year}`} className='bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center gap-1'>
-                    {year}
-                    <button onClick={() => handleYearChange(year)} className="hover:text-purple-900">×</button>
-                  </span>
-                ))}
+               
               </div>
             )}
              <div className='pb-4 flex flex-wrap items-center gap-3'>
@@ -344,16 +321,27 @@ const Resources = () => {
           </div>
 
         
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
             {currentProducts?.map((res: any) => (
-              <div key={res.id} className='bg-gray-100 border border-gray-200 p-5 aspect-square relative flex flex-col'>
-                <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>BROCHURE</h1>
-                <p className='font-semibold text-gray-800 mb-2 line-clamp-3'>{res.title}</p>
-                <div dangerouslySetInnerHTML={{ __html: res.description || "" }} className='line-clamp-4 text-sm font-light text-gray-500 flex-1 '/>
-                <a href={res.file} target='_blank' rel="noopener noreferrer" className='mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block'>
-                  Download Document
-                </a>
+              <div key={res.id} className='bg-gray-100 border border-gray-200 p-5 relative flex flex-col'>
+                <img className='object-contain aspect-3/2 border border-gray-200 rounded-sm mb-4' src={res.blog_image_url}/>
+                <div className='px-5'>
+
+
+             
+                <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>BY: {res.author}</h1>
+                  <h1 className='text-xs font-semibold text-gray-500 mb-2 line-clamp-2'>{res.date}</h1>
+                <p className='font-semibold text-gray-800 mb-2 line-clamp-4'>{res.title}</p>
+                <div className='line-clamp-4 text-sm font-light text-gray-500 flex-1 '>
+                    {res.description}
+                </div>
+                <Link href={`/success-stories/${res.slug}`}  rel="noopener noreferrer" className='mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block'>
+                  View more
+                </Link>
+
+                  </div>
               </div>
+
             ))}
           </div>
 
@@ -523,39 +511,7 @@ const Resources = () => {
                 </div>
               )}
 
-               <div className="mb-6 border border-gray-400 overflow-hidden">
-                <button 
-                  onClick={toggleYears}
-                  className={`flex justify-between items-center w-full p-4 `}
-                >
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-700">Year</h3>
-                    {selectedYears.length > 0 && (
-                      <span className="bg-purple-500 text-white text-xs rounded-full px-2 py-0.5">
-                        {selectedYears.length}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
-                    {isYearsExpanded ? '−' : '+'}
-                  </span>
-                </button>
-                {isYearsExpanded && (
-                  <div className="space-y-2 max-h-60 overflow-y-auto p-4 pt-2 bg-white">
-                    {availableYears.map((year: number) => (
-                      <label key={year} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={selectedYears.includes(year)}
-                          onChange={() => handleYearChange(year)}
-                          className="w-4 h-4 text-[#b62126] rounded border-gray-300 focus:ring-[#b62126] focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-700">{year}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
+            
 
              
             </div>
@@ -566,4 +522,4 @@ const Resources = () => {
   )
 }
 
-export default Resources
+export default SuccessStories

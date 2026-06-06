@@ -28,7 +28,7 @@ const ResourcesSection = ({ resources }: any) => {
                                 <div key={i} className="p-4 sm:p-5 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                                     <h3 className="font-semibold text-md md:text-md text-gray-900 mb-2">{res.title}</h3>
 
-                                    <div className="text-gray-600 text-sm mt-2 fonts leading-relaxed" 
+                                    <div className="text-gray-600 text-sm mt-2 line-clamp-5 fonts leading-relaxed" 
                                        dangerouslySetInnerHTML={{ __html: res.description || "" }} />
 
                                     {res.file && (
