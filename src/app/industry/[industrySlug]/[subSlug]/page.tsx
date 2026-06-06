@@ -10,7 +10,7 @@ import { SubIndustry } from "@/components/component/SubIndustry_Card";
 
 async function getUser(id: any) {
   const res = await fetch(
-    `http://localhost:3000/api/sub-industry/${id}`,
+    `http://synmac.acetians.in/api/sub-industry/${id}`,
     {
       // next: { revalidate: 300 },
       cache: "no-store"

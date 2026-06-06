@@ -44,7 +44,7 @@ interface Industry {
 
 async function getIndustries() {
     try {
-        const res = await fetch("http://localhost:3000/api/industry", {
+        const res = await fetch("http://synmac.acetians.in/api/industry", {
             // next: { revalidate: 300 },
             cache: "no-store"
         });
