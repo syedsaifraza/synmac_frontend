@@ -14,7 +14,7 @@ console.log("slug", slug)
         headers: {
           "Content-Type": "application/json",
         },
-        // next: { revalidate: 300 },
+        
         cache: "no-store"
       }
     );

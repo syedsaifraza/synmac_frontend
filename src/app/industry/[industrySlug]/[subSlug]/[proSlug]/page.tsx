@@ -8,7 +8,7 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 import ResourcesSection from "@/components/component/ResourcesSection";
 
 async function getUser(slug: any) {
-  const res = await fetch(`http://synmac.acetians.in/api/category/${slug}`, {
+  const res = await fetch(`http://synmac.acetians.in /api/category/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });

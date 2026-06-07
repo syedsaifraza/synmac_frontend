@@ -1,7 +1,7 @@
 import Header from "@/components/component/Header";
 
 async function getBlogsResources(slug: any) {
-  const res = await fetch(`http://synmac.acetians.in/api/news/${slug}`, {
+  const res = await fetch(`http://synmac.acetians.in /api/news/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });

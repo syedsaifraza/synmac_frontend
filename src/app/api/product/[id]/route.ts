@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }: any) {
             headers: {
                 "Content-Type": "application/json",
             },
-        // next: { revalidate: 300 },
+        
         cache: "no-store"
       }
     );

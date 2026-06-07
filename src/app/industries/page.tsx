@@ -1,7 +1,9 @@
+'use client'
+
 import Header from '@/components/component/Header'
 import Link from 'next/link';
-import React from 'react'
 import { BiChevronRight } from 'react-icons/bi';
+import { useSelector } from 'react-redux';
 
 interface SubIndustry {
     id: number;
@@ -42,37 +44,13 @@ interface Industry {
 
 
 
-async function getIndustries() {
-    try {
-        const res = await fetch("http://synmac.acetians.in/api/industry", {
-            // next: { revalidate: 300 },
-            cache: "no-store"
-        });
+const Page  =  () => {
 
-        if (!res.ok) {
-            throw new Error(`Failed to fetch industries: ${res.status}`);
-        }
+  const { industories = [] } = useSelector(
+  (state: any) => state?.resources || {}
+);
 
-
-
-
-        const result = await res.json();
-
-
-
-
-        return result?.industries || [];
-    } catch (error) {
-        console.error("Error fetching industries:", error);
-        return [];
-    }
-}
-
-const page = async () => {
-
-    const industries = await getIndustries();
-
-    if (industries.length === 0) {
+    if (industories.length === 0) {
         return (
             <section id="industry-block" className="bg-white py-24 px-6 text-black">
                 <div className="container mx-auto text-center">
@@ -105,7 +83,7 @@ const page = async () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {industries?.map((industry: Industry, index: any) => {
+                        {industories?.map((industry: Industry, index: any) => {
 
                         
                             const imageUrl = industry.feature_file_link || industry.hero_background_file_url;
@@ -155,4 +133,4 @@ const page = async () => {
     )
 }
 
-export default page
+export default Page 
