@@ -1,4 +1,5 @@
 import Header from "@/components/component/Header";
+import { notFound } from "next/navigation";
 
 async function getBlogsResources(slug: any) {
   const res = await fetch(`http://synmac.acetians.in/api/blogs/${slug}`, {
@@ -13,7 +14,9 @@ const page = async ({ params }: any) => {
   const path = await params;
   const getBlogData = await getBlogsResources(path.slug);
 
-  console.log("Select Blog", getBlogData)
+   if(!getBlogData.success){
+        return notFound();
+  }
 
   return (
     <div>

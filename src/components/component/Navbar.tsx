@@ -60,8 +60,6 @@ const Navbar = ({getCompanyData,getBlogs,getStories, getNews, data,allResources 
     const dispatch = useDispatch()
 
 
-    console.log("getBlogs", getStories,getNews)
-
     useEffect(() => {
     dispatch(setResourcesFromApi(allResources))
     dispatch(setProductsFromApi(product.data))
@@ -305,7 +303,7 @@ const isProductPage = pathname === '/product';
                         </Link>
                         <div className='relative group resouce-Section flex flex-row items-center gap-1'>
                             <span>Resources</span>
-                            <FaAngleDown/>
+                            <FaAngleDown className='resouce-isoc'/>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
 
                             <div className='resouce-Section-panel top-5 text-gray-600 font-semibold p-2 text-xs space-y-2  '>
@@ -335,9 +333,13 @@ const isProductPage = pathname === '/product';
                         >
                             <FiSearch className='cursor-pointer' size={20} />
                         </button>
+                        <div className='flex flex-row'>
+ <LanguageSelector />
+                            
+                        </div>
                         
                      
-                        <LanguageSelector />
+                       
                     </ul>
 
                     <div className="md:hidden">

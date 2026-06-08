@@ -117,9 +117,7 @@ body {
   list-style-type: disc;
 }
 
-.custom-content li {
 
-}
 
 .ql-editor{
     padding: 0px !important;
@@ -140,4 +138,26 @@ background:white;
     display: flex;
     flex-direction: column;
 
+}
+
+.resouce-Section:hover .resouce-isoc{
+
+    rotate: 180;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+.article-content::after {
+  content: "";
+  display: block;
+  clear: both;
 }

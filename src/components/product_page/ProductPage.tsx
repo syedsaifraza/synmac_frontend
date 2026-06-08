@@ -212,7 +212,7 @@ const ProductPage = ({ productData }: any) => {
   return (
     <div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0 flex flex-row gap-10 ">
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full space-y-10">
           <div className="text-black  lg:pt-16  space-y-3 ">
             <h1 className="text-3xl text-gray-900 font-semibold">
               Product Applications
@@ -225,7 +225,20 @@ const ProductPage = ({ productData }: any) => {
             />
           </div>
 
-          {productData?.usecases?.length > 0 && (
+
+          <div className="my-10">
+
+            <div
+              className=" text-gray-600 text-base text-justify sm:text-lg leading-relaxed fonts ql-editor"
+              dangerouslySetInnerHTML={{
+                __html: productData?.usecaes_and_benefits_content || "",
+              }}
+            />
+
+          
+          </div>
+
+          {/* {productData?.usecases?.length > 0 && (
             <div className="text-black py-8 space-y-1 ">
               <h1 className="text-3xl text-gray-900 font-semibold">
                 Uses / Specification
@@ -266,7 +279,7 @@ const ProductPage = ({ productData }: any) => {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="w-1/4  space-y-3 border bg-gray-50 rounded-md border-[#ff0100]/10 my-20 inline-block p-5">

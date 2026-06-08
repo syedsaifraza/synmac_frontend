@@ -22,6 +22,13 @@ export async function GET(
     const data = await res.json();
 
 
+    if(!data.success){
+      return NextResponse.json(data)
+    }
+
+
+
+
 
     return NextResponse.json({
       success: true,

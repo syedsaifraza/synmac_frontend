@@ -15,7 +15,7 @@ const About_Soluctions = ({
 }) => {
     return (
         <div className="text-black py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto ">
 
                
                 <h2 className="text-3xl font-semibold mb-4">
@@ -24,19 +24,21 @@ const About_Soluctions = ({
 
               
                 <div
-                    className="text-gray-600 text-sm sm:text-base leading-relaxed fonts mb-8 ql-editor"
+                    className="text-gray-600 text-sm sm:text-base leading-relaxed fonts mb-4 ql-editor"
                     dangerouslySetInnerHTML={{ __html: description || "" }}
                 />
 
               
                <div className="bg-white">
 
-    <div className="space-y-3">
+    <div className="space-y-3 mb-4">
 
         <h3 className="text-xl sm:text-2xl font-semibold text-gray-900">
             {sub_heading}
         </h3>
 
+       
+{/* 
         {image && (
             <img
                 src={image}
@@ -61,9 +63,19 @@ const About_Soluctions = ({
             dangerouslySetInnerHTML={{ __html: sub_descriptiion || "" }}
         />
 
-        <div className="clear-both"></div>
+        <div className="clear-both"></div> */}
 
     </div>
+
+    <div className="article-content text-gray-600">
+  <img src={image} className="float-right w-140 h-70 ml-4" />
+
+  <div
+    dangerouslySetInnerHTML={{
+      __html: sub_descriptiion
+    }}
+  />
+</div>
 
 </div>
             </div>

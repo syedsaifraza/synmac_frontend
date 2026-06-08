@@ -1,4 +1,5 @@
 import Header from "@/components/component/Header";
+import { notFound } from "next/navigation";
 
 async function getBlogsResources(slug: any) {
   const res = await fetch(`http://synmac.acetians.in/api/news/${slug}`, {
@@ -14,7 +15,10 @@ const page = async ({ params }: any) => {
 
   const getNewsData = await getBlogsResources(path.slug);
 
-  console.log("hello dta",getNewsData)
+
+   if(!getNewsData.success){
+        return notFound();
+  }
 
   return (
     <div>

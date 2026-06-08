@@ -37,7 +37,7 @@ const synmaceSlice = createSlice({
 
         setProductsFromApi:(state,action) =>{
 
-            console.log("Proudctdata",action.payload)
+          
            
              state.product = action.payload
         },
@@ -56,7 +56,7 @@ const synmaceSlice = createSlice({
 
          setCompanyInfoDataFromApi:(state,action) =>{
 
-            console.log("company info",action.payload)
+        
            
              state.company_info = action.payload.data
         },

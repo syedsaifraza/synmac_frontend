@@ -1,4 +1,6 @@
 import Industory from "@/components/component/Industory";
+import Four04 from "@/components/Four04";
+import { notFound } from "next/navigation";
 
 
 async function getUser(industrySlug: any) {
@@ -16,6 +18,12 @@ const page = async ({ params }: any) => {
   const resolvedParams = await params;
 
   const data = await getUser(resolvedParams?.industrySlug);
+
+
+
+  if(!data.success){
+    return notFound();
+  }
 
 
 

@@ -299,12 +299,12 @@ const Blogs = () => {
               >
                 Topic {getSelectedDisplay("topic")}
               </button>
-              <button
+              {/* <button
                 onClick={() => openFilterSidebar("year")}
                 className="border border-gray-400 hover:bg-gray-100 p-2 cursor-pointer transition flex items-center gap-2"
               >
                 Authors {getSelectedDisplay("year")}
-              </button>
+              </button> */}
             </div>
 
             <div className="flex flex-wrap flex-row gap-2">
@@ -606,7 +606,7 @@ const Blogs = () => {
                 </div>
               )}
 
-              <div className="mb-6 border border-gray-400 overflow-hidden">
+              {/* <div className="mb-6 border border-gray-400 overflow-hidden">
                 <button
                   onClick={toggleYears}
                   className={`flex justify-between items-center w-full p-4 `}
@@ -641,7 +641,7 @@ const Blogs = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </>

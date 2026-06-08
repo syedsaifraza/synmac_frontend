@@ -474,7 +474,7 @@ const captchaRef = useRef<any>(null);
 
                         <div className="flex-1 min-w-0">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                                <h1 onClick={()=>console.log(product ,industories,sub_industries ,product_category)} className='text-sm sm:text-base text-gray-500 font-semibold'>
+                                <h1 className='text-sm sm:text-base text-gray-500 font-semibold'>
                                     Showing {startIndex + 1}-{Math.min(endIndex, totalProducts)} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
                                 </h1>
                                 

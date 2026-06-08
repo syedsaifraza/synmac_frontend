@@ -1,4 +1,5 @@
 import Header from "@/components/component/Header";
+import { notFound } from "next/navigation";
 
 async function getBlogsResources(slug: any) {
   const res = await fetch(`http://synmac.acetians.in/api/success/${slug}`, {
@@ -14,6 +15,9 @@ const page = async ({ params }: any) => {
 
   const getSuccessData = await getBlogsResources(path.slug);
 
+  if (!getSuccessData.success) {
+    return notFound();
+  }
 
   return (
     <div>
@@ -29,7 +33,7 @@ const page = async ({ params }: any) => {
             dangerouslySetInnerHTML={{
               __html: getSuccessData.SuccDaat.success_story_content || "",
             }}
-             className="prose max-w-none"
+            className="prose max-w-none"
           />
         </div>
       </div>

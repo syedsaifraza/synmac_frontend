@@ -1,10 +1,8 @@
 import Industory from "@/components/component/Industory";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: any) {
   const { slug } = await params;
-
-
-console.log("slug", slug)
 
   try {
     const res = await fetch(
@@ -22,12 +20,12 @@ console.log("slug", slug)
     const data = await res.json();
 
     
+       if(!data.success){
+          return NextResponse.json(data)
+        }
 
 
 
-    if (!data.data) {
-      return Response.json({ message: "Not found" }, { status: 404 });
-    }
 
     return Response.json({
       success: true,

@@ -150,10 +150,7 @@ export default function Contactus() {
               </h1>
               <div className="max-w-4xl">
                 <p className="text-gray-500 text-md  mt-4 max-w-4xl mx-auto text-sm">
-                  Use the following form below to place an order, receive a
-                  price quote, request samples, check product availability or
-                  for general questions. Synmac Team will immediately start
-                  working to meet your needs..
+                 {company_info?.company_description}
                 </p>
               </div>
 
@@ -280,8 +277,7 @@ export default function Contactus() {
                     onChange={(value: any) => setCaptchaValue(value)}
                   />
 
-                  {/* <h1 onClick={()=>console.log(formData)}>Helo</h1> */}
-
+                 
                   <button
                     type="submit"
                     disabled={isSubmitting || captchaValue === ""}
@@ -314,7 +310,7 @@ export default function Contactus() {
                   </p>
                 </div>
 
-                {/* Contact Details */}
+              
                 <div className="space-y-4">
                   <div>
                     <h2 className="text-sm font-semibold text-blue-500 uppercase tracking-wide mb-2">
@@ -375,7 +371,7 @@ export default function Contactus() {
           <div className="py-10 max-w-6xl mx-auto">
             <h1
               className="text-center text-3xl font-bold"
-              onClick={() => console.log(company_info)}
+           
             >
               Our Office Locations
             </h1>

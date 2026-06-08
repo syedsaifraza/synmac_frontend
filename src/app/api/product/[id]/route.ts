@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export async function GET(req: Request, { params }: any) {
   const { id } = await params;
 
@@ -16,6 +18,10 @@ export async function GET(req: Request, { params }: any) {
     );
 
     const data = await res.json();
+
+        if(!data.success){
+          return NextResponse.json(data)
+        }
 
 
     return Response.json({

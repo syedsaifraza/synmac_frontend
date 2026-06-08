@@ -23,6 +23,7 @@ import Product_Category_Section from "./ProductCategory_Card";
 import Product_Section from "./Product_Card";
 import ResourcesSection from "./ResourcesSection";
 import { SubIndustry } from "./SubIndustry_Card";
+import Path from "../ui/Path";
 
 const Industory = ({ industoryData }: any) => {
   return (
@@ -32,15 +33,11 @@ const Industory = ({ industoryData }: any) => {
         description={industoryData?.hero_background_description || " "}
         background_image={industoryData.hero_background_file_url || " "}
       />
-      <div className="border-b text-xs border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium">
-          <Link href="/" className="hover:text-[#cd2626] transition">
-            Home
-          </Link>
-          <LiaAngleRightSolid size={12} />
-          <h1 className="text-[#cd2626] ">{industoryData?.name}</h1>
-        </div>
-      </div>
+
+      <Path 
+      industryName={industoryData?.name}
+  industrySlug={industoryData?.slug}/>
+  
       <About_Soluctions
         heading={industoryData?.feature_title}
         description={industoryData?.feature_description || " "}

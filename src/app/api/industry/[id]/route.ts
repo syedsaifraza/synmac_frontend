@@ -20,13 +20,12 @@ export async function GET(req: Request, { params }: any) {
     );
 
     const data = await res.json();
-
-    
-
+  
 
 
-    if (!data.data) {
-      return Response.json({ message: "Not found" }, { status: 404 });
+
+    if (!data.success) {
+      return Response.json(data);
     }
 
     return Response.json({

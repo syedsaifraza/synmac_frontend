@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState, useRef } from "react";
-import { FaGlobe } from "react-icons/fa";
+import { FaAngleDown, FaAngleUp, FaGlobe } from "react-icons/fa";
 
 const languages = [
   { code: "en", label: "English" },
@@ -90,6 +90,10 @@ const LanguageSelector = () => {
       >
         <FaGlobe size={16} />
         <span>{currentLabel}</span>
+        {
+          open ? (  <FaAngleUp/>) : (  <FaAngleDown/>)
+        }
+       
       </button>
 
       {open && (
