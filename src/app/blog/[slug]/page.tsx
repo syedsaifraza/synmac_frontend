@@ -5,17 +5,14 @@ async function getBlogsResources(slug: any) {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
-
   return res.json();
 }
 
 const page = async ({ params }: any) => {
+  
   const path = await params;
-
   const getBlogData = await getBlogsResources(path.slug);
 
-
-  console.log("getBlogData",getBlogData)
   return (
     <div>
       <Header
