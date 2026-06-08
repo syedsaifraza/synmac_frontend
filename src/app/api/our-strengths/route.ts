@@ -13,7 +13,7 @@ export async function GET() {
 
     const data = await res.json();
 
-      console.log("company-info",data)
+    
 
     return Response.json({
       success: true,

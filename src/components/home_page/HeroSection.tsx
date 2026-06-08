@@ -52,7 +52,7 @@ const HeroSection = ({ data }: { data: any }) => {
 
       <div className="relative z-10 container mx-auto max-w-6xl">
         <div className="max-w-2xl animate-fade-in-up">
-          <div dangerouslySetInnerHTML={{ __html: data?.title || "" }} className="font-display ql-editor"/>
+          <div dangerouslySetInnerHTML={{ __html: data?.title || "" }} className="font-display ql-editor "/>
             
 
 

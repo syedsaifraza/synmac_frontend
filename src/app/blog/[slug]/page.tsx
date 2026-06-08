@@ -1,7 +1,7 @@
 import Header from "@/components/component/Header";
 
 async function getBlogsResources(slug: any) {
-  const res = await fetch(`http://synmac.acetians.in /api/blogs/${slug}`, {
+  const res = await fetch(`http://localhost:3000/api/blogs/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -9,9 +9,11 @@ async function getBlogsResources(slug: any) {
 }
 
 const page = async ({ params }: any) => {
-  
+
   const path = await params;
   const getBlogData = await getBlogsResources(path.slug);
+
+  console.log("Select Blog", getBlogData)
 
   return (
     <div>

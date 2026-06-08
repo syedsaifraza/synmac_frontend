@@ -118,7 +118,11 @@ body {
 }
 
 .custom-content li {
-  margin-left: 20px;
+
+}
+
+.ql-editor{
+    padding: 0px !important;
 }
 
 .resouce-Section{
