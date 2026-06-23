@@ -47,12 +47,12 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.industry && (
-                        <div className=" max-h-120 overflow-y-auto">
+                        <div className=" max-h-60 overflow-y-auto">
                             {filteredIndustries.length > 0 ? (
                                 filteredIndustries.map((item: any) => (
                                     <label
                                         key={item.id}
-                                        className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
+                                        className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-1 rounded transition-colors"
                                     >
                                         <div className="flex items-center gap-2 flex-1 fonts">
                                             <input
@@ -99,12 +99,12 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.subIndustry && (
-                        <div className=" max-h-120 overflow-y-auto fonts">
+                        <div className=" max-h-60 overflow-y-auto fonts">
                             {filteredSubIndustries.length > 0 ? (
                                 filteredSubIndustries.map((item: any) => (
                                     <label
                                         key={item.id}
-                                        className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
+                                        className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-1 rounded transition-colors"
                                     >
                                         <div className="flex items-center gap-2 flex-1">
                                             <input
@@ -151,12 +151,12 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.category && (
-                        <div className=" max-h-120 overflow-y-auto fonts">
+                        <div className=" max-h-60 overflow-y-auto fonts">
                             {filteredCategories.length > 0 ? (
                                 filteredCategories.map((item: any , idx:number) => (
                                     <label
                                         key={idx}
-                                        className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-2 rounded transition-colors"
+                                        className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-1 rounded transition-colors"
                                     >
                                         <div className="flex items-center gap-2 flex-1">
                                             <input

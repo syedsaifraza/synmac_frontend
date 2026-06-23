@@ -439,7 +439,7 @@ const isProductPage = pathname === '/product';
                                                 key={idx}
                                                 href={getIndustryUrl(industry)}
                                                 onMouseEnter={() => handleIndustryHover(industry)}
-                                                className={`flex justify-between  font-medium  rounded-lg text-xs
+                                                className={`flex   font-medium gap-2 rounded-lg text-xs
                                                     ${activeIndustry?.id === industry.id
                                                         ? " text-[#cd2626] "
                                                         : "text-gray-700 "
@@ -465,7 +465,7 @@ const isProductPage = pathname === '/product';
                                                     key={idx}
                                                     href={getSubIndustryUrl(activeIndustry, sub)}
                                                     onMouseEnter={() => handleSubIndustryHover(sub)}
-                                                    className={`  flex font-medium justify-between items-top rounded-lg text-xs
+                                                    className={`  flex font-medium gap-2 items-top rounded-lg text-xs
                                                         ${activeSubIndustry?.id === sub.id
                                                             ? "text-[#cd2626]"
                                                             : "text-gray-700 "
@@ -507,7 +507,7 @@ const isProductPage = pathname === '/product';
                                                     key={idx}
                                                     href={getCategoryUrl(activeIndustry, activeSubIndustry, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
-                                                    className={`flex font-medium items-top justify-between  rounded-lg text-xs mb-0.5
+                                                    className={`flex font-medium gap-2 items-top   rounded-lg text-xs mb-0.5
                                                         ${activeCategory?.id === cat.id
                                                             ? "text-[#cd2626]"
                                                             : "text-gray-700 "
