@@ -16,7 +16,7 @@ const capabilities = [
 ];
 
 async function getUser() {
-  const res = await fetch(`http://synmac.acetians.in/api/our-strengths/`, {
+  const res = await fetch(`http://localhost:3000/api/our-strengths/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

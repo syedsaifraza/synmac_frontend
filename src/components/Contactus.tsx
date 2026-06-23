@@ -376,10 +376,7 @@ export default function Contactus() {
               Our Office Locations
             </h1>
             <p className="text-gray-500 text-center mt-4 max-w-4xl mx-auto fonts">
-              Lorem ipsum dolor sit amet consectetur to adipiscing elit sed dot
-              eiusmod tempor sit amet consectetur to adipiscing elit sed dot
-              eiusmod tempor incididunt labore et dolore magna aliqua. Veniam
-              quis nostrud exercitation ullamco.
+              {company_info?.global_contacts_description}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 py-10">

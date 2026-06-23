@@ -75,13 +75,13 @@ const SustainabilitySection = ({ data, data1 }: any) => {
             <div>
               <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Sustainability</p>
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 text-black">
-                {data.title}
+                {data?.title}
               </h2>
               <p className="text-gray-500 leading-relaxed mb-8 max-w-lg fonts">
-                {data.description}
+                {data?.description}
               </p>
               <div className="space-y-5">
-                {data?.sustainability_lists.map((item: any,idx:number) => {
+                {data?.sustainability_lists?.map((item: any,idx:number) => {
                   
                   return (
                     <div key={idx} className="flex items-start gap-4">
@@ -96,8 +96,8 @@ const SustainabilitySection = ({ data, data1 }: any) => {
                         />
                       </div>
                       <div>
-                        <h4 className="font-display font-semibold text-sm text-black">{item.title}</h4>
-                        <p className="text-gray-500 text-sm fonts">{item.description}</p>
+                        <h4 className="font-display font-semibold text-sm text-black">{item?.title}</h4>
+                        <p className="text-gray-500 text-sm fonts">{item?.description}</p>
                       </div>
                     </div>
                   );
@@ -141,20 +141,20 @@ const SustainabilitySection = ({ data, data1 }: any) => {
 
               let label;
 
-              if (s.label === "years_of_excellence") {
+              if (s?.label === "years_of_excellence") {
                 label = "Years Of Excellence"
-              } else if (s.label === "no_of_products") {
+              } else if (s?.label === "no_of_products") {
                 label = "No Of Products"
-              } else if (s.label === "countries_served") {
+              } else if (s?.label === "countries_served") {
                 label = "Countries Served"
-              } else if (s.label === "happy_clients") {
+              } else if (s?.label === "happy_clients") {
                 label = "Happy Clients"
               }
 
               return (
                 <div key={i} className="text-center py-6">
                   <div className="text-4xl md:text-5xl font-display font-bold  mb-2">
-                    {counts[i]}{s.suffix}
+                    {counts[i]}{s?.suffix}
                   </div>
                   <p className="text-lg font-semibold ">{label}</p>
                 </div>

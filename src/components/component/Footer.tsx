@@ -6,7 +6,7 @@ import { FaX } from "react-icons/fa6";
 import { BsTwitterX } from "react-icons/bs";
 
 async function getUser() {
-  const res = await fetch(`http://synmac.acetians.in/api/footer/`, {
+  const res = await fetch(`http://localhost:3000/api/footer/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

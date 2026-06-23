@@ -5,6 +5,7 @@ import Footer from "@/components/component/Footer";
 import { Providers } from "./providers";
 import "quill/dist/quill.snow.css";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 async function getIndustries() {
-  const res = await fetch("http://synmac.acetians.in/api/industry", {
+  const res = await fetch("http://localhost:3000/api/industry", {
     
     cache: "no-store"
   });
@@ -25,7 +26,7 @@ async function getIndustries() {
 }
 async function getSubIndustry() {
     const res = await fetch(
-        `http://synmac.acetians.in/api/sub-industry`,
+        `http://localhost:3000/api/sub-industry`,
         {
             method: "GET",
             headers: {
@@ -40,7 +41,7 @@ async function getSubIndustry() {
 
 async function getCategory() {
     const res = await fetch(
-        `http://synmac.acetians.in/api/category`,
+        `http://localhost:3000/api/category`,
         {
             method: "GET",
             headers: {
@@ -54,7 +55,7 @@ async function getCategory() {
 }
 
 async function getAllResources() {
-  const res = await fetch(`http://synmac.acetians.in/api/resources`, {
+  const res = await fetch(`http://localhost:3000/api/resources`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -64,7 +65,7 @@ async function getAllResources() {
 
 
 async function getAllBlogs() {
-  const res = await fetch(`http://synmac.acetians.in/api/blogs`, {
+  const res = await fetch(`http://localhost:3000/api/blogs`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -74,7 +75,7 @@ async function getAllBlogs() {
 
 async function getProduct() {
     const res = await fetch(
-        `http://synmac.acetians.in/api/product`,
+        `http://localhost:3000/api/product`,
         {
             method: "GET",
             headers: {
@@ -89,7 +90,7 @@ async function getProduct() {
 
 async function getCompanyInfo() {
     const res = await fetch(
-        `http://synmac.acetians.in/api/company-info`,
+        `http://localhost:3000/api/company-info`,
         {
             method: "GET",
             headers: {
@@ -104,7 +105,7 @@ async function getCompanyInfo() {
 
 
 async function getAllNews() {
-  const res = await fetch(`http://synmac.acetians.in/api/news`, {
+  const res = await fetch(`http://localhost:3000/api/news`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -112,7 +113,7 @@ async function getAllNews() {
   return res.json();
 }
 async function getAllStories() {
-  const res = await fetch(`http://synmac.acetians.in/api/success`, {
+  const res = await fetch(`http://localhost:3000/api/success`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -172,6 +173,8 @@ export default async function RootLayout({ children }: any) {
 
        
         <Providers>
+
+          <Toaster position="top-right" />
            <Navbar getStories={getStories} getNews={getNews} getBlogs={getBlogs} getCompanyData={getCompanyData} productCategory={getAllProuductCategory}  subIndustory={getAllSubIndustory} data={industries} product={getProducts} allResources={allResources} />
    {children}
         </Providers>

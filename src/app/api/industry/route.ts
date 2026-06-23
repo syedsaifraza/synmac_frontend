@@ -1,5 +1,6 @@
 export async function GET() {
   try {
+
     const res = await fetch(
       "https://synmac-backend.serverscripts.in/api/v1/user/industry/view",
       { method: "GET",
@@ -12,7 +13,6 @@ export async function GET() {
     );
 
     const data = await res.json();
-
 
     return Response.json({
       success: true,

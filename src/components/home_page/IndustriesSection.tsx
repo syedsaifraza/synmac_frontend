@@ -69,12 +69,11 @@ const IndustriesSection = async ({ industries }: any) => {
             Industries We Serve
           </p>
           <h2 className="font-display text-3xl md:text-4xl font-bold">
-            Powering Industries{" "}
-            <span className="text-[#cd2626]">Worldwide</span>
+           DISCOVER THE PRODUCT THAT FITS  {" "}
+            <span className="text-[#cd2626]">YOUR MARKET</span>
           </h2>
-          <p className="text-gray-500 mt-4 max-w-xl mx-auto">
-            Click on any industry to explore sub-markets and discover the
-            specialty chemicals we offer.
+          <p className="text-gray-500 mt-4 max-w-3xl mx-auto">
+            Our end-market overview provides a structured way to identify products aligned with industry-specific requirements. Use the markets below to access relevant products, supporting background information, and a comprehensive set of downloads.
           </p>
         </div>
 

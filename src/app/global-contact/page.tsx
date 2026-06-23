@@ -1,6 +1,6 @@
 import React from 'react'
 async function getUser() {
-  const res = await fetch(`http://synmac.acetians.in/api/company-info/`, {
+  const res = await fetch(`http://localhost:3000/api/company-info/`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

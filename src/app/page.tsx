@@ -4,7 +4,7 @@ import OurStrengths from "@/components/home_page/OurStrengths";
 import SustainabilitySection from "@/components/home_page/SustainabilitySection";
 
 async function getUser() {
-  const res = await fetch(`http://synmac.acetians.in/api/company-info`, {
+  const res = await fetch(`http://localhost:3000/api/company-info`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -12,7 +12,7 @@ async function getUser() {
 }
 
 async function getSustainability() {
-  const res = await fetch(`http://synmac.acetians.in/api/sustainability`, {
+  const res = await fetch(`http://localhost:3000/api/sustainability`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -20,7 +20,7 @@ async function getSustainability() {
 }
 
 async function getHeroSection() {
-  const res = await fetch(`http://synmac.acetians.in/api/hero-section`, {
+  const res = await fetch(`http://localhost:3000/api/hero-section`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });
@@ -29,14 +29,14 @@ async function getHeroSection() {
 
 async function getIndustries() {
   try {
-    const res = await fetch("http://synmac.acetians.in/api/industry", {
+    const res = await fetch("http://localhost:3000/api/industry", {
       
       cache: "no-store"
     });
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch industries: ${res.status}`);
-    }
+    // if (!res.ok) {
+    //   throw new Error(`Failed to fetch industries: ${res.status}`);
+    // }
 
 
 
@@ -52,12 +52,27 @@ async function getIndustries() {
     return [];
   }
 }
+
+
+async function getFooterData() {
+  const res = await fetch(`http://localhost:3000/api/footer/`, {
+    // next: { revalidate: 300 }
+    cache: "no-store"
+  });
+  return res.json();
+}
+
+
 export default async function page() {
 
   const data = await getUser()
   const heroSection = await getHeroSection()
   const sustainability = await getSustainability()
   const industries = await getIndustries();
+
+  const footer = await getFooterData()
+
+
 
 
 
@@ -71,7 +86,7 @@ export default async function page() {
 }
       <IndustriesSection industries={industries} />
       <OurStrengths />
-      <SustainabilitySection data={sustainability?.data} data1={data.data} />
+      <SustainabilitySection  data={sustainability?.data} data1={footer.data} />
     </div>
   );
 }

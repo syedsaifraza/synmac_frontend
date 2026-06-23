@@ -9,6 +9,7 @@ import { FaX } from 'react-icons/fa6'
 import { DocumentRequestModal } from "./DocumentRequestModal";
 import { FilterSidebar } from "./FilterSidebar";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const ProductListSection = () => {
 const captchaRef = useRef<any>(null);
@@ -157,13 +158,22 @@ const captchaRef = useRef<any>(null);
                 saveRequestToLocalStorage(selectedDocument.productId, selectedDocument.documentType);
                 setSubmitMessage({ type: 'success', text: 'Request submitted successfully! You will receive access via email shortly.' });
 
-                setTimeout(() => {
-                     captchaRef.current.reset();
+
+                if(result.success){
+                    toast.success("Request submited")
+                    captchaRef.current.reset();
                     setIsModalOpen(false);
                     setSelectedDocument(null);
                     setSubmitMessage(null);
                     setCaptchaValue("")
-                }, 1000);
+                }
+
+
+                console.log(result)
+
+                
+
+              
             } else {
                 throw new Error('Failed to submit request');
             }
@@ -354,7 +364,7 @@ const captchaRef = useRef<any>(null);
                 </div>
             )}
 
-            <div className='py-8 sm:py-12 lg:py-20 px-4 sm:px-6 lg:px-8'>
+            <div className='py-8 sm:py-12 lg:pt-30 px-4 sm:px-6 lg:px-8'>
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-6 sm:mb-8">
                         <p className="text-[#cd2626] text-xs sm:text-sm font-medium tracking-wider uppercase mb-2">Product Finder</p>
@@ -490,7 +500,7 @@ const captchaRef = useRef<any>(null);
                                         <option value={10}>10</option>
                                         <option value={15}>15</option>
                                         <option value={20}>20</option>
-                                        <option value={50}>50</option>
+                                     
                                     </select>
                                     <span className="text-sm text-gray-600">per page</span>
                                 </div>
@@ -498,7 +508,12 @@ const captchaRef = useRef<any>(null);
 
                             <div className='space-y-3 sm:space-y-4'>
                                 {paginatedProducts.length > 0 ? (
-                                    paginatedProducts.map((pro: any) => (
+                                    paginatedProducts.map((pro: any) => {
+
+                                            const isTDSPending = localStorage.getItem(`dc_request_${pro?.id}_tds`)
+                                        const isMSDSPending = localStorage.getItem(`doc_request_${pro?.id}_msds`)
+                                        
+                                        return (
                                         <div
                                             key={pro?.id}
                                             className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-lg transition-all duration-300"
@@ -515,7 +530,7 @@ const captchaRef = useRef<any>(null);
                                                         <div className='flex flex-row w-full justify-between'>
                                                             <div className="space-x-2">
                                                                 {pro?.industry_name && (
-                                                                    <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                    <span onClick={()=>console.log(isTDSPending,isMSDSPending)} className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
                                                                         {pro?.industry_name}
                                                                     </span>
                                                                 )}
@@ -545,7 +560,7 @@ const captchaRef = useRef<any>(null);
                                                                             }`}
                                                                     >
                                                                         {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
-                                                                        TDS
+                                                                        TDS {isTDSPending && "Pending"}
                                                                     </a>
                                                                 )}
 
@@ -564,7 +579,7 @@ const captchaRef = useRef<any>(null);
                                                                             }`}
                                                                     >
                                                                         {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
-                                                                        SDS
+                                                                        SDS {isMSDSPending && "Pending"}
                                                                     </a>
                                                                 )}
                                                             </div>
@@ -573,7 +588,7 @@ const captchaRef = useRef<any>(null);
                                                 </div>
                                             </div>
                                         </div>
-                                    ))
+                                    )})
                                 ) : (
                                     <div className="text-center py-12 bg-gray-50 rounded-xl">
                                         <p className="text-gray-500 text-sm sm:text-base">No products found matching your criteria.</p>
