@@ -2,7 +2,7 @@ import Header from "@/components/component/Header";
 import { notFound } from "next/navigation";
 
 async function getBlogsResources(slug: any) {
-  const res = await fetch(`http://localhost:3000/api/blogs/${slug}`, {
+  const res = await fetch(`http://synmac.acetians.in/api/blogs/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });

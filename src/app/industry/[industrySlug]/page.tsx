@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 
 async function getUser(industrySlug: any) {
-  const res = await fetch(`http://localhost:3000/api/industry/${industrySlug}`, {
+  const res = await fetch(`http://synmac.acetians.in/api/industry/${industrySlug}`, {
     // next: { revalidate: 300 }
     cache: "no-store"
   });

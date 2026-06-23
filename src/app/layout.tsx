@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 async function getIndustries() {
-  const res = await fetch("http://localhost:3000/api/industry", {
+  const res = await fetch("http://synmac.acetians.in/api/industry", {
     
     cache: "no-store"
   });
@@ -26,7 +26,7 @@ async function getIndustries() {
 }
 async function getSubIndustry() {
     const res = await fetch(
-        `http://localhost:3000/api/sub-industry`,
+        `http://synmac.acetians.in/api/sub-industry`,
         {
             method: "GET",
             headers: {
@@ -41,7 +41,7 @@ async function getSubIndustry() {
 
 async function getCategory() {
     const res = await fetch(
-        `http://localhost:3000/api/category`,
+        `http://synmac.acetians.in/api/category`,
         {
             method: "GET",
             headers: {
@@ -55,7 +55,7 @@ async function getCategory() {
 }
 
 async function getAllResources() {
-  const res = await fetch(`http://localhost:3000/api/resources`, {
+  const res = await fetch(`http://synmac.acetians.in/api/resources`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -65,7 +65,7 @@ async function getAllResources() {
 
 
 async function getAllBlogs() {
-  const res = await fetch(`http://localhost:3000/api/blogs`, {
+  const res = await fetch(`http://synmac.acetians.in/api/blogs`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -75,7 +75,7 @@ async function getAllBlogs() {
 
 async function getProduct() {
     const res = await fetch(
-        `http://localhost:3000/api/product`,
+        `http://synmac.acetians.in/api/product`,
         {
             method: "GET",
             headers: {
@@ -90,7 +90,7 @@ async function getProduct() {
 
 async function getCompanyInfo() {
     const res = await fetch(
-        `http://localhost:3000/api/company-info`,
+        `http://synmac.acetians.in/api/company-info`,
         {
             method: "GET",
             headers: {
@@ -105,7 +105,7 @@ async function getCompanyInfo() {
 
 
 async function getAllNews() {
-  const res = await fetch(`http://localhost:3000/api/news`, {
+  const res = await fetch(`http://synmac.acetians.in/api/news`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
@@ -113,7 +113,7 @@ async function getAllNews() {
   return res.json();
 }
 async function getAllStories() {
-  const res = await fetch(`http://localhost:3000/api/success`, {
+  const res = await fetch(`http://synmac.acetians.in/api/success`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });

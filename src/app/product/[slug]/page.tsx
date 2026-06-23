@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 
 async function getProduct(slug: any) {
-  const res = await fetch(`http://localhost:3000/api/product/${slug}`, {
+  const res = await fetch(`http://synmac.acetians.in/api/product/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });

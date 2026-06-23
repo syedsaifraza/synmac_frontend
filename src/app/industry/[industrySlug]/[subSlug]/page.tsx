@@ -11,7 +11,7 @@ import Path from "@/components/ui/Path";
 import { notFound } from "next/navigation";
 
 async function getUser(id: any) {
-  const res = await fetch(`http://localhost:3000/api/sub-industry/${id}`, {
+  const res = await fetch(`http://synmac.acetians.in/api/sub-industry/${id}`, {
     cache: "no-store",
   });
 

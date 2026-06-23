@@ -10,7 +10,7 @@ import Path from "@/components/ui/Path";
 import { notFound } from "next/navigation";
 
 async function getUser(slug: any) {
-  const res = await fetch(`http://localhost:3000/api/category/${slug}`, {
+  const res = await fetch(`http://synmac.acetians.in/api/category/${slug}`, {
     // next : { revalidate: 300 }
     cache: "no-store",
   });
