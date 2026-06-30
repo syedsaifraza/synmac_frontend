@@ -446,6 +446,7 @@ const isProductPage = pathname === '/product';
                                                     }
                                                 `}
                                             >
+                                                
                                                 <span className="">{industry.name}</span>
                                                 <FaAngleRight className="text-[10px] relative top-1" />
                                             </Link>

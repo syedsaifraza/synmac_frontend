@@ -11,7 +11,7 @@ export function SubIndustry({subIndustry ,title}:any) {
 
   const visibleData = showAll
     ? subIndustry
-    : subIndustry.slice(0, 3);
+    : subIndustry.slice(0, 4);
 
   return (
     <div className=" text-white py-16 px-4">
@@ -23,7 +23,7 @@ export function SubIndustry({subIndustry ,title}:any) {
         </h2>
 
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {visibleData.map((item: any, i: number) => (
             <Link
               key={i}
@@ -32,7 +32,7 @@ export function SubIndustry({subIndustry ,title}:any) {
             >
 
             
-              <div className="h-52 overflow-hidden">
+              <div className="h-40 overflow-hidden">
                 <img
                   src={item.feature_file_link || null}
                   alt={item.name}
@@ -40,14 +40,24 @@ export function SubIndustry({subIndustry ,title}:any) {
                 />
               </div>
 
-              {/* Content */}
-              <div className="py-5 flex items-start gap-4">
+             
 
-                {/* Left Content */}
-                <div className="flex-1">
-                  <h3 className="text-lg text-gray-700 font-semibold mb-2 group-hover:text-[#ff0100] transition">
-                    {item.name}
+            
+                <div className="flex-1 py-3 px-2 flex flex-row gap-4 justify-between">
+                  <h3 title={item?.name} className="text-md text-gray-700 font-semibold line-clamp-2  group-hover:text-[#ff0100] transition " >
+                    {item?.name}
                   </h3>
+         
+     <div className=" flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
+                      <IoIosArrowRoundForward className="text-4xl font-bold text-white" />
+                    </div>
+
+               
+    
+
+                </div>
+                
+             
 
                   <div
                     dangerouslySetInnerHTML={{
@@ -55,14 +65,9 @@ export function SubIndustry({subIndustry ,title}:any) {
                     }}
                     className="text-gray-500 text-sm line-clamp-3 fonts"
                   />
-                </div>
 
                
-                <div className="w-9 h-9 flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
-                  <IoIosArrowRoundForward className="text-xl" />
-                </div>
-
-              </div>
+         
             </Link>
           ))}
         </div>

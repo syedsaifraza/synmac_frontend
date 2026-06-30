@@ -60,8 +60,8 @@ const Product_Category_Section = ({ data,title }: any) => {
                   </div>
 
                  
-                  <div className="w-9 h-9 flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
-                    <IoIosArrowRoundForward className="text-xl text-white" />
+                  <div className=" flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
+                    <IoIosArrowRoundForward className="text-4xl font-bold text-white" />
                   </div>
 
                 </div>

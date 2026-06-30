@@ -13,6 +13,8 @@ export async function GET() {
 
     const data = await res.json();
 
+   
+
     return Response.json({
       success: true,
       stories: data.data,
