@@ -229,7 +229,7 @@ const SuccessStories = () => {
      
 
      
-        <div className="border-b border-gray-200 mb-4">
+        {/* <div className="border-b border-gray-200 mb-4">
           <div className="text-3xl font-medium py-2">
             Results ({filteredResources.length}) <span className='text-lg font-semibold text-gray-500'>total</span>
           </div>
@@ -249,7 +249,7 @@ const SuccessStories = () => {
             </button>
           </div>
 
-          {/* Selected Filters Display */}
+        
           <div className='flex flex-wrap gap-2 mb-2'>
             {selectedIndustries.map(id => {
               const industry = industories?.find((ind: any) => ind.id === id);
@@ -281,7 +281,7 @@ const SuccessStories = () => {
               </button>
             )}
           </div>
-        </div>
+        </div> */}
          
 
     

@@ -11,7 +11,7 @@ export function SubIndustry({subIndustry ,title}:any) {
 
   const visibleData = showAll
     ? subIndustry
-    : subIndustry.slice(0, 4);
+    : subIndustry.slice(0, 3);
 
   return (
     <div className=" text-white py-16 px-4">
