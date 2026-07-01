@@ -190,10 +190,10 @@ const SuccessStories = () => {
 
   return (
     <div>
-      {/* Hero Section */}
+    
       <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-fixed bg-cover bg-no-repeat bg-center flex items-center bg-[#ff0100]"
         style={{ backgroundImage: `url(${"https://www.azumuta.com/wp-content/uploads/2024/05/petrochemical-industry-with-twilight-sky-2-1536x1024-1.jpeg"})` }} >
-        <div className="absolute inset-0 bg-[#750909b9]"></div>
+        <div className="absolute inset-0 bg-[#750909e8]"></div>
         <div className="relative z-10 px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto w-full text-white">
           <div className="max-w-3xl">
             <h1 className="text-3xl md:text-5xl font-semibold leading-tight">
@@ -211,91 +211,25 @@ const SuccessStories = () => {
         </div>
       </div>
 
-      {/* Breadcrumb */}
-      <div className="border-b border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
+      <div className="border-b  border-gray-200 py-3 sm:py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row gap-1 items-center max-w-6xl mx-auto font-medium text-sm sm:text-base">
           <Link href="/" className="hover:text-[#cd2626] transition">Home</Link>
           <LiaAngleRightSolid size={12} />
           <h1 className="text-gray-600">Success Stories</h1>
         </div>
+        
       </div>
 
-      {/* Featured Section - Main Story + Sidebar Stories */}
-      <div className="max-w-6xl mx-auto grid grid-cols-5 gap-4 my-8 px-4 sm:px-6 lg:px-0">
-        {/* Main Story - Takes 3 columns */}
-        <div className="col-span-5 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 bg-white rounded-md overflow-hidden shadow border border-gray-200">
-          <div className="relative">
-            <img
-              src={mainStory?.success_story_image_url || "/placeholder-image.jpg"}
-              alt={mainStory?.title || "Success Story"}
-              className="w-full h-full aspect-square object-cover"
-            />
-          </div>
-          <div className="p-6 md:p-8 flex flex-1 flex-col justify-between">
-            <div>
-              <p className="text-red-600 text-xs font-semibold uppercase mb-2">
-                {mainStory?.industry_name || "Featured Story"}
-              </p>
-              <Link href={`/success-stories/${mainStory?.slug}`}>
-                <h2 className="text-xl md:text-2xl font-bold leading-tight hover:text-[#cd2626] transition">
-                  {mainStory?.title}
-                </h2>
-              </Link>
-              <p className="text-gray-600 mt-4 text-sm line-clamp-4">
-                {mainStory?.description}
-              </p>
-            </div>
-            <Link 
-              href={`/success-stories/${mainStory?.slug}`}
-              className="mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block w-fit"
-            >
-              Read Full Story →
-            </Link>
-          </div>
-        </div>
+      
 
-        {/* Sidebar Stories - Takes 2 columns */}
-        <div className="col-span-5 lg:col-span-2 flex flex-col gap-4">
-          {sidebarStories.map((item:any, index:any) => (
-            <div
-              key={item.id || index}
-              className="grid grid-cols-3 border border-gray-200 rounded-md overflow-hidden bg-white shadow"
-            >
-              <img
-                src={item?.success_story_image_url || "/placeholder-image.jpg"}
-                alt={item?.title || "Success Story"}
-                className="h-full object-cover"
-              />
-              <div className="col-span-2 p-4 flex flex-col justify-between">
-                <div>
-                  <p className="text-red-600 text-xs font-semibold uppercase">
-                    {item?.industry_name || "Story"}
-                  </p>
-                  <Link href={`/success-stories/${item?.slug}`}>
-                    <h3 className="font-bold text-sm mt-2 hover:text-[#cd2626] transition">
-                      {item?.title}
-                    </h3>
-                  </Link>
-                  <p className="text-gray-500 text-xs mt-2 line-clamp-2">
-                    {item?.description}
-                  </p>
-                </div>
-                <Link 
-                  href={`/success-stories/${item?.slug}`}
-                  className="mt-2 text-[#b62126] text-xs font-medium hover:underline"
-                >
-                  Read more →
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
-   
-      <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-0">
-        {/* Filter Section */}
-        <div className="border-b border-gray-400 mb-4">
+      <div className='my-5 max-w-6xl mx-auto'>
+
+
+     
+
+     
+        <div className="border-b border-gray-200 mb-4">
           <div className="text-3xl font-medium py-2">
             Results ({filteredResources.length}) <span className='text-lg font-semibold text-gray-500'>total</span>
           </div>
@@ -348,39 +282,123 @@ const SuccessStories = () => {
             )}
           </div>
         </div>
+         
 
-        {/* Stories Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
-          {currentProducts?.map((res: any) => (
-            <div key={res.id} className='p-3 border border-gray-200 rounded-md overflow-hidden bg-white shadow flex flex-col'>
-              <img 
-                className='object-cover aspect-3/2 rounded-sm mb-4' 
-                src={res.success_story_image_url || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDfoD5gixSf9m2cN0cOpA-kOfmH4QdUwsaVu4S0fA4pUeZNvw-IwCIKPz0&s=10"} 
-                alt={res.title}
+    
+      <div className=" grid grid-cols-5 gap-4 my-4 px-4 sm:px-6 lg:px-0">
+
+        
+       
+        <div className="col-span-5 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 bg-white rounded-md overflow-hidden shadow border border-gray-200">
+          <div className="relative">
+            <img
+              src={mainStory?.success_story_image_url || "/placeholder-image.jpg"}
+              alt={mainStory?.title || "Success Story"}
+              className="w-full h-full aspect-square object-cover"
+            />
+          </div>
+          <div className="p-6 md:p-8 flex flex-1 flex-col justify-between">
+            <div>
+              <p className="text-red-600 text-xs font-semibold uppercase mb-2">
+                {mainStory?.industry_name || "Featured Story"}
+              </p>
+              <Link href={`/success-stories/${mainStory?.slug}`}>
+                <h2 className="text-xl md:text-2xl font-bold leading-tight hover:text-[#cd2626] transition">
+                  {mainStory?.title}
+                </h2>
+              </Link>
+              <p className="text-gray-600 mt-4 text-sm line-clamp-4">
+                {mainStory?.description}
+              </p>
+            </div>
+            <Link 
+              href={`/success-stories/${mainStory?.slug}`}
+              className="mt-4 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block w-fit"
+            >
+              Read Full Story →
+            </Link>
+          </div>
+        </div>
+
+      
+        <div className="col-span-5 lg:col-span-2 flex flex-col gap-2">
+          {sidebarStories.map((item:any, index:any) => (
+            <Link
+            href={`/success-stories/${item?.slug}`}
+              key={item.id || index}
+              className="grid grid-cols-3 border border-gray-200 h-28 rounded-md overflow-hidden bg-white shadow -sm hover:shadow-md"
+            >
+              <img
+                src={item?.success_story_image_url || "/placeholder-image.jpg"}
+                alt={item?.title || "Success Story"}
+                className="h-full object-cover"
               />
-              <div className='px-3 flex flex-col flex-1'>
-                <p className='text-xs font-semibold text-gray-500 mb-2'>
-                  BY: {res.author || "Synmac"}
-                </p>
-                <p className='text-xs font-semibold text-gray-500 mb-2'>
-                  {res.date || "2024"}
-                </p>
-                <p className="text-red-600 text-md font-semibold uppercase line-clamp-2">
-                  {res.title}
-                </p>
-                <div className='line-clamp-3 text-sm font-light text-gray-500 flex-1 my-2'>
-                  {res.description}
+              <div className="col-span-2 p-3 flex flex-col justify-between">
+                <div>
+                  
+                  <Link href={`/success-stories/${item?.slug}`}>
+                    <h3 className="font-semibold text-xs hover:text-[#cd2626] transition">
+                      {item?.title}
+                    </h3>
+                  </Link>
+                  <p className="text-gray-500 text-xs mt-1 line-clamp-2">
+                    {item?.description}
+                  </p>
                 </div>
                 <Link 
-                  href={`/success-stories/${res.slug}`} 
-                  className='mt-2 border-b-2 py-1 hover:border-[#b62126]/40 cursor-pointer text-sm font-semibold border-[#b62126] transition-all duration-300 ease-in-out inline-block w-fit'
+                  href={`/success-stories/${item?.slug}`}
+                  className="mt-1 text-[#b62126] text-xs font-medium hover:underline"
                 >
-                  View more →
+                  Read more →
                 </Link>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
+      </div>
+
+      
+
+   
+      <div className="max-w-6xl mx-auto  px-4 sm:px-6 lg:px-0">
+         <div className="grid grid-cols-2 lg:grid-cols-3   gap-2">
+          {currentProducts.map((item:any, index:any) => (
+            <Link
+            href={`/success-stories/${item?.slug}`}
+              key={item.id || index}
+              className="grid grid-cols-3 border border-gray-200 h-28 rounded-md overflow-hidden bg-white shadow -sm hover:shadow-md"
+            >
+              <img
+                src={item?.success_story_image_url || "/placeholder-image.jpg"}
+                alt={item?.title || "Success Story"}
+                className="h-full object-cover"
+              />
+              <div className="col-span-2 p-3 flex flex-col justify-between">
+                <div>
+                  
+                  <Link href={`/success-stories/${item?.slug}`}>
+                    <h3 className="font-semibold line-clamp-2 lg:line-clamp-3 text-xs hover:text-[#cd2626] transition">
+                      {item?.title}
+                    </h3>
+                  </Link>
+                  <p className="text-gray-500 text-xs mt-1 line-clamp-2">
+                    {item?.description}
+                  </p>
+                </div>
+                <Link 
+                  href={`/success-stories/${item?.slug}`}
+                  className="mt-1 text-[#b62126] text-xs font-medium hover:underline"
+                >
+                  Read more →
+                </Link>
+              </div>
+            </Link>
+          ))}
+        </div>
+    
+  
+
+    
 
         {filteredResources.length === 0 && (
           <div className="text-center py-12">
@@ -394,7 +412,7 @@ const SuccessStories = () => {
           </div>
         )}
 
-        {/* Pagination */}
+     
         {totalPages > 1 && (
           <div className="flex gap-2 justify-center items-center text-xs mt-8 p-3">
             <button
@@ -435,7 +453,10 @@ const SuccessStories = () => {
         )}
       </div>
 
-      {/* Filter Sidebar */}
+         
+      </div>
+
+    
       {isFilterOpen && (
         <>
           <div

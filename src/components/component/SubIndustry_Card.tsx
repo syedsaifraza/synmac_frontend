@@ -23,7 +23,7 @@ export function SubIndustry({subIndustry ,title}:any) {
         </h2>
 
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {visibleData.map((item: any, i: number) => (
             <Link
               key={i}
@@ -32,7 +32,7 @@ export function SubIndustry({subIndustry ,title}:any) {
             >
 
             
-              <div className="h-40 overflow-hidden">
+              <div className="h-52 overflow-hidden">
                 <img
                   src={item.feature_file_link || null}
                   alt={item.name}

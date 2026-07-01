@@ -9,10 +9,10 @@ const Product_Category_Section = ({ data,title }: any) => {
 
   if (!data || data.length === 0) return null;
 
-  const visibleData = showAll ? data : data.slice(0, 3);
+  const visibleData = showAll ? data : data.slice(0, 4);
 
   return (
-    <div className="bg-[#2f3333] text-white py-16 px-4">
+    <div className="bg-[#2f3333]  text-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
 
     
@@ -21,7 +21,7 @@ const Product_Category_Section = ({ data,title }: any) => {
         </h2>
 
  
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {visibleData.map((item: any, i: number) => {
 
             const url = `/industry/${item.industry_slug}/${item?.sub_industry_slug || " "}/${item.slug}`;
@@ -30,20 +30,39 @@ const Product_Category_Section = ({ data,title }: any) => {
               <Link
                 key={i}
                 href={url}
-                className="group block rounded-xl overflow-hidden  transition"
+                className="group block rounded-xl p-3 border-gray-400 border shadow-white overflow-hidden  transition"
               >
 
               
-                <div className="h-52 overflow-hidden">
+              <div className="h-40 overflow-hidden">
                   <img
                     src={item.feature_file_link || null}
                     alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    className="w-full h-full rounded-md object-cover group-hover:scale-105 transition duration-300"
                   />
                 </div>
 
+                     <div className="flex-1 py-3 px-2 flex flex-row gap-4 justify-between">
+                  <h3 title={item?.name} className="text-md text-white font-semibold line-clamp-2  group-hover:text-[#ff0100] transition " >
+                    {item?.name}
+                  </h3>
+         
+     <div className=" flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
+                      <IoIosArrowRoundForward className="text-3xl font-bold text-white" />
+                    </div>
+
+               
+    
+
+                </div>
+ <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.hero_background_description || ""
+                      }}
+                      className="text-gray-400 text-sm line-clamp-3 fonts "
+                    />
                 
-                <div className="py-5 flex items-start gap-4">
+                {/* <div className="py-5 flex items-start gap-4">
 
                
                   <div className="flex-1">
@@ -51,12 +70,7 @@ const Product_Category_Section = ({ data,title }: any) => {
                       {item.name}
                     </h3>
 
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: item.hero_background_description || ""
-                      }}
-                      className="text-gray-400 text-sm line-clamp-3 fonts "
-                    />
+                   
                   </div>
 
                  
@@ -64,7 +78,7 @@ const Product_Category_Section = ({ data,title }: any) => {
                     <IoIosArrowRoundForward className="text-4xl font-bold text-white" />
                   </div>
 
-                </div>
+                </div> */}
 
               </Link>
             );
