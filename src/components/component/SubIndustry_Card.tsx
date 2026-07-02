@@ -47,10 +47,14 @@ export function SubIndustry({subIndustry ,title}:any) {
                   <h3 title={item?.name} className="text-md text-gray-700 font-semibold line-clamp-2  group-hover:text-[#ff0100] transition " >
                     {item?.name}
                   </h3>
-         
+
+                  <div className="flex items-baseline justify-center">
      <div className=" flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
                       <IoIosArrowRoundForward className="text-4xl font-bold text-white" />
                     </div>
+
+                  </div>
+         
 
                
     
