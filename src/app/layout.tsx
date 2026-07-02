@@ -155,6 +155,9 @@ export default async function RootLayout({ children }: any) {
         </Script>
       </head>
 
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-HYD5J2SJ6N"></script>
+
+
 
       <body>
 
