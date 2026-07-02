@@ -26,7 +26,7 @@ const Product_Category_Section = ({ data, title }: any) => {
               <Link
                 key={i}
                 href={url}
-                className="group block bg-[#141414] rounded-xl border border-[#2a2a2a] hover:border-[#ff0100] transition-all duration-300 hover:shadow-xl hover:shadow-[#ff0100]/5 overflow-hidden"
+                className="group block bg-[#141414] rounded-xl border border-[#2a2a2a]  transition-all duration-300 hover:shadow-xl  overflow-hidden"
               >
                 <div className="relative w-full h-48 overflow-hidden bg-[#1a1a1a]">
                   <img
@@ -34,12 +34,7 @@ const Product_Category_Section = ({ data, title }: any) => {
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
-                  {/* Simple overlay on hover */}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="text-white text-sm font-medium px-4 py-2 border border-white/30 rounded-full backdrop-blur-sm">
-                      Explore
-                    </span>
-                  </div>
+                 
                 </div>
 
                 <div className="p-5">
@@ -51,8 +46,8 @@ const Product_Category_Section = ({ data, title }: any) => {
                       {item?.name}
                     </h3>
                     
-                    <div className="flex items-center justify-center rounded-full bg-[#ff0100]/10 group-hover:bg-[#ff0100] shrink-0 mt-0.5 transition-all duration-300 w-8 h-8 group-hover:scale-110">
-                      <IoIosArrowRoundForward className="text-2xl font-bold text-[#ff0100] group-hover:text-white transition-colors" />
+                    <div className="flex items-center justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 transition-all duration-300 w-8 h-8 group-hover:translate-x-1">
+                      <IoIosArrowRoundForward className="text-3xl font-bold text-white transition-colors" />
                     </div>
                   </div>
 
