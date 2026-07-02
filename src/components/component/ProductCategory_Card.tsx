@@ -3,8 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react'
 import { IoIosArrowRoundForward } from 'react-icons/io';
 
-const Product_Category_Section = ({ data,title }: any) => {
-
+const Product_Category_Section = ({ data, title }: any) => {
   const [showAll, setShowAll] = useState(false);
 
   if (!data || data.length === 0) return null;
@@ -12,94 +11,76 @@ const Product_Category_Section = ({ data,title }: any) => {
   const visibleData = showAll ? data : data.slice(0, 4);
 
   return (
-    <div className="bg-[#2f3333]  text-white py-16 px-4">
+    <div className="bg-[#0a0a0a] text-white py-20 px-4">
       <div className="max-w-6xl mx-auto">
-
-    
-        <h2 className="text-3xl font-semibold mb-10 tracking-tight">
-         {title}
+   
+        <h2 className="text-4xl font-light mb-12 tracking-wide">
+          {title}
         </h2>
 
- 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {visibleData.map((item: any, i: number) => {
-
             const url = `/industry/${item.industry_slug}/${item?.sub_industry_slug || " "}/${item.slug}`;
 
             return (
               <Link
                 key={i}
                 href={url}
-                className="group block rounded-xl p-3 border-gray-400 border shadow-white overflow-hidden  transition"
+                className="group block bg-[#141414] rounded-xl border border-[#2a2a2a] hover:border-[#ff0100] transition-all duration-300 hover:shadow-xl hover:shadow-[#ff0100]/5 overflow-hidden"
               >
-
-              
-              <div className="h-40 overflow-hidden">
+                <div className="relative w-full h-48 overflow-hidden bg-[#1a1a1a]">
                   <img
                     src={item.feature_file_link || null}
                     alt={item.name}
-                    className="w-full h-full rounded-md object-cover group-hover:scale-105 transition duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+                  {/* Simple overlay on hover */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="text-white text-sm font-medium px-4 py-2 border border-white/30 rounded-full backdrop-blur-sm">
+                      Explore
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 
+                      title={item?.name} 
+                      className="text-md font-medium line-clamp-2 group-hover:text-[#ff0100] transition-colors flex-1"
+                    >
+                      {item?.name}
+                    </h3>
+                    
+                    <div className="flex items-center justify-center rounded-full bg-[#ff0100]/10 group-hover:bg-[#ff0100] shrink-0 mt-0.5 transition-all duration-300 w-8 h-8 group-hover:scale-110">
+                      <IoIosArrowRoundForward className="text-2xl font-bold text-[#ff0100] group-hover:text-white transition-colors" />
+                    </div>
+                  </div>
+
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: item.hero_background_description || ""
+                    }}
+                    className="text-gray-500 text-sm line-clamp-3 mt-2"
                   />
                 </div>
-
-                     <div className="flex-1 py-3 px-2 flex flex-row gap-4 justify-between">
-                  <h3 title={item?.name} className="text-md text-white font-semibold line-clamp-2  group-hover:text-[#ff0100] transition " >
-                    {item?.name}
-                  </h3>
-         
-     <div className=" flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
-                      <IoIosArrowRoundForward className="text-3xl font-bold text-white" />
-                    </div>
-
-               
-    
-
-                </div>
- <div
-                      dangerouslySetInnerHTML={{
-                        __html: item.hero_background_description || ""
-                      }}
-                      className="text-gray-400 text-sm line-clamp-3 fonts "
-                    />
-                
-                {/* <div className="py-5 flex items-start gap-4">
-
-               
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-[#ff0100] transition">
-                      {item.name}
-                    </h3>
-
-                   
-                  </div>
-
-                 
-                  <div className=" flex items-center relative right-2 justify-center rounded-full bg-[#ff0100] shrink-0 mt-0.5 group-hover:translate-x-1 transition">
-                    <IoIosArrowRoundForward className="text-4xl font-bold text-white" />
-                  </div>
-
-                </div> */}
-
               </Link>
             );
           })}
         </div>
 
-      
         {data.length > 3 && (
-          <div className="flex justify-center mt-12">
+          <div className="flex justify-center mt-14">
             <button
               onClick={() => setShowAll(!showAll)}
-                className=" bg-[#ff0100] px-6 py-2 rounded-full text-sm hover:bg-white hover:border hover:border-gray-300 cursor-pointer  hover:text-black transition"
+              className="px-8 py-3 rounded-full text-sm font-medium border border-[#2a2a2a] hover:border-[#ff0100] hover:bg-[#ff0100] transition-all duration-300 cursor-pointer"
             >
               {showAll ? "Show Less" : "Show All"}
             </button>
           </div>
         )}
-
       </div>
     </div>
   );
 }
 
-export default Product_Category_Section
+export default Product_Category_Section;
