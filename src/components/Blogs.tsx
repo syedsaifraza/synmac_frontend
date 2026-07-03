@@ -77,9 +77,9 @@ const Blogs = () => {
           />
 
 
-          <div className="lg:w-2/5 flex flex-col gap-1">
+          <div className="lg:w-2/5 space-y-1 grid grid-cols-1 justify-between ">
 
-            {blogs.slice(1, 4).map((item: any, index: number) => (
+            {blogs?.slice(1, 4).map((item: any, index: number) => (
 
               <CardFeature
                 key={index}

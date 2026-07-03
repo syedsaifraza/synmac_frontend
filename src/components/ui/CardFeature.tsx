@@ -6,7 +6,7 @@ const CardFeature = ({url,image,title,index,description,line='line-clamp-2'}:any
    <Link
           href={url}
           key={index}
-          className={`flex h-35 items-center  bg-white rounded-lg group overflow-hidden hover:bg-gray-50 transition border border-gray-200
+          className={`flex h-30 items-center  bg-white rounded-lg group overflow-hidden hover:bg-gray-50 transition border border-gray-200
           ${index !== 2 ? "border" : ""}
           flex-1`}
         >

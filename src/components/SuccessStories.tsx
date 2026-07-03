@@ -675,7 +675,7 @@ description="Explore inspiring customer success stories and real-world case stud
        
       
 
-        <div className="flex flex-col lg:flex-row gap-4 h-90 rounded-lg overflow-hidden">
+        <div className="flex flex-col lg:flex-row gap-4  rounded-lg overflow-hidden">
 
          
 
@@ -688,7 +688,7 @@ description="Explore inspiring customer success stories and real-world case stud
           />
 
 
-          <div className="lg:w-2/5 flex flex-col gap-3">
+          <div className="lg:w-2/5 space-y-3 grid grid-cols-1 justify-between">
 
             {success.slice(1, 4).map((item:any, index:number) => (
 

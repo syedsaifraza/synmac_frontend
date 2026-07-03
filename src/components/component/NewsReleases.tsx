@@ -574,12 +574,9 @@ const Blogs = () => {
 
           <div className="lg:w-3/5 bg-white rounded-lg  border-gray-200 overflow-hidden group border p-3 relative">
 
-            <div className=" flex flex-col justify-between ">
+            <div className=" flex flex-col justify-between min-h-70">
 
-              <div>
-
-
-
+              
                 <Link href={`/blog/${news[0]?.slug}`}>
                   <h2 className="text-2xl font-bold mt-3 leading-snug hover:text-[#b62126] transition">
                     {news[0]?.title}
@@ -590,11 +587,11 @@ const Blogs = () => {
                   {news[0]?.description}  
                 </p>
 
-              </div>
+             
 
               <Link
                 href={`/blog/${news[0]?.slug}`}
-                className="mt-8 w-fit text-sm font-semibold border-b-2 border-[#b62126] hover:pr-2 duration-300  group-hover:translate-x-2 absolute bottom-3"
+                className="mt-8 w-fit text-sm font-semibold border-b-2 border-[#b62126] hover:pr-2 duration-300  group-hover:translate-x-2 "
               >
                 Read Full News →
               </Link>
@@ -605,9 +602,9 @@ const Blogs = () => {
           </div>
 
 
-          <div className="lg:w-2/5 flex flex-col gap-3">
+          <div className="lg:w-2/5 grid grid-cols-1 justify-between gap-3">
 
-            {Array(4).fill(news[0]).slice(1, 4).map((item: any, index: number) => (
+            {news?.slice(1,4)?.map((item: any, index: number) => (
 
               <CardFeature
                 key={index}
@@ -627,13 +624,13 @@ const Blogs = () => {
 
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          {Array(10).fill(news[0]).map((res: any, indx: any) => (
+          {news?.slice(4,)?.map((res: any, indx: any) => (
             <div>
               <CardFeature
                 key={indx}
                 index={indx}
                 title={res.title}
-                line={"line-clamp-3"}
+                
                 image={res?.blog_image_url}
                 description={res.description}
                 url={`/news-releases/${res.slug}`}
