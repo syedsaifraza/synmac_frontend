@@ -1,7 +1,7 @@
 'use client';
 
 
-export default function Header({ title, description, background_image, }: { title: string, description: string, background_image: string ,   }) {
+export default function Header({ title, description, background_image,className }: { title: string, description: string, background_image: string ,className?:any   }) {
   return (
 
     <>
@@ -12,10 +12,11 @@ export default function Header({ title, description, background_image, }: { titl
 
 
 
-        <div className="absolute inset-0 bg-black/60"></div>
+  
+        <div className={`absolute inset-0 ${className ? `${className}` : "bg-black/60"} `}></div>
 
         <div className="relative z-10 px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto w-full text-white ">
-          <div className="max-w-3xl">
+          <div className="min-w-3xl">
             <h1 className="text-2xl md:text-4xl font-semibold leading-tight">
               {title}
             </h1>
