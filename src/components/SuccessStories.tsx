@@ -713,7 +713,7 @@ description="Explore inspiring customer success stories and real-world case stud
       <div>
               <CardFeature
         key={indx}
-          line={"line-clamp-3"}
+     
         index={indx}
         title={res.title}
         image={res.success_story_image_url}

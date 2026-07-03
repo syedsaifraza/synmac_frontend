@@ -103,7 +103,7 @@ const Blogs = () => {
               <CardFeature
                 key={indx}
                 index={indx}
-                  line={"line-clamp-3"}
+                
                 title={res.title}
                 image={res.blog_image_url}
                 description={res.description}
