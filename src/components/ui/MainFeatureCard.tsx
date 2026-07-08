@@ -10,7 +10,7 @@ const MainFeatureCard = ({ title, slug, description, image, link }: any) => {
 
 
 
-      <div className=" overflow-hidden">
+      <div className=" overflow-hidden border border-gray-100 aspect-square">
         <img
           src={image ? image : broken.src}
           alt={title}
@@ -19,14 +19,14 @@ const MainFeatureCard = ({ title, slug, description, image, link }: any) => {
       </div>
 
 
-      <div className="p-7 flex flex-col justify-between">
+      <div className="px-7 flex flex-col justify-between">
 
         <div>
 
 
 
           <Link href={link}>
-            <h2 className="text-2xl font-bold mt-3 leading-snug hover:text-[#b62126] transition">
+            <h2 className="text-2xl font-bold  leading-snug hover:text-[#b62126] transition">
               {title}
             </h2>
           </Link>
