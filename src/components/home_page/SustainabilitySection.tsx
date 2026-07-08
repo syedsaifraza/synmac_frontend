@@ -142,9 +142,9 @@ const SustainabilitySection = ({ data, data1 }: any) => {
               let label;
 
               if (s?.label === "years_of_excellence") {
-                label = "Years Of Excellence"
+                label = "Years of Excellence"
               } else if (s?.label === "no_of_products") {
-                label = "No Of Products"
+                label = "No of Products"
               } else if (s?.label === "countries_served") {
                 label = "Countries Served"
               } else if (s?.label === "happy_clients") {

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import broken from "../../assets/images.png"
 
 const CardFeature = ({url,image,title,index,description,line='line-clamp-2'}:any) => {
   return (
@@ -11,17 +12,15 @@ const CardFeature = ({url,image,title,index,description,line='line-clamp-2'}:any
           flex-1`}
         >
 
-            {
-                image && (
+           
     <div className="w-40 h-full  overflow-hidden shrink-0">
             <img
-              src={image}
+               src={image ? image : broken.src}
               alt={title}
               className="w-full h-full object-cover hover:scale-110 duration-300"
             />
           </div>
-                )
-            }
+               
 
       
 

@@ -22,9 +22,7 @@ const page = async ({ params }: any) => {
     <div>
       <Header
         title={getBlogData?.blogData?.title}
-        description={
-          "Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."
-        }
+        description={ getBlogData?.blogData?.description}
         background_image={getBlogData?.blogData?.blog_image_url}
       />
 

@@ -604,14 +604,13 @@
 
 "use client";
 import Header from "@/components/component/Header";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import { LiaAngleRightSolid } from "react-icons/lia";
+import broken from "../assets/images.png"
 import { useSelector } from "react-redux";
 import CardFeature from "./ui/CardFeature";
 import Loader from "./ui/Loader";
 import OnlyHomePath from "./ui/OnlyHomePath";
 import MainFeatureCard from "./ui/MainFeatureCard";
+import Image from "next/image";
 
 const Blogs = () => {
   const {  success } = useSelector(
@@ -640,7 +639,7 @@ const Blogs = () => {
 
 
   
-  if (!success?.length) {
+  if (!success) {
     return (
       <div>
         <Header
@@ -656,8 +655,30 @@ const Blogs = () => {
   }
 
 
+   if (success.length === 0) {
+      return (
+        <div>
+          <Header
+          className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
+          title={"Success Stories"}
+         description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
+          background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
+        />
+
+          <div className="p-10 text-center font- text-xl">
+  <h1 className="text-2xl md:text-2xl tracking-tight bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+              No Success Story  Found
+            </h1>
+          </div>
+         
+        </div>
+      );
+    }
+
+
   return (
     <div>
+
       <Header
        className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
         title={"Success Stories"}
@@ -710,9 +731,9 @@ description="Explore inspiring customer success stories and real-world case stud
 
 <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
   {success?.slice(4,)?.map((res: any, indx: any) => (
-      <div>
+      <div  key={indx}>
               <CardFeature
-        key={indx}
+       
      
         index={indx}
         title={res.title}

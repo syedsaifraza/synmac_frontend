@@ -4,7 +4,7 @@ const initialState:any = {
     resources : [],
     product:[],
     blogs:[],
-    news:[],
+    news:null,
     success:[],
     industories:[],
     sub_industries:[],

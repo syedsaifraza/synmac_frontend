@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 async function getBlogsResources(slug: any) {
   const res = await fetch(`http://synmac.acetians.in/api/news/${slug}`, {
-    // next : { revalidate: 300 }
     cache: "no-store",
   });
 
@@ -28,7 +27,7 @@ const page = async ({ params }: any) => {
         description={
        getNewsData.News.description
         }
-        background_image={getNewsData.News.success_story_image_url}
+        background_image={getNewsData?.News?.news_image_url}
       />
 
       <div className="text-black py-12 sm:py-16 px-4 sm:px-6 lg:px-8">

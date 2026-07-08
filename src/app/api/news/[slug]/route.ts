@@ -33,6 +33,8 @@ export async function GET(req: Request, { params }: any) {
       return Response.json({ message: "Not found" }, { status: 404 });
     }
 
+    
+
     return Response.json({
       success: true,
       News : data.data,

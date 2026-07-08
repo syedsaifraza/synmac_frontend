@@ -528,14 +528,14 @@ import Loader from "../ui/Loader";
 import OnlyHomePath from "../ui/OnlyHomePath";
 
 
-const Blogs = () => {
+const News = () => {
   const { news } = useSelector(
     (state: any) => state?.resources,
   );
 
 
 
-  if (!news?.length) {
+  if (!news) {
     return (
       <div>
         <Header
@@ -549,6 +549,28 @@ const Blogs = () => {
       </div>
     );
   }
+
+
+    if (news.length === 0) {
+    return (
+      <div>
+        <Header
+          className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
+          title={"News Release"}
+        description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
+          background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
+        />
+        <div className="p-10 text-center font- text-xl">
+<h1 className="text-2xl md:text-2xl tracking-tight bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+            No News Found
+          </h1>
+        </div>
+       
+      </div>
+    );
+  }
+
+
 
 
   return (
@@ -577,7 +599,7 @@ const Blogs = () => {
             <div className=" flex flex-col justify-between min-h-70">
 
               
-                <Link href={`/blog/${news[0]?.slug}`}>
+                <Link href={`/news-releases/${news[0]?.slug}`}>
                   <h2 className="text-2xl font-bold mt-3 leading-snug hover:text-[#b62126] transition">
                     {news[0]?.title}
                   </h2>
@@ -590,7 +612,7 @@ const Blogs = () => {
              
 
               <Link
-                href={`/blog/${news[0]?.slug}`}
+                href={`/news-releases/${news[0]?.slug}`}
                 className="mt-8 w-fit text-sm font-semibold border-b-2 border-[#b62126] hover:pr-2 duration-300  group-hover:translate-x-2 "
               >
                 Read Full News →
@@ -647,5 +669,5 @@ const Blogs = () => {
   );
 };
 
-export default Blogs;
+export default News;
 

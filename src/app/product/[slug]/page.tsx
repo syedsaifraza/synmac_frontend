@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 
 async function getProduct(slug: any) {
   const res = await fetch(`http://synmac.acetians.in/api/product/${slug}`, {
-    // next : { revalidate: 300 }
     cache: "no-store",
   });
 
@@ -23,18 +22,7 @@ const Page = async ({ params }: any) => {
    }
 
 
-  const SolutionsSection = () => {
-    const name = productData?.name ?? "Avipol";
-    const description = productData?.description ?? "Avipol is a specialized chemical solution used as a viscosity reducer in industries like sugar and agro-processing, helping improve fluid flow, enhance processing efficiency, reduce energy consumption, and ensure smoother handling of syrups and thick liquids.";
 
-    return (
-      <div className="text-black py-8 sm:py-12 lg:py-16">
-
-        <div className="text-gray-600 text-base sm:text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: description || "" }} />
-
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-white">

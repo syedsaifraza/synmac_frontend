@@ -79,7 +79,7 @@ const HeroSection = ({ data }: { data: any }) => {
             {
               data?.is_active_contactus === 1 ? ( <Link
                   href="/contact-us"
-                  className="px-6 sm:px-8 py-3 sm:py-3.5 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors text-center text-sm sm:text-base"
+                 className="px-6 sm:px-8 py-3 sm:py-3.5 bg-[#cd2626] text-white rounded-lg  hover:bg-[#b32020] transition-colors text-center font-[500] text-sm sm:text-base"
                 >
                   Contact Us
                 </Link>) : ( "") 

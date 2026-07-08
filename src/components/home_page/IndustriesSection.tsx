@@ -117,13 +117,13 @@ const IndustriesSection = async ({ industries }: any) => {
           })}
         </div>
         {industries.length > 10 && (
-          <div className="flex flex-row justify-center items-center  py-10">
-            <div className="">
-              <span className="bg-[#cd2626]  text-white cursor-pointer  font-semibold text-base flex items-center gap-2 border-2 border-white px-6 py-2.5 rounded-full backdrop-blur-sm">
+          <div className="flex flex-row justify-center items-center  py-10 ">
+           
+              <Link href={"/industries"} className="bg-[#cd2626] group text-white cursor-pointer  font-semibold text-sm flex items-center gap-1 border-2 border-white px-6 py-2.5 rounded-full backdrop-blur-sm">
                 View All
-                <BiChevronRight size={20} />
-              </span>
-            </div>
+                <BiChevronRight className="group-hover:translate-x-3 duration-200" size={25} />
+              </Link>
+           
           </div>
         )}
       </div>

@@ -5,6 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 export const DocumentRequestModal = ({
   isModalOpen,
   captchaRef,
+  captchaValue,
   selectedDocument,
   hasPendingRequest,
   handleReRequest,
@@ -13,14 +14,18 @@ export const DocumentRequestModal = ({
   handleFormChange,
   handleSubmitRequest,
   isSubmitting,
-  submitMessage,
-  closeModal
+  closeModal,
+  formatRequestTime,
+  getTimeRemaining
 }: any) => {
   if (!isModalOpen || !selectedDocument) return null;
 
-  const hasExistingRequest = hasPendingRequest(selectedDocument.productId, selectedDocument.documentType);
+  // Get the pending request data from selectedDocument or check again
+  const pendingRequestData = selectedDocument.pendingRequest || 
+    hasPendingRequest(selectedDocument.productId, selectedDocument.documentType);
+  
+  const hasExistingRequest = pendingRequestData !== null;
 
-  // Handle purpose checkbox change
   const handlePurposeChange = (value: string, checked: boolean) => {
     let updatedPurposes = [...(formData.purposes || [])];
     
@@ -50,7 +55,6 @@ export const DocumentRequestModal = ({
     });
   };
 
-
   const isOtherSelected = formData.purposes?.includes("Other");
 
   return (
@@ -74,7 +78,7 @@ export const DocumentRequestModal = ({
           </div>
 
           <div className="p-6">
-            {hasExistingRequest && !submitMessage ? (
+            {hasExistingRequest ? (
               <div className="text-center py-6">
                 <div className="mb-4">
                   <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -83,9 +87,27 @@ export const DocumentRequestModal = ({
                     </svg>
                   </div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">Request Already Submitted</h3>
-                  <p className="text-gray-600 mb-6">
+                  
+                 
+                  <div className="bg-gray-50 rounded-lg p-4 mb-4 text-left">
+                    
+                    <p className="text-sm text-gray-600 mt-1">
+                      <span className="font-medium">Submitted on:</span>{' '}
+                      <span className="text-gray-800">{formatRequestTime(pendingRequestData.timestamp)}</span>
+                    </p>
+                  
+                  </div>
+                  
+                  <p className="text-gray-600 mb-4">
                     You have already requested access to this document. Our team will review your request and provide access within 24 hours.
                   </p>
+                  
+                  {getTimeRemaining(pendingRequestData.timestamp) && (
+                    <p className="text-sm text-gray-500 mb-6">
+                      You can request again after the 24-hour period expires.
+                    </p>
+                  )}
+                  
                   <button
                     onClick={() => handleReRequest(selectedDocument.productId, selectedDocument.documentType)}
                     className="w-full bg-[#cd2626] text-white py-2 px-4 rounded-lg hover:bg-[#a31e1e] transition-colors"
@@ -97,12 +119,6 @@ export const DocumentRequestModal = ({
             ) : (
               <form onSubmit={handleSubmitRequest} className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                  {submitMessage && (
-                    <div className={`p-3 rounded-lg col-span-2 ${submitMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                      {submitMessage.text}
-                    </div>
-                  )}
-
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Product</label>
                     <input
@@ -158,7 +174,6 @@ export const DocumentRequestModal = ({
                     />
                   </div>
 
-                  {/* Country Field */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Country *
@@ -282,15 +297,15 @@ export const DocumentRequestModal = ({
                   </div>
                 </div>
 
-                 <ReCAPTCHA
-                 ref={captchaRef}
-                        sitekey=" 6LeVmfssAAAAAFNZidDT3B2RWy2xYawxd5CkoP3Y"
-                        onChange={(value:any) => setCaptchaValue(value)}
-                      />
+                <ReCAPTCHA
+                  ref={captchaRef}
+                  sitekey="6LeVmfssAAAAAFNZidDT3B2RWy2xYawxd5CkoP3Y"
+                  onChange={(value: any) => setCaptchaValue(value)}
+                />
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || (formData.purposes?.length === 0) || (isOtherSelected && !formData.purpose_other_text?.trim())}
+                  disabled={!captchaValue || isSubmitting}
                   className="w-full bg-[#cd2626] text-white py-2 px-4 rounded-lg hover:bg-[#a31e1e] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (

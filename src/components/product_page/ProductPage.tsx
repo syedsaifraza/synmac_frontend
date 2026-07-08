@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { FaLock, FaLockOpen } from "react-icons/fa";
 import { DocumentRequestModal } from "./DocumentRequestModal";
 import Product_Section from "../component/Product_Card";
+import toast from "react-hot-toast";
 
 const ProductPage = ({ productData }: any) => {
   const captchaRef = useRef<any>(null);
@@ -23,6 +24,30 @@ const ProductPage = ({ productData }: any) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<any>(null);
 
+  const formatRequestTime = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  // Helper function to get time remaining
+  const getTimeRemaining = (timestamp: number) => {
+    const elapsed = Date.now() - timestamp;
+    const hoursRemaining = Math.max(0, 24 - (elapsed / (1000 * 60 * 60)));
+    if (hoursRemaining < 1) {
+      const minutesRemaining = Math.ceil(hoursRemaining * 60);
+      return `${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''}`;
+    }
+    return `${Math.ceil(hoursRemaining)} hour${Math.ceil(hoursRemaining) > 1 ? 's' : ''}`;
+  };
+
+  // Updated hasPendingRequest - returns request data or null
   const hasPendingRequest = useCallback((productId: any, documentType: any) => {
     const pendingRequests = localStorage.getItem(
       `doc_request_${productId}_${documentType}`,
@@ -31,9 +56,11 @@ const ProductPage = ({ productData }: any) => {
       const requestData = JSON.parse(pendingRequests);
       const hoursSinceRequest =
         (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
-      return hoursSinceRequest < 24;
+      if (hoursSinceRequest < 24) {
+        return requestData; // Return the full request data
+      }
     }
-    return false;
+    return null;
   }, []);
 
   const saveRequestToLocalStorage = (
@@ -56,7 +83,7 @@ const ProductPage = ({ productData }: any) => {
 
   const handleDocumentClick = (
     e: React.MouseEvent,
-    docType: "tds" | "msds",
+    docType: "tds" | "sds",
     docUrl: string,
   ) => {
     const isLocked =
@@ -82,12 +109,14 @@ const ProductPage = ({ productData }: any) => {
       e.preventDefault();
 
       // Check if there's already a pending request
-      if (hasPendingRequest(productData?.id, docType)) {
+      const pendingRequest = hasPendingRequest(productData?.id, docType);
+      if (pendingRequest) {
         setSelectedDocument({
           productId: productData?.id,
           productName: productData?.name,
           documentType: docType,
           documentUrl: docUrl,
+          pendingRequest: pendingRequest // Pass the pending request data
         });
         setIsModalOpen(true);
         setSubmitMessage(null);
@@ -97,6 +126,7 @@ const ProductPage = ({ productData }: any) => {
           productName: productData?.name,
           documentType: docType,
           documentUrl: docUrl,
+          pendingRequest: null
         });
         setIsModalOpen(true);
         setSubmitMessage(null);
@@ -120,7 +150,7 @@ const ProductPage = ({ productData }: any) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmitRequest = async (e: React.FormEvent) => {
+  const handleSubmitRequest = async (e: any) => {
     e.preventDefault();
     if (!selectedDocument) return;
 
@@ -153,38 +183,41 @@ const ProductPage = ({ productData }: any) => {
       });
 
       if (response.ok) {
-        saveRequestToLocalStorage(
-          selectedDocument.productId,
-          selectedDocument.documentType,
-        );
-        setSubmitMessage({
-          type: "success",
-          text: "Request submitted successfully! You will receive access via email shortly.",
-        });
+        const result = await response.json();
 
-        setTimeout(() => {
+        if (result.success) {
+          toast.success("Request submitted successfully");
           setIsModalOpen(false);
-          captchaRef.current.reset();
+          saveRequestToLocalStorage(
+            selectedDocument.productId,
+            selectedDocument.documentType,
+          );
           setSelectedDocument(null);
           setSubmitMessage(null);
           setCaptchaValue("");
-        }, 2000);
+          captchaRef?.current?.reset();
+        } else {
+          setCaptchaValue("");
+          captchaRef?.current?.reset();
+        }
       } else {
+        setCaptchaValue("");
+        captchaRef?.current?.reset();
         throw new Error("Failed to submit request");
       }
     } catch (error) {
-      setSubmitMessage({
-        type: "error",
-        text: "Failed to submit request. Please try again.",
-      });
+      toast.error("Something went wrong");
+      setCaptchaValue("");
+      captchaRef?.current?.reset();
     } finally {
+      setCaptchaValue("");
       setIsSubmitting(false);
     }
   };
 
   const handleReRequest = (productId: number, documentType: string) => {
     removeRequestFromLocalStorage(productId, documentType);
-    // Reset form for new request
+    
     setFormData({
       client_name: "",
       client_email: "",
@@ -197,7 +230,10 @@ const ProductPage = ({ productData }: any) => {
       message: "",
     });
     setSubmitMessage(null);
-    // Keep modal open so user can submit new request immediately
+    setSelectedDocument({
+      ...selectedDocument,
+      pendingRequest: null
+    });
   };
 
   const closeModal = () => {
@@ -213,7 +249,7 @@ const ProductPage = ({ productData }: any) => {
     <div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-0 flex flex-row gap-10 ">
         <div className="flex-1 w-full space-y-10">
-          <div className="text-black  lg:pt-16  space-y-3 ">
+          <div className="text-black lg:pt-16 space-y-3 ">
             <h1 className="text-3xl text-gray-900 font-semibold">
               Product Applications
             </h1>
@@ -225,64 +261,17 @@ const ProductPage = ({ productData }: any) => {
             />
           </div>
 
-
           <div className="my-10">
-
             <div
-              className=" text-gray-600 text-base text-justify sm:text-lg leading-relaxed fonts ql-editor"
+              className="text-gray-600 text-base text-justify sm:text-lg leading-relaxed fonts ql-editor"
               dangerouslySetInnerHTML={{
                 __html: productData?.usecaes_and_benefits_content || "",
               }}
             />
-
-          
           </div>
-
-          {/* {productData?.usecases?.length > 0 && (
-            <div className="text-black py-8 space-y-1 ">
-              <h1 className="text-3xl text-gray-900 font-semibold">
-                Uses / Specification
-              </h1>
-              <ul className="divide-y divide-gray-50">
-                {productData?.usecases?.map((use: any, index: number) => (
-                  <li
-                    key={index}
-                    className=" py-2 text-gray-700 flex items-start gap-2 sm:gap-3 text-sm sm:text-base"
-                  >
-                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0"></span>
-                    <span
-                      dangerouslySetInnerHTML={{ __html: use.title || "" }}
-                      className="flex-1 fonts ql-editor"
-                    ></span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {productData?.benefits?.length > 0 && (
-            <div className="text-black py-8  space-y-1 ">
-              <h1 className="text-3xl text-gray-900 font-semibold">Benefits</h1>
-
-              <ul className="divide-y divide-gray-50">
-                {productData?.benefits?.map((prod: any, index: number) => (
-                  <li
-                    key={index}
-                    className="px-4 sm:px-6 py-3 sm:py-3.5 text-gray-700 flex items-start gap-2 sm:gap-3 text-sm sm:text-base"
-                  >
-                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0 fonts"></span>
-                    <span
-                      dangerouslySetInnerHTML={{ __html: prod.title || "" }}
-                      className="flex-1 ql-editor"
-                    ></span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )} */}
         </div>
 
-        <div className="w-1/4  space-y-3 border bg-gray-50 rounded-md border-[#ff0100]/10 my-20 inline-block p-5">
+        <div className="w-1/4 space-y-3 border bg-gray-50 rounded-md border-[#ff0100]/10 my-20 inline-block p-5">
           <h1 className="text-xl text-gray-900 font-semibold">
             Product Information
           </h1>
@@ -297,20 +286,21 @@ const ProductPage = ({ productData }: any) => {
                   target={!productData?.is_tds_locked ? "_blank" : undefined}
                   rel="noopener noreferrer"
                   className={`inline-flex items-center w-full gap-2 px-2 sm:px-2 py-2 sm:py-2.5 border rounded-lg font-medium transition-colors duration-200 text-xs
-                  ${
-                    productData?.is_tds_locked
+                  ${productData?.is_tds_locked
                       ? "bg-gray-100 text-gray-600 cursor-pointer hover:bg-gray-200 border-gray-200"
                       : "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200"
-                  }`}
+                    }`}
                 >
                   {productData?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
                   Technical Data Sheet (TDS)
-                  {hasPendingRequest(productData?.id, "tds") &&
-                    productData?.is_tds_locked && (
+                  {(() => {
+                    const pending = hasPendingRequest(productData?.id, "tds");
+                    return pending && productData?.is_tds_locked ? (
                       <span className="text-xs ml-2 text-amber-600">
-                        (Request Pending)
+                        Pending
                       </span>
-                    )}
+                    ) : null;
+                  })()}
                 </a>
               )}
 
@@ -320,25 +310,26 @@ const ProductPage = ({ productData }: any) => {
                     !productData?.is_msds_locked ? productData.msds_doc : "#"
                   }
                   onClick={(e) =>
-                    handleDocumentClick(e, "msds", productData.msds_doc)
+                    handleDocumentClick(e, "sds", productData.msds_doc)
                   }
                   target={!productData?.is_msds_locked ? "_blank" : undefined}
                   rel="noopener noreferrer"
                   className={`inline-flex items-center w-full gap-2 px-2 sm:px-2 py-2 sm:py-2.5 border rounded-lg transition-colors duration-200 text-xs fonts
-                  ${
-                    productData?.is_msds_locked
+                  ${productData?.is_msds_locked
                       ? "bg-gray-100 text-gray-600 cursor-pointer hover:bg-gray-200 border-gray-200"
                       : "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200"
-                  }`}
+                    }`}
                 >
                   {productData?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
                   Material Safety Data Sheet (MSDS)
-                  {hasPendingRequest(productData?.id, "msds") &&
-                    productData?.is_msds_locked && (
+                  {(() => {
+                    const pending = hasPendingRequest(productData?.id, "sds");
+                    return pending && productData?.is_msds_locked ? (
                       <span className="text-xs ml-2 text-amber-600">
-                        (Request Pending)
+                        Pending
                       </span>
-                    )}
+                    ) : null;
+                  })()}
                 </a>
               )}
             </div>
@@ -354,6 +345,7 @@ const ProductPage = ({ productData }: any) => {
       <DocumentRequestModal
         isModalOpen={isModalOpen}
         ref={captchaRef}
+        captchaValue={captchaValue}
         selectedDocument={selectedDocument}
         hasPendingRequest={hasPendingRequest}
         handleReRequest={handleReRequest}
@@ -361,9 +353,10 @@ const ProductPage = ({ productData }: any) => {
         handleFormChange={handleFormChange}
         handleSubmitRequest={handleSubmitRequest}
         isSubmitting={isSubmitting}
-        submitMessage={submitMessage}
         setCaptchaValue={setCaptchaValue}
         closeModal={closeModal}
+        formatRequestTime={formatRequestTime}
+        getTimeRemaining={getTimeRemaining}
       />
     </div>
   );
