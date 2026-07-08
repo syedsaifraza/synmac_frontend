@@ -153,13 +153,18 @@ export default async function RootLayout({ children }: any) {
             })(window,document,'script','dataLayer','GTM-MLS7S5VK');
           `}
         </Script>
+
+         <script async src="https://www.googletagmanager.com/gtag/js?id=G-HYD5J2SJ6N"></script>
+
+         
       </head>
 
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-HYD5J2SJ6N"></script>
+     
 
 
 
       <body>
+
 
      <noscript>
           <iframe
@@ -172,7 +177,6 @@ export default async function RootLayout({ children }: any) {
             }}
           />
         </noscript>
-
 
        
         <Providers>
