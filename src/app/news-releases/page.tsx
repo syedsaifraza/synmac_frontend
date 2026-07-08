@@ -598,8 +598,8 @@ const page = () => {
 
          
            <MainFeatureCard
-            slug={news[1]?.slug}
-            image={news[1]?.news_image_url}
+            slug={news[0]?.slug}
+            image={news[0]?.news_image_url}
             description={news[0]?.description}
             title={news[0]?.title}
             link={`/news-releases/${news[0]?.slug}`}
