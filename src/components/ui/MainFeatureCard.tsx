@@ -5,7 +5,7 @@ import broken from "../../assets/images.png"
 
 const MainFeatureCard = ({ title, slug, description, image, link }: any) => {
   return (
-    <div className="lg:w-3/5 bg-white rounded-lg  border-gray-200 overflow-hidden grid md:grid-cols-2 group">
+    <div className="lg:w-3/5 bg-white rounded-lg   border-gray-200 overflow-hidden grid md:grid-cols-2 group">
 
 
 
@@ -19,9 +19,9 @@ const MainFeatureCard = ({ title, slug, description, image, link }: any) => {
       </div>
 
 
-      <div className="px-7 flex flex-col justify-between">
+      <div className="p-5 flex flex-col">
 
-        <div>
+       
 
 
 
@@ -31,15 +31,15 @@ const MainFeatureCard = ({ title, slug, description, image, link }: any) => {
             </h2>
           </Link>
 
-          <p className="text-gray-600 mt-5 text-sm leading-7 line-clamp-5">
+          <p className="text-gray-600 text-sm leading-7 line-clamp-5">
             {description}
           </p>
 
-        </div>
+       
 
         <Link
           href={link}
-          className="mt-8 w-fit text-sm font-semibold border-b-2 border-[#b62126] hover:pr-2 duration-300  group-hover:translate-x-2"
+          className="mt-4 w-fit text-sm font-semibold border-b-2 border-[#b62126] hover:pr-2 duration-300  group-hover:translate-x-2"
         >
           Read Full Story →
         </Link>
