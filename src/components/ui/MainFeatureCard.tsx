@@ -5,7 +5,7 @@ import broken from "../../assets/images.png"
 
 const MainFeatureCard = ({ title, slug, description, image, link }: any) => {
   return (
-    <div className="lg:w-3/5 bg-white rounded-lg  border-gray-200 overflow-hidden grid md:grid-cols-2 group">
+    <div className="lg:w-3/5 bg-white rounded-lg border border-gray-200 overflow-hidden grid md:grid-cols-2 group">
 
 
 
