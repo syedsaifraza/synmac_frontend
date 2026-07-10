@@ -190,7 +190,7 @@
 
 //   return (
 //     <div>
-    
+
 //       <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] bg-fixed bg-cover bg-no-repeat bg-center flex items-center bg-[#ff0100]"
 //         style={{ backgroundImage: `url(${"https://www.azumuta.com/wp-content/uploads/2024/05/petrochemical-industry-with-twilight-sky-2-1536x1024-1.jpeg"})` }} >
 //         <div className="absolute inset-0 bg-[#750909e8]"></div>
@@ -217,18 +217,18 @@
 //           <LiaAngleRightSolid size={12} />
 //           <h1 className="text-gray-600">Success Stories</h1>
 //         </div>
-        
+
 //       </div>
 
-      
+
 
 
 //       <div className='my-5 max-w-6xl mx-auto'>
 
 
-     
 
-     
+
+
 //         {/* <div className="border-b border-gray-200 mb-4">
 //           <div className="text-3xl font-medium py-2">
 //             Results ({filteredResources.length}) <span className='text-lg font-semibold text-gray-500'>total</span>
@@ -249,7 +249,7 @@
 //             </button>
 //           </div>
 
-        
+
 //           <div className='flex flex-wrap gap-2 mb-2'>
 //             {selectedIndustries.map(id => {
 //               const industry = industories?.find((ind: any) => ind.id === id);
@@ -282,13 +282,13 @@
 //             )}
 //           </div>
 //         </div> */}
-         
 
-    
+
+
 //       <div className=" grid grid-cols-5 gap-4 my-4 px-4 sm:px-6 lg:px-0">
 
-        
-       
+
+
 //         <div className="col-span-5 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 bg-white rounded-md overflow-hidden shadow border border-gray-200">
 //           <div className="relative">
 //             <img
@@ -320,7 +320,7 @@
 //           </div>
 //         </div>
 
-      
+
 //         <div className="col-span-5 lg:col-span-2 flex flex-col gap-2">
 //           {sidebarStories.map((item:any, index:any) => (
 //             <Link
@@ -335,7 +335,7 @@
 //               />
 //               <div className="col-span-2 p-3 flex flex-col justify-between">
 //                 <div>
-                  
+
 //                   <Link href={`/success-stories/${item?.slug}`}>
 //                     <h3 className="font-semibold text-xs hover:text-[#cd2626] transition">
 //                       {item?.title}
@@ -357,9 +357,9 @@
 //         </div>
 //       </div>
 
-      
 
-   
+
+
 //       <div className="max-w-6xl mx-auto  px-4 sm:px-6 lg:px-0">
 //          <div className="grid grid-cols-2 lg:grid-cols-3   gap-2">
 //           {currentProducts.map((item:any, index:any) => (
@@ -375,7 +375,7 @@
 //               />
 //               <div className="col-span-2 p-3 flex flex-col justify-between">
 //                 <div>
-                  
+
 //                   <Link href={`/success-stories/${item?.slug}`}>
 //                     <h3 className="font-semibold line-clamp-2 lg:line-clamp-3 text-xs hover:text-[#cd2626] transition">
 //                       {item?.title}
@@ -395,10 +395,10 @@
 //             </Link>
 //           ))}
 //         </div>
-    
-  
 
-    
+
+
+
 
 //         {filteredResources.length === 0 && (
 //           <div className="text-center py-12">
@@ -412,7 +412,7 @@
 //           </div>
 //         )}
 
-     
+
 //         {totalPages > 1 && (
 //           <div className="flex gap-2 justify-center items-center text-xs mt-8 p-3">
 //             <button
@@ -453,10 +453,10 @@
 //         )}
 //       </div>
 
-         
+
 //       </div>
 
-    
+
 //       {isFilterOpen && (
 //         <>
 //           <div
@@ -497,7 +497,7 @@
 //                 >
 //                   <div className="flex items-center gap-2">
 //                     <h3 className="font-semibold text-gray-700">Industries</h3>
-                    
+
 //                   </div>
 //                   <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
 //                     {isIndustriesExpanded ? '−' : '+'}
@@ -529,7 +529,7 @@
 //                   >
 //                     <div className="flex items-center gap-2">
 //                       <h3 className="font-semibold text-gray-700">Topics</h3>
-                     
+
 //                     </div>
 //                     <span className="text-gray-500 text-xl font-bold transition-transform duration-200">
 //                       {isTopicsExpanded ? '−' : '+'}
@@ -604,156 +604,132 @@
 
 "use client";
 import Header from "@/components/component/Header";
-import broken from "../assets/images.png"
-import { useSelector } from "react-redux";
-import CardFeature from "./ui/CardFeature";
-import Loader from "./ui/Loader";
-import OnlyHomePath from "./ui/OnlyHomePath";
-import MainFeatureCard from "./ui/MainFeatureCard";
-import Image from "next/image";
+import CardFeature from "@/components/ui/CardFeature";
+import Loader from "@/components/ui/Loader";
+import MainFeatureCard from "@/components/ui/MainFeatureCard";
+import OnlyHomePath from "@/components/ui/OnlyHomePath";
+import { useDispatch, useSelector } from "react-redux";
 
-const Blogs = () => {
-  const {  success } = useSelector(
+import Bg from "../../assets/NewsBg.jpeg"
+import { setSuccessFromApi } from "@/features/synmacdata.slice";
+import { useEffect } from "react";
+const SuccessStories = ({storyData}:any) => {
+
+const dispatch = useDispatch()
+
+   useEffect(() => {
+       dispatch(setSuccessFromApi(storyData))
+    }, [storyData]);
+  
+   
+  const { success } = useSelector(
     (state: any) => state?.resources,
   );
- 
 
 
-  // if (!success?.length) {
-  //   return (
-  //     <div>
-  //       <Header
-  //       className={"bg-[#750909e8]"}
-  //         title={"Blogs"}
-  //         description={
-  //           "Access detailed guides, product information, and industry knowledge to help you understand, use, and choose the right chemical solutions for your business."
-  //         }
-  //         background_image={""}
-  //       />
-  //       <div className="max-w-6xl mx-auto py-16 text-center">
-  //         <p>Loading resources...</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
 
-  
+
+
   if (!success) {
     return (
       <div>
         <Header
           className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
           title={"Success Stories"}
-         description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
-          background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
+          description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
+          background_image={Bg}
         />
-
         <Loader text={"Success Stories"} />
       </div>
     );
   }
 
 
-   if (success.length === 0) {
-      return (
-        <div>
-          <Header
+  if (success.length === 0) {
+    return (
+      <div>
+        <Header
           className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
           title={"Success Stories"}
-         description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
-          background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
+          description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
+          background_image={Bg}
         />
-
-          <div className="p-10 text-center font- text-xl">
-  <h1 className="text-2xl md:text-2xl tracking-tight bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-              No Success Story  Found
-            </h1>
-          </div>
-         
+        <div className="p-10 text-center font- text-xl">
+          <h1 className="text-2xl md:text-2xl tracking-tight bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+            No Success Story  Found
+          </h1>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
 
   return (
     <div>
-
       <Header
-       className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
+        className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
         title={"Success Stories"}
-description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
-        background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
+        description="Explore inspiring customer success stories and real-world case studies that highlight the impact of our innovative chemical solutions in diverse industries."
+        background_image={Bg}
       />
-
-       <OnlyHomePath text={"Success Stories"}/>
-
-
-
-      
-
+      <OnlyHomePath text={"Success Stories"} />
       <div className="flex max-w-6xl flex-col mx-auto py-4 space-y-3">
-       
-      
-
-        <div className="flex flex-col lg:flex-row gap-4  rounded-lg overflow-hidden">
-
-         
-
+      <div className="flex flex-col lg:flex-row gap-4  rounded-lg overflow-hidden">
           <MainFeatureCard
-          slug={ success[0]?.slug} 
-          image={ success[0]?.success_story_image_url}
-          description= {success[0]?.description} 
-          title= {success[0]?.title} 
-          link={`/success-stories/${success[0]?.slug}`}
+            slug={success[0]?.slug}
+            image={success[0]?.success_story_image_url}
+            description={success[0]?.description}
+            title={success[0]?.title}
+            link={`/success-stories/${success[0]?.slug}`}
           />
 
 
           <div className="lg:w-2/5 space-y-3 grid grid-cols-1 justify-between">
 
-            {success.slice(1, 4).map((item:any, index:number) => (
+            {success.slice(1, 4).map((item: any, index: number) => (
 
               <CardFeature
-              key={index}
-              index={index}
-              title={item.title}
-              image={item.success_story_image_url}
-              description={item.description}
-              url={`/success-stories/${item.slug}`}
+                key={index}
+                index={index}
+                title={item.title}
+                image={item.success_story_image_url}
+                description={item.description}
+                url={`/success-stories/${item.slug}`}
               />
 
             ))}
 
           </div>
 
-        </div>
+      </div>
 
 
-<div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-  {success?.slice(4,)?.map((res: any, indx: any) => (
-      <div  key={indx}>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          {success?.slice(4,)?.map((res: any, indx: any) => (
+            <div key={indx}>
               <CardFeature
-       
-     
-        index={indx}
-        title={res.title}
-        image={res.success_story_image_url}
-        description={res.description}
-        url={`/success-stories/${res.slug}`}
-        />
-      </div>
- 
-    ))}
-</div>
-       
+
+
+                index={indx}
+                title={res.title}
+                image={res.success_story_image_url}
+                description={res.description}
+                url={`/success-stories/${res.slug}`}
+              />
+            </div>
+
+          ))}
       </div>
 
-  
+      </div>
+
+
     </div>
   );
 };
 
-export default Blogs;
+export default SuccessStories;
 
 
 

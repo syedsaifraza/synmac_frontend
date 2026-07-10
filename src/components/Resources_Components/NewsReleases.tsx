@@ -1,3 +1,162 @@
+
+"use client";
+import Header from "@/components/component/Header";
+import CardFeature from "@/components/ui/CardFeature";
+import Loader from "@/components/ui/Loader";
+import MainFeatureCard from "@/components/ui/MainFeatureCard";
+import OnlyHomePath from "@/components/ui/OnlyHomePath";
+import newBg from "../../assets/NewsBg.jpeg"
+import { useDispatch, useSelector } from "react-redux";
+import { setNewFromApi } from "@/features/synmacdata.slice";
+import { useEffect } from "react";
+
+
+
+const NewsRelease = ({newsData}:any) => {
+
+  const dispatch = useDispatch()
+
+    useEffect(() => {
+      dispatch(setNewFromApi(newsData))
+    }, [newsData]);
+
+  console.log("newsData",newsData)
+  const { news } = useSelector(
+    (state: any) => state?.resources,
+  );
+
+
+
+  if (!news) {
+    return (
+      <div>
+        <Header
+          className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
+          title={"News Release"}
+          description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
+          background_image={newBg}
+        />
+
+        <Loader text={"News Release"} />
+      </div>
+    );
+  }
+
+
+  if (news.length === 0) {
+    return (
+      <div>
+        <Header
+          className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
+          title={"News Release"}
+          description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
+          background_image={newBg}
+        />
+        <div className="p-10 text-center font- text-xl">
+          <h1 className="text-2xl md:text-2xl tracking-tight bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+            No News Found
+          </h1>
+        </div>
+
+      </div>
+    );
+  }
+
+
+
+
+  return (
+    <div>
+      <Header
+        className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
+        title={"News Release"}
+        description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
+        background_image={newBg}
+      />
+
+      <OnlyHomePath text={"News Release"} />
+
+
+
+
+
+      <div className="flex max-w-6xl flex-col mx-auto py-4 space-y-3">
+
+
+
+        <div className="flex flex-col lg:flex-row gap-3">
+
+
+          <MainFeatureCard
+            slug={news[0]?.slug}
+            image={news[0]?.news_image_url}
+            description={news[0]?.description}
+            title={news[0]?.title}
+            link={`/news-releases/${news[0]?.slug}`}
+          />
+
+
+
+
+
+
+          <div className="lg:w-2/5 grid grid-cols-1 justify-between gap-3">
+
+            {news?.slice(1, 4)?.map((item: any, index: number) => (
+
+              <CardFeature key={index}
+                index={index}
+                title={item.title}
+                image={item?.news_image_url}
+                description={item.description}
+                url={`/news-releases/${item.slug}`}
+
+              />
+
+            ))}
+
+          </div>
+
+        </div>
+
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          {news?.slice(4,)?.map((res: any, indx: any) => (
+            <div>
+              <CardFeature
+                key={indx}
+                index={indx}
+                title={res.title}
+                image={res?.news_image_url}
+                description={res.description}
+                url={`/news-releases/${res.slug}`}
+              />
+            </div>
+
+          ))}
+        </div>
+
+      </div>
+
+
+    </div>
+  );
+};
+
+export default NewsRelease;
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 'use client'
 // import Header from '@/components/component/Header'
 // import Link from 'next/link'
@@ -517,157 +676,4 @@
 
 
 
-
-
-"use client";
-import Header from "@/components/component/Header";
-import Link from "next/link";
-import { useSelector } from "react-redux";
-import CardFeature from "../ui/CardFeature";
-import Loader from "../ui/Loader";
-import OnlyHomePath from "../ui/OnlyHomePath";
-
-
-const News = () => {
-  const { news } = useSelector(
-    (state: any) => state?.resources,
-  );
-
-
-
-  if (!news) {
-    return (
-      <div>
-        <Header
-          className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
-          title={"News Release"}
-        description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
-          background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
-        />
-
-        <Loader text={"News Release"} />
-      </div>
-    );
-  }
-
-
-    if (news.length === 0) {
-    return (
-      <div>
-        <Header
-          className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
-          title={"News Release"}
-        description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
-          background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
-        />
-        <div className="p-10 text-center font- text-xl">
-<h1 className="text-2xl md:text-2xl tracking-tight bg-linear-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-            No News Found
-          </h1>
-        </div>
-       
-      </div>
-    );
-  }
-
-
-
-
-  return (
-    <div>
-      <Header
-        className="bg-linear-to-r from-[#5c0606]  via-[#5c0606]70 via-80% to-[#5c0606]/70 to-100%"
-      title={"News Release"}
-       description="Stay informed with our latest news, press releases, company announcements, product launches, industry updates, and key developments shaping the future of chemical solutions."
-        background_image={"https://cdn.prod.website-files.com/68e00ded1f2318dde69565bd/6904fe6ebbd3f3a82c055e46_blog_header_6.27.24.jpeg"}
-      />
-
-      <OnlyHomePath text={"News Release"}/>
-
-
-
-
-
-      <div className="flex max-w-6xl flex-col mx-auto py-4 space-y-3">
-
-
-
-        <div className="flex flex-col lg:flex-row gap-3">
-
-          <div className="lg:w-3/5 bg-white rounded-lg  border-gray-200 overflow-hidden group border p-3 relative">
-
-            <div className=" flex flex-col justify-between min-h-70">
-
-              
-                <Link href={`/news-releases/${news[0]?.slug}`}>
-                  <h2 className="text-2xl font-bold mt-3 leading-snug hover:text-[#b62126] transition">
-                    {news[0]?.title}
-                  </h2>
-                </Link>
-
-                <p className="text-gray-600 mt-5 text-sm leading-7 line-clamp-8">
-                  {news[0]?.description}  
-                </p>
-
-             
-
-              <Link
-                href={`/news-releases/${news[0]?.slug}`}
-                className="mt-8 w-fit text-sm font-semibold border-b-2 border-[#b62126] hover:pr-2 duration-300  group-hover:translate-x-2 "
-              >
-                Read Full News →
-              </Link>
-
-            </div>
-
-
-          </div>
-
-
-          <div className="lg:w-2/5 grid grid-cols-1 justify-between gap-3">
-
-            {news?.slice(1,4)?.map((item: any, index: number) => (
-
-              <CardFeature
-                key={index}
-                index={index}
-                title={item.title}
-                image={item?.blog_image_url}
-                description={item.description}
-                url={`/news-releases/${item.slug}`}
-
-              />
-
-            ))}
-
-          </div>
-
-        </div>
-
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          {news?.slice(4,)?.map((res: any, indx: any) => (
-            <div>
-              <CardFeature
-                key={indx}
-                index={indx}
-                title={res.title}
-                
-                image={res?.blog_image_url}
-                description={res.description}
-                url={`/news-releases/${res.slug}`}
-              />
-            </div>
-
-          ))}
-        </div>
-
-      </div>
-
-
-    </div>
-  );
-};
-
-export default News;
 

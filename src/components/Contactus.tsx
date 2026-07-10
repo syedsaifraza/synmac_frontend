@@ -7,6 +7,7 @@ import { LiaAngleRightSolid } from "react-icons/lia";
 import Header from "./component/Header";
 // @ts-ignore: react-google-recaptcha has no declaration file
 import ReCAPTCHA from "react-google-recaptcha";
+import contactBG from "../assets/contactBG.jpg"
 import {
   HiOutlineClock,
   HiOutlineLocationMarker,
@@ -128,7 +129,7 @@ export default function Contactus() {
       <div>
         <Header
           title={"Contact Us"}
-          background_image="https://t3.ftcdn.net/jpg/03/38/11/34/360_F_338113434_1OTf8iR1bYPskGDwvGP1pnBPPQ6bJdhB.jpg"
+          background_image={contactBG}
           description="We'd love to hear from you. Whether you have a question, feedback, or just want to say hello — feel free to reach out."
         />
 

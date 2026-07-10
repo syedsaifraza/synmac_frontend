@@ -1,6 +1,8 @@
+'use client'
 import Image from "next/image";
 import { BiChevronRight } from "react-icons/bi";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 interface SubIndustry {
   id: number;
@@ -39,8 +41,13 @@ interface Industry {
   faqs: any[];
 }
 
-const IndustriesSection = async ({ industries }: any) => {
-  if (industries.length === 0) {
+const IndustriesSection =  () => {
+
+
+    const {  industories } = useSelector((state: any) => state?.resources)
+
+
+  if (industories?.length === 0) {
     return (
       <section id="industry-block" className="bg-white py-24 px-6 text-black">
         <div className="container mx-auto text-center">
@@ -78,7 +85,7 @@ const IndustriesSection = async ({ industries }: any) => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
-          {industries?.slice(0, 10).map((industry: Industry, index: any) => {
+          {industories?.slice(0, 10).map((industry: Industry, index: any) => {
             const imageUrl =
               industry.feature_file_link || industry.hero_background_file_url;
 
@@ -116,7 +123,7 @@ const IndustriesSection = async ({ industries }: any) => {
             );
           })}
         </div>
-        {industries.length > 10 && (
+        
           <div className="flex flex-row justify-center items-center  py-10 ">
            
               <Link href={"/industries"} className="bg-[#cd2626] group text-white cursor-pointer  font-semibold text-sm flex items-center gap-1 border-2 border-white px-6 py-2.5 rounded-full backdrop-blur-sm">
@@ -125,7 +132,7 @@ const IndustriesSection = async ({ industries }: any) => {
               </Link>
            
           </div>
-        )}
+      
       </div>
     </section>
   );

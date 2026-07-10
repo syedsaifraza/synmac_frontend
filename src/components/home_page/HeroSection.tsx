@@ -1,10 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react";
-
-
-
-import Image from "next/image";
 import { BiChevronDown, } from "react-icons/bi";
 import Link from "next/link";
 
@@ -39,6 +35,7 @@ const HeroSection = ({ data }: { data: any }) => {
             className="w-full h-full object-cover hero-zoom"
             width={1920}
             height={1080}
+             loading="eager"
           
           />
         </div>

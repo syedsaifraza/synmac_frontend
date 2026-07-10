@@ -23,12 +23,15 @@ const page = async ({ params }: any) => {
     <div>
       <Header
         title={getSuccessData.SuccDaat.title}
-        description={getSuccessData.SuccDaat.description}
-        background_image={getSuccessData.SuccDaat.success_story_image_url}
+        description={" "}
+        background_image={" "}
       />
 
       <div className="text-black py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
+            <div className="mb-3">
+     <h1 className="text-xl text-gray-800">{ getSuccessData?.blogData?.description}</h1>
+          </div>
           <div
             dangerouslySetInnerHTML={{
               __html: getSuccessData.SuccDaat.success_story_content || "",

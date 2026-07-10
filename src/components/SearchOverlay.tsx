@@ -70,7 +70,7 @@ const SearchOverlay = ({ open, onClose }: any) => {
     };
   }, [open]);
 
-  // Watch for URL changes
+  
   useEffect(() => {
     if (!isNavigating) return;
 

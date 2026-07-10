@@ -4,7 +4,7 @@ import Header from '@/components/component/Header'
 import Link from 'next/link';
 import { BiChevronRight } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
-
+import BG from "../../assets/BG1.webp"
 interface SubIndustry {
     id: number;
     subMarketName: string;
@@ -66,7 +66,7 @@ const Page  =  () => {
 
     return (
         <div>
-            <Header title={"Industries"} description={"We provide high-quality solutions across diverse industries, focusing on innovation, reliability, and performance. Our expertise ensures efficient processes, modern technology integration, and customer-centric services tailored to meet evolving business needs."} background_image={"https://www.hindalco.com/Upload/Images/masthead/solutions-industries-bg-2.webp"} />
+            <Header title={"Industries"} description={"We provide high-quality solutions across diverse industries, focusing on innovation, reliability, and performance. Our expertise ensures efficient processes, modern technology integration, and customer-centric services tailored to meet evolving business needs."} background_image={BG} />
 
             <section id="industry-block" className="bg-white py-24 max-w-6xl mx-auto text-black">
                 <div className="container mx-auto">

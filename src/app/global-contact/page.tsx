@@ -1,4 +1,5 @@
 import React from 'react'
+import globalBG from "../../assets/GlobalCont.jpg"
 async function getUser() {
   const res = await fetch(`http://synmac.acetians.in/api/company-info/`, {
     // next: { revalidate: 300 }
@@ -53,8 +54,7 @@ const page = async () => {
       <div
         className="relative h-100 bg-fixed bg-center bg-cover flex items-center justify-center "
         style={{
-          backgroundImage:
-            'url("https://zsd-cdn.prod.dx.zndbx.cloud/Kontakt_standorte_5834bf06a3.jpg")',
+          backgroundImage:`url(${globalBG})`,
         }}
       >
 

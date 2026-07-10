@@ -1,15 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-
   images: {
-     remotePatterns: [
-    {
-      protocol: 'https',
-      hostname: 'synmac-backend.serverscripts.in',
-    },
-  ],
-    domains: ['synmac-backend.serverscripts.in'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "synmac.acetians.in",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "synmac-backend.serverscripts.in",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

@@ -6,25 +6,31 @@ import { useSearchParams, usePathname } from 'next/navigation'
 import React, { useState, useEffect, useRef } from 'react'
 import { BiSearch } from 'react-icons/bi'
 import { FaX } from 'react-icons/fa6'
-import { DocumentRequestModal } from "./DocumentRequestModal";
-import { FilterSidebar } from "./FilterSidebar";
-import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
 
-const ProductListSection = () => {
-const captchaRef = useRef<any>(null);
-    const {product ,industories,sub_industries,product_category} = useSelector((state:any)=>state.resources)
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { FilterSidebar } from "@/components/product_page/FilterSidebar";
+import { DocumentRequestModal } from "@/components/product_page/DocumentRequestModal";
+import { setProductsFromApi } from "@/features/synmacdata.slice";
+
+const page = ({productData,sidebar}:any) => {
+
+    const dispatch = useDispatch()
+      useEffect(() => {
+      dispatch(setProductsFromApi(productData))
+    }, [productData]);
+    const captchaRef = useRef<any>(null);
+    const { product, industories, sub_industries, product_category } = useSelector((state: any) => state.resources)
     const [captchaValue, setCaptchaValue] = useState("");
     const searchParams = useSearchParams();
     const [search, setSearch] = useState<string>("");
     const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    
-  
+
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    
+
     const [filters, setFilters] = useState({
         industry: "",
         subIndustry: "",
@@ -35,8 +41,9 @@ const captchaRef = useRef<any>(null);
     const [selectedDocument, setSelectedDocument] = useState<{
         productId: number;
         productName: string;
-        documentType: 'tds' | 'msds';
+        documentType: 'tds' | 'sds';
         documentUrl: string;
+        pendingRequest?: any; // Add pending request data
     } | null>(null);
     const [formData, setFormData] = useState({
         client_name: "",
@@ -48,7 +55,6 @@ const captchaRef = useRef<any>(null);
         purposes: [],
         purpose_other_text: "",
         message: "",
-        
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -57,14 +63,41 @@ const captchaRef = useRef<any>(null);
     const prevSearchRef = useRef<string>("");
     const prevFiltersRef = useRef(filters);
 
+    // Helper function to format time
+    const formatRequestTime = (timestamp: number) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
+    // Helper function to get time remaining
+    const getTimeRemaining = (timestamp: number) => {
+        const elapsed = Date.now() - timestamp;
+        const hoursRemaining = Math.max(0, 24 - (elapsed / (1000 * 60 * 60)));
+        if (hoursRemaining < 1) {
+            const minutesRemaining = Math.ceil(hoursRemaining * 60);
+            return `${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''}`;
+        }
+        return `${Math.ceil(hoursRemaining)} hour${Math.ceil(hoursRemaining) > 1 ? 's' : ''}`;
+    };
+
+    // Updated hasPendingRequest - returns request data or null
     const hasPendingRequest = React.useCallback((productId: any, documentType: any) => {
         const pendingRequests = localStorage.getItem(`doc_request_${productId}_${documentType}`);
         if (pendingRequests) {
             const requestData = JSON.parse(pendingRequests);
             const hoursSinceRequest = (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
-            return hoursSinceRequest < 24;
+            if (hoursSinceRequest < 24) {
+                return requestData; // Return the full request data
+            }
         }
-        return false;
+        return null;
     }, []);
 
     const saveRequestToLocalStorage = (productId: number, documentType: string) => {
@@ -79,7 +112,7 @@ const captchaRef = useRef<any>(null);
         localStorage.removeItem(`doc_request_${productId}_${documentType}`);
     };
 
-    const handleDocumentClick = (e: React.MouseEvent, pro: any, docType: 'tds' | 'msds', docUrl: string) => {
+    const handleDocumentClick = (e: React.MouseEvent, pro: any, docType: 'tds' | 'sds', docUrl: string) => {
         const isLocked = docType === 'tds' ? pro?.is_tds_locked : pro?.is_msds_locked;
         const hasDoc = docType === 'tds' ? pro?.tds_doc : pro?.msds_doc;
 
@@ -89,16 +122,22 @@ const captchaRef = useRef<any>(null);
         }
 
         if (hasDoc && !isLocked) {
+            window.open(docUrl, "_blank");
             return;
         }
 
         if (hasDoc && isLocked) {
             e.preventDefault();
+            
+            // Check if there's already a pending request
+            const pendingRequest = hasPendingRequest(pro?.id, docType);
+            
             setSelectedDocument({
                 productId: pro?.id,
                 productName: pro?.name,
                 documentType: docType,
-                documentUrl: docUrl
+                documentUrl: docUrl,
+                pendingRequest: pendingRequest // Pass the pending request data
             });
             setIsModalOpen(true);
             setSubmitMessage(null);
@@ -144,42 +183,43 @@ const captchaRef = useRef<any>(null);
             message: formData.message,
             document_type: selectedDocument.documentType,
             request_status: "pending",
-            captchaToken:captchaValue
+            captchaToken: captchaValue
         };
 
         try {
             const response = await fetch('/api/request', {
                 method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(requestData),
             });
 
             if (response.ok) {
                 const result = await response.json();
-                saveRequestToLocalStorage(selectedDocument.productId, selectedDocument.documentType);
-                setSubmitMessage({ type: 'success', text: 'Request submitted successfully! You will receive access via email shortly.' });
 
-
-                if(result.success){
-                    toast.success("Request submited")
-                    captchaRef.current.reset();
+                if (result.success) {
+                    toast.success("Request submitted successfully");
                     setIsModalOpen(false);
+                    captchaRef.current.reset();
+                    saveRequestToLocalStorage(selectedDocument.productId, selectedDocument.documentType);
                     setSelectedDocument(null);
                     setSubmitMessage(null);
-                    setCaptchaValue("")
+                    setCaptchaValue("");
+                } else {
+                    setCaptchaValue("");
+                    captchaRef.current.reset();
                 }
-
-
-                console.log(result)
-
-                
-
-              
             } else {
+                setCaptchaValue("");
+                captchaRef.current.reset();
                 throw new Error('Failed to submit request');
             }
         } catch (error) {
             console.error('Error submitting request:', error);
-            setSubmitMessage({ type: 'error', text: 'Failed to submit request. Please try again.' });
+            toast.error("Something went wrong");
+            setCaptchaValue("");
+            captchaRef.current.reset();
         } finally {
             setIsSubmitting(false);
         }
@@ -188,7 +228,10 @@ const captchaRef = useRef<any>(null);
     const handleReRequest = (productId: number, documentType: string) => {
         removeRequestFromLocalStorage(productId, documentType);
         if (selectedDocument) {
-            setSelectedDocument({ ...selectedDocument });
+            setSelectedDocument({
+                ...selectedDocument,
+                pendingRequest: null // Clear the pending request
+            });
         }
     };
 
@@ -218,7 +261,7 @@ const captchaRef = useRef<any>(null);
         if (searchChanged || filtersChanged) {
             setSearch(newSearch);
             setFilters(newFilters);
-            setCurrentPage(1); // Reset to first page when filters change
+            setCurrentPage(1);
 
             prevSearchRef.current = newSearch;
             prevFiltersRef.current = newFilters;
@@ -267,7 +310,6 @@ const captchaRef = useRef<any>(null);
         }) || [];
     }, [product, filters, search]);
 
-    
     const totalProducts = filterProduct.length;
     const totalPages = Math.ceil(totalProducts / pageSize);
     const startIndex = (currentPage - 1) * pageSize;
@@ -282,7 +324,7 @@ const captchaRef = useRef<any>(null);
     const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newSize = parseInt(e.target.value);
         setPageSize(newSize);
-        setCurrentPage(1); // Reset to first page when changing page size
+        setCurrentPage(1);
     };
 
     const handleFilterChange = (type: string, value: string) => {
@@ -290,38 +332,37 @@ const captchaRef = useRef<any>(null);
             ...prev,
             [type]: prev[type as keyof typeof filters] === value ? "" : value
         }));
-        setCurrentPage(1); // Reset to first page when filter changes
+        setCurrentPage(1);
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearch(value);
-        setCurrentPage(1); // Reset to first page when search changes
+        setCurrentPage(1);
     };
 
     const clearAllFilters = () => {
         setSearch("");
         setFilters({ industry: "", subIndustry: "", category: "" });
-        setCurrentPage(1); // Reset to first page when clearing filters
+        setCurrentPage(1);
     };
 
-    const filteredIndustries = industories.filter((item: any) =>
+    const filteredIndustries = sidebar?.industry?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    const filteredSubIndustries = sub_industries?.filter((item: any) =>
+    const filteredSubIndustries = sidebar?.subIndustry?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    const filteredCategories = product_category?.filter((item: any) =>
+    const filteredCategories = sidebar?.productCategory?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    // Generate page numbers to display
     const getPageNumbers = () => {
         const pageNumbers = [];
         const maxPagesToShow = 5;
-        
+
         if (totalPages <= maxPagesToShow) {
             for (let i = 1; i <= totalPages; i++) {
                 pageNumbers.push(i);
@@ -349,7 +390,7 @@ const captchaRef = useRef<any>(null);
                 pageNumbers.push(totalPages);
             }
         }
-        
+
         return pageNumbers;
     };
 
@@ -487,8 +528,7 @@ const captchaRef = useRef<any>(null);
                                 <h1 className='text-sm sm:text-base text-gray-500 font-semibold'>
                                     Showing {startIndex + 1}-{Math.min(endIndex, totalProducts)} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
                                 </h1>
-                                
-                                {/* Page Size Selector */}
+
                                 <div className="flex items-center gap-2">
                                     <label className="text-sm text-gray-600">Show:</label>
                                     <select
@@ -500,7 +540,6 @@ const captchaRef = useRef<any>(null);
                                         <option value={10}>10</option>
                                         <option value={15}>15</option>
                                         <option value={20}>20</option>
-                                     
                                     </select>
                                     <span className="text-sm text-gray-600">per page</span>
                                 </div>
@@ -509,86 +548,94 @@ const captchaRef = useRef<any>(null);
                             <div className='space-y-3 sm:space-y-4'>
                                 {paginatedProducts.length > 0 ? (
                                     paginatedProducts.map((pro: any) => {
+                                        const pendingTDS = hasPendingRequest(pro?.id, 'tds');
+                                        const pendingSDS = hasPendingRequest(pro?.id, 'sds');
 
-                                            const isTDSPending = localStorage.getItem(`dc_request_${pro?.id}_tds`)
-                                        const isMSDSPending = localStorage.getItem(`doc_request_${pro?.id}_msds`)
-                                        
                                         return (
-                                        <div
-                                            key={pro?.id}
-                                            className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-lg transition-all duration-300"
-                                        >
-                                            <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                                                <div className="flex-1 min-w-0">
-                                                    <Link href={`/product/${pro?.slug}`}
-                                                        className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">
-                                                        {pro?.name}
-                                                    </Link>
-                                                    <div dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
-                                                        className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3  fonts  line-clamp-5" />
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        <div className='flex flex-row w-full justify-between'>
-                                                            <div className="space-x-2">
-                                                                {pro?.industry_name && (
-                                                                    <span onClick={()=>console.log(isTDSPending,isMSDSPending)} className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
-                                                                        {pro?.industry_name}
-                                                                    </span>
-                                                                )}
-                                                                {pro?.sub_industry_name && (
-                                                                    <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
-                                                                        {pro?.sub_industry_name}
-                                                                    </span>
-                                                                )}
-                                                                {pro?.product_category_name && (
-                                                                    <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
-                                                                        {pro?.product_category_name}
-                                                                    </span>
-                                                                )}
-                                                            </div>
+                                            <div
+                                                key={pro?.id}
+                                                className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5 hover:shadow-lg transition-all duration-300"
+                                            >
+                                                <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                                                    <div className="flex-1 min-w-0">
+                                                        <Link href={`/product/${pro?.slug}`}
+                                                            className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">
+                                                            {pro?.name}
+                                                        </Link>
+                                                        <div dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
+                                                            className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 fonts line-clamp-5" />
+                                                        <div className="flex flex-wrap gap-1.5">
+                                                            <div className='flex flex-row w-full justify-between'>
+                                                                <div className="space-x-2">
+                                                                    {pro?.industry_name && (
+                                                                        <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                            {pro?.industry_name}
+                                                                        </span>
+                                                                    )}
+                                                                    {pro?.sub_industry_name && (
+                                                                        <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                            {pro?.sub_industry_name}
+                                                                        </span>
+                                                                    )}
+                                                                    {pro?.product_category_name && (
+                                                                        <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
+                                                                            {pro?.product_category_name}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
 
-                                                            <div className="flex flex-row items-center gap-2 shrink-0">
-                                                                {pro?.tds_doc && (
-                                                                    <a
-                                                                        href={!pro?.is_tds_locked ? pro?.tds_doc : "#"}
-                                                                        onClick={(e) => handleDocumentClick(e, pro, 'tds', pro?.tds_doc)}
-                                                                        target={!pro?.is_tds_locked ? "_blank" : undefined}
-                                                                        rel="noopener noreferrer"
-                                                                        className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
+                                                                <div className="flex flex-row items-center gap-2 shrink-0">
+                                                                    {pro?.tds_doc && (
+                                                                        <a
+                                                                            href={!pro?.is_tds_locked ? pro?.tds_doc : "#"}
+                                                                            onClick={(e) => handleDocumentClick(e, pro, 'tds', pro?.tds_doc)}
+                                                                            target={!pro?.is_tds_locked ? "_blank" : undefined}
+                                                                            rel="noopener noreferrer"
+                                                                            className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_tds_locked
-                                                                                ? "bg-[#cd2626] text-white cursor-pointer "
-                                                                                : "bg-green-800  text-white"
-                                                                            }`}
-                                                                    >
-                                                                        {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
-                                                                        TDS {isTDSPending && "Pending"}
-                                                                    </a>
-                                                                )}
+                                                                                    ? "bg-[#cd2626] text-white cursor-pointer"
+                                                                                    : "bg-green-800 text-white"
+                                                                                }`}
+                                                                        >
+                                                                            {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
+                                                                            TDS
+                                                                            {/* {pendingTDS && pro?.is_tds_locked && (
+                                                                                <span className="text-[10px] ml-1 text-yellow-200">
+                                                                                   Pending
+                                                                                </span>
+                                                                            )} */}
+                                                                        </a>
+                                                                    )}
 
-                                                                {pro?.msds_doc && (
-                                                                    <a
-                                                                        href={!pro?.is_msds_locked ? pro?.msds_doc : "#"}
-                                                                        onClick={(e) => handleDocumentClick(e, pro, 'msds', pro?.msds_doc)}
-                                                                        target={!pro?.is_msds_locked ? "_blank" : undefined}
-                                                                        rel="noopener noreferrer"
-                                                                        className={`text-xs h-8 px-3 gap-1 flex items-center text-white 
-                                                                         font-semibold rounded-md 
-                                                                             whitespace-nowrap
+                                                                    {pro?.msds_doc && (
+                                                                        <a
+                                                                            href={!pro?.is_msds_locked ? pro?.msds_doc : "#"}
+                                                                            onClick={(e) => handleDocumentClick(e, pro, 'sds', pro?.msds_doc)}
+                                                                            target={!pro?.is_msds_locked ? "_blank" : undefined}
+                                                                            rel="noopener noreferrer"
+                                                                            className={`text-xs h-8 px-3 gap-1 flex items-center text-white font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_msds_locked
-                                                                                ? "bg-[#cd2626] cursor-pointer "
-                                                                                : "bg-green-800"
-                                                                            }`}
-                                                                    >
-                                                                        {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
-                                                                        SDS {isMSDSPending && "Pending"}
-                                                                    </a>
-                                                                )}
+                                                                                    ? "bg-[#cd2626] cursor-pointer"
+                                                                                    : "bg-green-800"
+                                                                                }`}
+                                                                        >
+                                                                            {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
+                                                                            SDS
+                                                                            {/* {pendingSDS && pro?.is_msds_locked && (
+                                                                                <span className="text-[10px] ml-1 text-yellow-200">
+                                                                                   Pending
+                                                                                </span>
+                                                                            )} */}
+                                                                        </a>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )})
+                                        )
+                                    })
                                 ) : (
                                     <div className="text-center py-12 bg-gray-50 rounded-xl">
                                         <p className="text-gray-500 text-sm sm:text-base">No products found matching your criteria.</p>
@@ -603,7 +650,6 @@ const captchaRef = useRef<any>(null);
                                 )}
                             </div>
 
-                            {/* Pagination Component */}
                             {totalPages > 1 && paginatedProducts.length > 0 && (
                                 <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
                                     <button
@@ -613,24 +659,23 @@ const captchaRef = useRef<any>(null);
                                     >
                                         Previous
                                     </button>
-                                    
+
                                     {getPageNumbers().map((page, index) => (
                                         <button
                                             key={index}
                                             onClick={() => typeof page === 'number' && handlePageChange(page)}
                                             disabled={typeof page !== 'number' || isLoading}
-                                            className={`min-w-10 px-3 py-2 rounded-md transition-colors ${
-                                                currentPage === page
+                                            className={`min-w-10 px-3 py-2 rounded-md transition-colors ${currentPage === page
                                                     ? 'bg-[#cd2626] text-white'
                                                     : typeof page === 'number'
-                                                    ? 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                                                    : 'border-none text-gray-500 cursor-default'
-                                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                        ? 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                                        : 'border-none text-gray-500 cursor-default'
+                                                } disabled:opacity-50 disabled:cursor-not-allowed`}
                                         >
                                             {page}
                                         </button>
                                     ))}
-                                    
+
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
                                         disabled={currentPage === totalPages || isLoading}
@@ -653,11 +698,14 @@ const captchaRef = useRef<any>(null);
                 setCaptchaValue={setCaptchaValue}
                 selectedDocument={selectedDocument}
                 formData={formData}
+                captchaValue={captchaValue}
                 handleFormChange={handleFormChange}
                 handleSubmitRequest={handleSubmitRequest}
                 isSubmitting={isSubmitting}
                 captchaRef={captchaRef}
                 submitMessage={submitMessage}
+                formatRequestTime={formatRequestTime}
+                getTimeRemaining={getTimeRemaining}
                 closeModal={() => {
                     setIsModalOpen(false);
                     setSelectedDocument(null);
@@ -668,4 +716,4 @@ const captchaRef = useRef<any>(null);
     )
 }
 
-export default ProductListSection;
+export default page;

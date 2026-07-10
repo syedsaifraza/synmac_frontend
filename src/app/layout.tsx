@@ -15,78 +15,6 @@ export const metadata: Metadata = {
  
 };
 
-async function getIndustries() {
-  const res = await fetch("http://synmac.acetians.in/api/industry", {
-    
-    cache: "no-store"
-  });
-
-  const data = await res.json()
-  return data.industries || [];
-}
-async function getSubIndustry() {
-    const res = await fetch(
-        `http://synmac.acetians.in/api/sub-industry`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store",
-        }
-    );
-
-    return res.json();
-}
-
-async function getCategory() {
-    const res = await fetch(
-        `http://synmac.acetians.in/api/category`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store",
-        }
-    );
-
-    return res.json();
-}
-
-async function getAllResources() {
-  const res = await fetch(`http://synmac.acetians.in/api/resources`, {
-    // next : { revalidate: 300 }
-    cache: "no-store",
-  });
-
-  return res.json();
-}
-
-
-async function getAllBlogs() {
-  const res = await fetch(`http://synmac.acetians.in/api/blogs`, {
-    // next : { revalidate: 300 }
-    cache: "no-store",
-  });
-
-  return res.json();
-}
-
-async function getProduct() {
-    const res = await fetch(
-        `http://synmac.acetians.in/api/product`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store",
-        }
-    );
-
-    return res.json();
-}
 
 async function getCompanyInfo() {
     const res = await fetch(
@@ -104,37 +32,35 @@ async function getCompanyInfo() {
 }
 
 
-async function getAllNews() {
-  const res = await fetch(`http://synmac.acetians.in/api/news`, {
-    // next : { revalidate: 300 }
-    cache: "no-store",
-  });
 
-  return res.json();
-}
-async function getAllStories() {
-  const res = await fetch(`http://synmac.acetians.in/api/success`, {
-    // next : { revalidate: 300 }
-    cache: "no-store",
-  });
+async function getNavData() {
+    const res = await fetch(
+        `https://synmac-backend.serverscripts.in/api/v1/user/navbar`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache: "no-store",
+        }
+    );
 
-  return res.json();
+
+    const data = await res.json()
+
+    return data;
 }
+
 
 
 
 
 
 export default async function RootLayout({ children }: any) {
-  const industries = await getIndustries();
-  const getAllSubIndustory = await getSubIndustry();
-  const getAllProuductCategory = await getCategory();
-  const allResources = await getAllResources();
-  const getProducts = await getProduct();
+
   const getCompanyData = await getCompanyInfo();
-  const getBlogs = await getAllBlogs()
-  const getStories = await getAllStories()
-  const getNews = await getAllNews()
+
+  const getNav = await getNavData()
 
 
   return (
@@ -182,7 +108,9 @@ export default async function RootLayout({ children }: any) {
         <Providers>
 
           <Toaster position="top-right" />
-           <Navbar getStories={getStories} getNews={getNews} getBlogs={getBlogs} getCompanyData={getCompanyData} productCategory={getAllProuductCategory}  subIndustory={getAllSubIndustory} data={industries} product={getProducts} allResources={allResources} />
+           <Navbar 
+            getCompanyData={getCompanyData}
+            data={getNav.data}  />
    {children}
         </Providers>
      

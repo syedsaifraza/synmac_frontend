@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import Logo from "../../../public/Img.png"
 import Image from 'next/image';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
@@ -7,15 +7,12 @@ import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 import SearchOverlay from '../SearchOverlay';
 import LanguageSelector from '../LanguageSelector';
 import { useDispatch } from 'react-redux';
-import { setBlogsFromApi, setCompanyInfoDataFromApi, setIndustoryFromApi, setNewFromApi, setProductCategoryFromApi, setProductsFromApi, setResourcesFromApi, setSubIndustoryFromApi, setSuccessFromApi } from '@/features/synmacdata.slice';
-
-
-
+import { setCompanyInfoDataFromApi, setIndustoryFromApi, setProductCategoryFromApi, setProductsFromApi, setSubIndustoryFromApi } from '@/features/synmacdata.slice';
 
 interface Product {
     id: number;
@@ -28,7 +25,7 @@ interface ProductCategory {
     id: number;
     slug: string;
     name: string;
-    products?: Product[];
+    product?: Product[]; // API uses "product" not "products"
     [key: string]: any;
 }
 
@@ -36,8 +33,8 @@ interface SubIndustry {
     id: number;
     slug: string;
     name: string;
-    product_category?: ProductCategory[];
-    products?: Product[];
+    product_categories?: ProductCategory[]; // API uses "product_categories"
+    product?: Product[]; // API uses "product"
     [key: string]: any;
 }
 
@@ -45,34 +42,30 @@ interface Industry {
     id: number;
     slug: string;
     name: string;
-    sub_industry?: SubIndustry[];
-    product_category?: ProductCategory[];
-    products?: Product[];
+    sub_industries?: SubIndustry[]; // API uses "sub_industries"
+    product_categories?: ProductCategory[]; // API uses "product_categories"
+    product?: Product[]; // API uses "product"
     feature_file_link?: string;
     feature_title?: string;
     feature_description?: string;
+    hero_background_description?: string; // Added based on your data
     [key: string]: any;
 }
 
-const Navbar = ({getCompanyData,getBlogs,getStories, getNews, data,allResources ,product,subIndustory,productCategory }: { data: Industry[];getBlogs:any,getStories:any, getNews:any, allResources:any,product:any,subIndustory:any,productCategory:any,getCompanyData:any}) => {
-
+const Navbar = ({
+    getCompanyData,
+    data,
+}: {
+    data: any,
+    getCompanyData: any
+}) => {
 
     const dispatch = useDispatch()
 
-
     useEffect(() => {
-    dispatch(setResourcesFromApi(allResources))
-    dispatch(setProductsFromApi(product.data))
-    dispatch(setIndustoryFromApi(data))
-    dispatch(setSubIndustoryFromApi(subIndustory.subIndustory))
-    dispatch(setProductCategoryFromApi(productCategory.productCategory))
-    dispatch(setCompanyInfoDataFromApi(getCompanyData))
-    dispatch(setBlogsFromApi(getBlogs.blogs))
-    dispatch(setNewFromApi(getNews.news))
-    dispatch(setSuccessFromApi(getStories.stories))
-;
-  }, []);
-
+        dispatch(setIndustoryFromApi(data))
+        dispatch(setCompanyInfoDataFromApi(getCompanyData))
+    }, []);
 
     const pathname = usePathname();
     const [scrolled, setScrolled] = useState(false);
@@ -85,57 +78,34 @@ const Navbar = ({getCompanyData,getBlogs,getStories, getNews, data,allResources 
     const [activeSubIndustry, setActiveSubIndustry] = useState<SubIndustry | null>(null);
     const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
     const hoverTimeoutRef = useRef<any>(null);
-    const [isClient, setIsClient] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
 
-   
+    const isProductPage = pathname === '/product';
 
-
-const isProductPage = pathname === '/product';
-    
-   
     const getNavbarTextColor = () => {
-      
         if (isProductPage) return "text-gray-700";
-        
-       
         return !scrolled && !isMenuOpen ? "text-white" : "text-gray-700";
     };
-    
-  
+
     const getNavbarBg = () => {
-        
         if (isProductPage) return "bg-white shadow-md";
-        
-      
         if (scrolled) return "bg-white shadow-md";
         if (isMenuOpen) return "bg-white text-black";
         return "bg-transparent text-white";
     };
 
-
     const getProducts = () => {
-       
-        if (activeCategory?.products?.length) {
-            return activeCategory.products;
+        if (activeCategory?.product?.length) {
+            return activeCategory.product;
         }
-
-      
-        if (activeSubIndustry?.products?.length) {
-            return activeSubIndustry.products;
+        if (activeSubIndustry?.product?.length) {
+            return activeSubIndustry.product;
         }
-
-        
-        if (activeIndustry?.products?.length) {
-            return activeIndustry.products;
+        if (activeIndustry?.product?.length) {
+            return activeIndustry.product;
         }
-
         return [];
     };
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50);
@@ -143,17 +113,20 @@ const isProductPage = pathname === '/product';
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
+    // Initialize active industry with proper property names
     useEffect(() => {
         if (data && data.length > 0) {
             const firstIndustry = data[0];
             setActiveIndustry(firstIndustry);
-            if (firstIndustry?.sub_industry?.[0]) {
-                setActiveSubIndustry(firstIndustry.sub_industry[0]);
-                if (firstIndustry.sub_industry[0]?.product_category?.[0]) {
-                    setActiveCategory(firstIndustry.sub_industry[0].product_category[0]);
+            
+            if (firstIndustry?.sub_industries?.length > 0) {
+                const firstSub = firstIndustry.sub_industries[0];
+                setActiveSubIndustry(firstSub);
+                if (firstSub?.product_categories?.[0]) {
+                    setActiveCategory(firstSub.product_categories[0]);
                 }
-            } else if (firstIndustry?.product_category?.[0]) {
-                setActiveCategory(firstIndustry.product_category[0]);
+            } else if (firstIndustry?.product_categories?.[0]) {
+                setActiveCategory(firstIndustry.product_categories[0]);
             }
         }
     }, [data]);
@@ -171,48 +144,44 @@ const isProductPage = pathname === '/product';
     };
 
     const hasSubIndustries = (industry: Industry) => {
-        return industry?.sub_industry && industry.sub_industry.length > 0;
+        return industry?.sub_industries && industry.sub_industries.length > 0;
     };
 
     const hasDirectCategories = (industry: Industry) => {
-        return industry?.product_category && industry.product_category.length > 0;
+        return industry?.product_categories && industry.product_categories.length > 0;
     };
 
     const hasDirectProducts = (industry: Industry) => {
-        return industry?.products && industry.products.length > 0;
+        return industry?.product && industry.product.length > 0;
     };
 
     const hasCategories = (subIndustry: SubIndustry) => {
-        return subIndustry?.product_category && subIndustry.product_category.length > 0;
+        return subIndustry?.product_categories && subIndustry.product_categories.length > 0;
     };
 
     const hasDirectProductsInSub = (subIndustry: SubIndustry) => {
-        return subIndustry?.products && subIndustry.products.length > 0;
+        return subIndustry?.product && subIndustry.product.length > 0;
     };
 
     const hasProductsInCategory = (category: ProductCategory) => {
-        return category?.products && category.products.length > 0;
+        return category?.product && category.product.length > 0;
     };
 
     const handleIndustryHover = useCallback((industry: Industry) => {
         setActiveIndustry(industry);
-
+        
         if (hasSubIndustries(industry)) {
-            const sub = industry.sub_industry![0];
+            const sub = industry.sub_industries![0];
             setActiveSubIndustry(sub);
-
             if (hasCategories(sub)) {
-                setActiveCategory(sub.product_category![0]);
+                setActiveCategory(sub.product_categories![0]);
             } else {
                 setActiveCategory(null);
             }
-
         } else if (hasDirectCategories(industry)) {
             setActiveSubIndustry(null);
-            setActiveCategory(industry.product_category![0]);
-
+            setActiveCategory(industry.product_categories![0]);
         } else {
-
             setActiveSubIndustry(null);
             setActiveCategory(null);
         }
@@ -220,11 +189,9 @@ const isProductPage = pathname === '/product';
 
     const handleSubIndustryHover = useCallback((subIndustry: SubIndustry) => {
         setActiveSubIndustry(subIndustry);
-
         if (hasCategories(subIndustry)) {
-            setActiveCategory(subIndustry.product_category![0]);
+            setActiveCategory(subIndustry.product_categories![0]);
         } else {
-
             setActiveCategory(null);
         }
     }, []);
@@ -232,46 +199,29 @@ const isProductPage = pathname === '/product';
     const getIndustryUrl = (industry: Industry) => `/industry/${industry.slug}`;
     const getSubIndustryUrl = (industry: Industry, subIndustry: SubIndustry) =>
         `/industry/${industry.slug}/${subIndustry.slug}`;
+
     const getCategoryUrl = (industry: Industry, subIndustry: SubIndustry | null, category: ProductCategory) => {
-
         return `/industry/${industry.slug}/${subIndustry?.slug || " "}/${category?.slug || " "}`;
-
-
     };
 
-
-
-
-    const getProductUrl = (data: any) => {
+    const getProductUrl = (product: any) => {
         const params = new URLSearchParams();
-
-        if (data?.name) params.append("productname", data.name);
-        if (data?.id) params.append("productid", data.id);
-        if (data?.industry_name) params.append("industryname", data.industry_name);
-        if (data?.sub_industry_name) params.append("subindustryname", data.sub_industry_name);
-        if (data?.product_category_name) params.append("productcategoryname", data.product_category_name);
-
+        if (product?.name) params.append("productname", product.name);
+        if (product?.id) params.append("productid", product.id);
+     
         return `/product?${params.toString()}`;
     };
 
-
-
-
-    const products = getProducts();
-
-
-
-
-    if (!isClient) {
-        return null;
-    }
+    const products = useMemo(() => {
+        return getProducts();
+    }, [activeCategory, activeSubIndustry, activeIndustry]);
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 fonts">
-      <div className={`${getNavbarBg()} ${isMenuOpen && "border-b border-gray-200"}`}>
+            <div className={`${getNavbarBg()} ${isMenuOpen && "border-b border-gray-200"}`}>
                 <div className="max-w-6xl mx-auto flex items-center justify-between py-4 ">
                     <Link href="/" className="flex items-center gap-2 w-1/4">
-                        <Image src={Logo} alt="Logo" className="w-[70%]" /> 
+                        <Image src={Logo} alt="Logo" className="w-[70%]" />
                         <span className={`font-extrabold text-xs text-black ${getNavbarTextColor()}`}>beta</span>
                     </Link>
 
@@ -292,9 +242,8 @@ const isProductPage = pathname === '/product';
                         >
                             <div className="flex items-center gap-1">
                                 <span>Industries</span>
-                                <FaAngleDown/>
-                        </div>
-                            
+                                <FaAngleDown />
+                            </div>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </li>
                         <Link href="/product" className="relative group">
@@ -303,18 +252,14 @@ const isProductPage = pathname === '/product';
                         </Link>
                         <div className='relative group resouce-Section flex flex-row items-center gap-1'>
                             <span>Resources</span>
-                            <FaAngleDown className='resouce-isoc'/>
+                            <FaAngleDown className='resouce-isoc' />
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
-
-                            <div className='resouce-Section-panel top-5 text-gray-600 font-semibold p-2 text-xs space-y-2  '>
+                            <div className='resouce-Section-panel top-5 text-gray-600 font-semibold p-2 text-xs space-y-2'>
                                 <Link href="/blog" className='cursor-pointer hover:text-[#cd2626]'>Blogs</Link>
                                 <Link href="/brochure" className='cursor-pointer hover:text-[#cd2626]'>Brochures</Link>
-                                 
-                                  <Link className='cursor-pointer hover:text-[#cd2626]' href={"/success-stories"}>Success Stories</Link>
+                                <Link className='cursor-pointer hover:text-[#cd2626]' href={"/success-stories"}>Success Stories</Link>
                                 <Link className='cursor-pointer hover:text-[#cd2626]' href={"/news-releases"}>News Releases</Link>
-                                  <p></p>
                             </div>
-                           
                         </div>
                         <Link href="#" className="relative group">
                             <span>About us</span>
@@ -324,32 +269,26 @@ const isProductPage = pathname === '/product';
                             <span>Contact us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
-                        
-                        {/* Search Button */}
-                        <button 
-                            onClick={() => setSearchOpen(true)} 
+
+                        <button
+                            onClick={() => setSearchOpen(true)}
                             className={getNavbarTextColor()}
                             aria-label="Search"
                         >
                             <FiSearch className='cursor-pointer' size={20} />
                         </button>
                         <div className='flex flex-row'>
- <LanguageSelector />
-                            
+                            <LanguageSelector />
                         </div>
-                        
-                     
-                       
                     </ul>
 
                     <div className="md:hidden">
                         {!isMenuOpen ? (
                             <HiMenuAlt3
-                                className={`text-2xl cursor-pointer ${
-                                    isProductPage 
-                                        ? "text-gray-700" 
+                                className={`text-2xl cursor-pointer ${isProductPage
+                                        ? "text-gray-700"
                                         : !scrolled && !isMenuOpen ? "text-white" : "text-gray-700"
-                                }`}
+                                    }`}
                                 onClick={() => setIsMenuOpen(true)}
                             />
                         ) : (
@@ -362,10 +301,9 @@ const isProductPage = pathname === '/product';
                 </div>
             </div>
 
-
             {isMenuOpen && typeof window !== 'undefined' && window.innerWidth >= 768 && activeIndustry && (
                 <div
-                    className="hidden bg-white  md:block fixed left-0 right-0 z-40"
+                    className="hidden bg-white md:block fixed left-0 right-0 z-40"
                     onMouseEnter={() => {
                         if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
                         setIsMenuOpen(true);
@@ -375,198 +313,155 @@ const isProductPage = pathname === '/product';
                     }}
                 >
                     <div className="">
-                        <div className="w-full h-[80vh] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] flex flex-row  overflow-hidden relative">
-
+                        <div className="w-full h-[80vh] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.1)] flex flex-row overflow-hidden relative">
                             <div className="w-1/3 px-24 py-10 bg-gray-00">
-                                    {activeIndustry.feature_file_link && (
-
-                                        <div className=" overflow-hidden  transition duration-300 flex flex-col h-full">
-
-
-                                            <div className="w-full h-40 overflow-hidden">
-                                                <img
-                                                    src={activeIndustry?.feature_file_link}
-                                                    alt={activeIndustry.name}
-                                                    className="w-full h-full object-cover hover:scale-105 transition duration-300"
-                                                />
-                                            </div>
-
-                                         
-                                            <div className="py-4 flex flex-col grow">
-
-                                                
-                                                <h1 className="text-lg font-semibold text-gray-800 mb-2">
-                                                    {activeIndustry.name}
-                                                </h1>
-
-                                             
-                                                <div
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: activeIndustry.hero_background_description || ""
-                                                    }}
-                                                    className="text-sm text-gray-600 line-clamp-8 fonts mb-4 "
-                                                />
-
-                                              
-                                                <Link
-                                                    href={`/industry/${activeIndustry.slug}`}
-                                                    className="text-center  border border-[#cd2626] px-4 py-2 rounded-full text-white bg-[#cd2626] hover:bg-[#cd2626]/80 transition"
-                                                >
-                                                    Explore More
-                                                </Link>
-
-                                            </div>
-
+                                {activeIndustry && (
+                                    <div className="overflow-hidden transition duration-300 flex flex-col h-full">
+                                        <div className="w-full h-40 bg-gray-50 overflow-hidden">
+                                            <img
+                                                src={activeIndustry?.feature_file_link || " "}
+                                                alt={activeIndustry.name}
+                                                className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                                            />
                                         </div>
-
-                                    )}
-
-                                </div>
+                                        <div className="py-4 flex flex-col grow">
+                                            <h1 className="text-lg font-semibold text-gray-800 mb-2">
+                                                {activeIndustry.name}
+                                            </h1>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: activeIndustry.hero_background_description || ""
+                                                }}
+                                                className="text-sm text-gray-600 line-clamp-8 fonts mb-4"
+                                            />
+                                            <Link
+                                                href={`/industry/${activeIndustry.slug}`}
+                                                className="text-center border border-[#cd2626] px-4 py-2 rounded-full text-white bg-[#cd2626] hover:bg-[#cd2626]/80 transition"
+                                            >
+                                                Explore More
+                                            </Link>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <div className="grid grid-cols-4 flex-1 pr-24 pt-10 pl-10">
-
-                                
-
-
                                 <div className="col-span-1 bg-white overflow-y-auto max-h-100">
-                                    <div className="sticky top-0 bg-white  pb-2">
+                                    <div className="sticky top-0 bg-white pb-2">
                                         <h3 className="text-sm font-medium text-gray-500">Main Markets</h3>
                                         <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
-
                                     </div>
                                     <div className="py-2 space-y-1 pr-8">
-                                        {data.map((industry,idx:number) => (
+                                        {data.map((industry: any, idx: number) => (
                                             <Link
                                                 key={idx}
                                                 href={getIndustryUrl(industry)}
                                                 onMouseEnter={() => handleIndustryHover(industry)}
-                                                className={`flex   font-medium gap-2 rounded-lg text-xs
+                                                className={`flex font-medium gap-2 rounded-lg text-xs
                                                     ${activeIndustry?.id === industry.id
-                                                        ? " text-[#cd2626] "
-                                                        : "text-gray-700 "
+                                                        ? "text-[#cd2626]"
+                                                        : "text-gray-700"
                                                     }
                                                 `}
                                             >
-                                                
-                                                <span className="">{industry.name}</span>
+                                                <span>{industry.name}</span>
                                                 <FaAngleRight className="text-[10px] relative top-1" />
                                             </Link>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="col-span-1 bg-white  overflow-y-auto max-h-100">
+                                <div className="col-span-1 bg-white overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white pb-2">
                                         <h3 className="text-sm font-medium text-gray-500">Sub Markets</h3>
-                                          <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
                                     </div>
                                     <div className="space-y-1 py-2 pr-8">
                                         {hasSubIndustries(activeIndustry) ? (
-                                            activeIndustry.sub_industry?.map((sub,idx:number) => (
+                                            activeIndustry.sub_industries?.map((sub, idx: number) => (
                                                 <Link
                                                     key={idx}
                                                     href={getSubIndustryUrl(activeIndustry, sub)}
                                                     onMouseEnter={() => handleSubIndustryHover(sub)}
-                                                    className={`  flex font-medium gap-2 items-top rounded-lg text-xs
+                                                    className={`flex font-medium gap-2 items-top rounded-lg text-xs
                                                         ${activeSubIndustry?.id === sub.id
                                                             ? "text-[#cd2626]"
-                                                            : "text-gray-700 "
+                                                            : "text-gray-700"
                                                         }
                                                     `}
                                                 >
-
-                                                      <span className=""> {sub.name}</span>
-                                     <FaAngleRight className="text-[10px] relative top-1" />
-                                                   
+                                                    <span>{sub.name}</span>
+                                                    <FaAngleRight className="text-[10px] relative top-1" />
                                                 </Link>
                                             ))
                                         ) : (
-                                            <div className=" text-xs text-gray-400">
-                                                No sub industries
-                                            </div>
+                                            <div className="text-xs text-gray-400">No sub industries</div>
                                         )}
                                     </div>
                                 </div>
 
-
-                                <div className="col-span-1 bg-white  overflow-y-auto max-h-100">
-                                    <div className="sticky top-0 bg-white  pb-2">
+                                <div className="col-span-1 bg-white overflow-y-auto max-h-100">
+                                    <div className="sticky top-0 bg-white pb-2">
                                         <h3 className="text-sm font-medium text-gray-500">End Markets</h3>
-    <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
                                     </div>
                                     <div className="py-2 space-y-1 pr-8">
-
-
-
-
-
-
-
-
                                         {activeSubIndustry && hasCategories(activeSubIndustry) ? (
-                                            activeSubIndustry.product_category?.map((cat,idx:number) => (
+                                            activeSubIndustry.product_categories?.map((cat, idx: number) => (
                                                 <Link
                                                     key={idx}
                                                     href={getCategoryUrl(activeIndustry, activeSubIndustry, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
-                                                    className={`flex font-medium gap-2 items-top   rounded-lg text-xs mb-0.5
+                                                    className={`flex font-medium gap-2 items-top rounded-lg text-xs mb-0.5
                                                         ${activeCategory?.id === cat.id
                                                             ? "text-[#cd2626]"
-                                                            : "text-gray-700 "
+                                                            : "text-gray-700"
                                                         }
                                                     `}
                                                 >
-
-                                                     <span className="">{cat.name}</span>
-                                                  <FaAngleRight className="text-[10px] relative top-1" />
-                                                    
+                                                    <span>{cat.name}</span>
+                                                    <FaAngleRight className="text-[10px] relative top-1" />
                                                 </Link>
                                             ))
                                         ) : activeIndustry && hasDirectCategories(activeIndustry) ? (
-                                            activeIndustry.product_category?.map((cat,idx:number) => (
+                                            activeIndustry.product_categories?.map((cat, idx: number) => (
                                                 <Link
                                                     key={idx}
                                                     href={getCategoryUrl(activeIndustry, null, cat)}
                                                     onMouseEnter={() => setActiveCategory(cat)}
                                                     className={`block rounded-lg text-xs mb-0.5
-                ${activeCategory?.id === cat.id
-                                                            ? " text-[#cd2626]"
-                                                            : "text-gray-700 "
+                                                        ${activeCategory?.id === cat.id
+                                                            ? "text-[#cd2626]"
+                                                            : "text-gray-700"
                                                         }
-            `}
+                                                    `}
                                                 >
                                                     {cat.name}
                                                 </Link>
                                             ))
                                         ) : (
-                                            <div className="text-xs text-gray-400">
-                                                No categories
-                                            </div>
+                                            <div className="text-xs text-gray-400">No categories</div>
                                         )}
                                     </div>
                                 </div>
 
-
                                 <div className="col-span-1 bg-white overflow-y-auto max-h-100">
                                     <div className="sticky top-0 bg-white pb-2">
                                         <h3 className="text-sm font-medium text-gray-500">Products</h3>
-                                           <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
+                                        <span className="absolute left-0 bottom-0 h-0.5 bg-gray-200 transition-all duration-300 w-full"></span>
                                     </div>
-                                    <div className="py-2 space-y-1 ">
+                                    <div className="py-2 space-y-1">
                                         {products.length > 0 ? (
-                                            products.map((product,idx:number) => (
+                                            products.map((product, idx: number) => (
                                                 <Link
                                                     key={idx}
                                                     href={getProductUrl(product)}
-                                                    className="block font-medium  text-xs mb-0.5 text-gray-700 hover:text-[#cd2626] "
+                                                    className="block font-medium text-xs mb-0.5 text-gray-700 hover:text-[#cd2626]"
                                                 >
                                                     {product.name}
-                                                    
                                                 </Link>
                                             ))
                                         ) : (
-                                            <div className="  text-xs text-gray-400">
-                                                No products
-                                            </div>
+                                            <div className="text-xs text-gray-400">No products</div>
                                         )}
                                     </div>
                                 </div>
@@ -581,145 +476,9 @@ const isProductPage = pathname === '/product';
                         </div>
                     </div>
                 </div>
-             )}
-
-
-            {isMenuOpen && typeof window !== 'undefined' && window.innerWidth < 768 && (
-                <div className="md:hidden fixed inset-0 top-0 bg-white z-50 overflow-y-auto">
-                    <div className="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
-                        {mobileView !== 'main' && (
-                            <button onClick={() => {
-                                if (mobileView === 'products') {
-                                    if (selectedCategory) setMobileView('categories');
-                                    else if (selectedSubIndustry) setMobileView('subIndustries');
-                                    else setMobileView('industries');
-                                } else if (mobileView === 'categories') {
-                                    if (selectedSubIndustry) setMobileView('subIndustries');
-                                    else setMobileView('industries');
-                                } else if (mobileView === 'subIndustries') {
-                                    setMobileView('industries');
-                                } else if (mobileView === 'industries') {
-                                    setMobileView('main');
-                                }
-                                setSelectedCategory(null);
-                                setSelectedSubIndustry(null);
-                                setSelectedIndustry(null);
-                            }} className="p-1">
-                                <MdArrowBack className="text-2xl" />
-                            </button>
-                        )}
-                        <h2 className="text-lg font-semibold flex-1 text-center">
-                            {mobileView === 'main' && 'Menu'}
-                            {mobileView === 'industries' && 'Industries'}
-                            {mobileView === 'subIndustries' && selectedIndustry?.name}
-                            {mobileView === 'categories' && (selectedSubIndustry?.name || selectedIndustry?.name)}
-                            {mobileView === 'products' && (selectedCategory?.name || selectedSubIndustry?.name || 'Products')}
-                        </h2>
-                        <button onClick={closeMenu} className="p-1">
-                            <IoClose className="text-2xl" />
-                        </button>
-                    </div>
-
-                    <div className="p-4">
-                        {mobileView === 'main' && (
-                            <div className="space-y-4">
-                                <button onClick={() => setMobileView('industries')} className="w-full flex justify-between items-center py-3 border-b">
-                                    <span className="text-base font-medium">Industries</span>
-                                    <FaAngleRight />
-                                </button>
-                                <Link href="/product" onClick={closeMenu} className="block py-3 border-b">Products</Link>
-                                <Link href="/resources" onClick={closeMenu} className="block py-3 border-b">Resources</Link>
-                                <Link href="/about-us" onClick={closeMenu} className="block py-3 border-b">About Us</Link>
-                                <Link href="/contact-us" onClick={closeMenu} className="block py-3 border-b">Contact Us</Link>
-                            </div>
-                        )}
-
-                        {mobileView === 'industries' && (
-                            <div>
-                                {data.map((industry,idx:number) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => {
-                                            setSelectedIndustry(industry);
-                                            if (hasSubIndustries(industry)) setMobileView('subIndustries');
-                                            else if (hasDirectCategories(industry)) setMobileView('categories');
-                                            else if (hasDirectProducts(industry)) setMobileView('products');
-                                        }}
-                                        className="w-full flex justify-between items-center py-3 border-b"
-                                    >
-                                        <span>{industry.name}</span>
-                                        <FaAngleRight />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {mobileView === 'subIndustries' && selectedIndustry && (
-                            <div>
-                                {selectedIndustry.sub_industry?.map((sub,idx:number) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => {
-                                            setSelectedSubIndustry(sub);
-                                            if (hasCategories(sub)) setMobileView('categories');
-                                            else if (hasDirectProductsInSub(sub)) setMobileView('products');
-                                        }}
-                                        className="w-full flex justify-between items-center py-3 border-b"
-                                    >
-                                        <span>{sub.name}</span>
-                                        <FaAngleRight />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {mobileView === 'categories' && selectedSubIndustry && (
-                            <div>
-                                {selectedSubIndustry.product_category?.map((cat,idx:number) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => {
-                                            setSelectedCategory(cat);
-                                            if (hasProductsInCategory(cat)) setMobileView('products');
-                                        }}
-                                        className="w-full flex justify-between items-center py-3 border-b"
-                                    >
-                                        <span>{cat.name}</span>
-                                        <FaAngleRight />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {mobileView === 'products' && (
-                            <div>
-                                {selectedCategory?.products?.map((product,idx:number) => (
-                                    <Link
-                                        key={idx}
-                                        href={getProductUrl(product)}
-                                        onClick={closeMenu}
-                                        className="block py-3 border-b"
-                                    >
-                                        {product.name}
-                                    </Link>
-                                ))}
-                                {!selectedCategory && selectedSubIndustry?.products?.map((product,idx:number) => (
-                                    <Link
-                                        key={idx}
-                                        href={getProductUrl(product)}
-                                        onClick={closeMenu}
-                                        className="block py-3 border-b"
-                                    >
-                                        {product.name}
-                                    </Link>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
             )}
 
-               <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+            <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
         </nav>
     );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 
-export default function Header({ title, description, background_image,className }: { title: string, description: string, background_image: string ,className?:any   }) {
+export default function Header({ title, description, background_image,className }: { title: string, description: string, background_image: any ,className?:any   }) {
   return (
 
     <>
