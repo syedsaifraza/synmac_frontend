@@ -165,6 +165,9 @@ background:white;
 
 
 .skiptranslate{
-    display: none !important;
+    /* display: none !important; */
+
+        position: fixed !important;
+    z-index: -999 !important;
 }
 
