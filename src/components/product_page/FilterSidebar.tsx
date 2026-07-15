@@ -46,10 +46,10 @@ export const FilterSidebar = ({
                             />
                         </svg>
                     </div>
-                    {openSections.industry && (
+                    {openSections?.industry && (
                         <div className=" max-h-80 overflow-y-auto">
-                            {filteredIndustries.length > 0 ? (
-                                filteredIndustries.map((item: any) => (
+                            {filteredIndustries?.length > 0 ? (
+                                filteredIndustries?.map((item: any) => (
                                     <label
                                         key={item.id}
                                         className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-1 rounded transition-colors"
@@ -60,7 +60,7 @@ export const FilterSidebar = ({
                                                 name="industry"
                                                 value={item.name}
                                                 checked={filters.industry === item.name}
-                                                onChange={() => handleFilterChange("industry", item.name)}
+                                                onChange={() => handleFilterChange("industry", item)}
                                                 className="cursor-pointer accent-[#cd2626]"
                                             />
                                             <span className="cursor-pointer">{item.name}</span>
@@ -98,10 +98,10 @@ export const FilterSidebar = ({
                             />
                         </svg>
                     </div>
-                    {openSections.subIndustry && (
+                    {openSections?.subIndustry && (
                         <div className=" max-h-80 overflow-y-auto fonts">
-                            {filteredSubIndustries.length > 0 ? (
-                                filteredSubIndustries.map((item: any) => (
+                            {filteredSubIndustries?.length > 0 ? (
+                                filteredSubIndustries?.map((item: any) => (
                                     <label
                                         key={item.id}
                                         className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-1 rounded transition-colors"
@@ -109,10 +109,10 @@ export const FilterSidebar = ({
                                         <div className="flex items-center gap-2 flex-1">
                                             <input
                                                 type="radio"
-                                                name="subIndustry"
+                                                name="subindustry"
                                                 value={item.name}
-                                                checked={filters.subIndustry === item.name}
-                                                onChange={() => handleFilterChange("subIndustry", item.name)}
+                                                checked={filters.subindustry === item.name}
+                                                onChange={() => handleFilterChange("subindustry", item)}
                                                 className="cursor-pointer accent-[#cd2626]"
                                             />
                                             <span className="cursor-pointer">{item.name}</span>
@@ -150,10 +150,10 @@ export const FilterSidebar = ({
                             />
                         </svg>
                     </div>
-                    {openSections.category && (
+                    {openSections?.category && (
                         <div className=" max-h-80 overflow-y-auto fonts">
-                            {filteredCategories.length > 0 ? (
-                                filteredCategories.map((item: any , idx:number) => (
+                            {filteredCategories?.length > 0 ? (
+                                filteredCategories?.map((item: any , idx:number) => (
                                     <label
                                         key={idx}
                                         className="flex items-center justify-between cursor-pointer text-sm text-gray-700 hover:bg-gray-50 p-1 rounded transition-colors"
@@ -161,10 +161,10 @@ export const FilterSidebar = ({
                                         <div className="flex items-center gap-2 flex-1">
                                             <input
                                                 type="radio"
-                                                name="category"
+                                                name="productcategory"
                                                 value={item.name}
-                                                checked={filters.category === item.name}
-                                                onChange={() => handleFilterChange("category", item.name)}
+                                                checked={filters.productcategory === item.name}
+                                                onChange={() => handleFilterChange("productcategory", item)}
                                                 className="cursor-pointer accent-[#cd2626]"
                                             />
                                             <span className="cursor-pointer">{item.name}</span>

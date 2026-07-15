@@ -31,8 +31,6 @@ const dispatch = useDispatch()
   dispatch(setBlogsFromApi(blogsData))
 }, [blogsData]);
 
-
-console.log("BlogData",blogsData)
   const { blogs } = useSelector(
     (state: any) => state?.resources,
   );

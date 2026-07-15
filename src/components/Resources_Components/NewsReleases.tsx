@@ -19,8 +19,7 @@ const NewsRelease = ({newsData}:any) => {
     useEffect(() => {
       dispatch(setNewFromApi(newsData))
     }, [newsData]);
-
-  console.log("newsData",newsData)
+    
   const { news } = useSelector(
     (state: any) => state?.resources,
   );

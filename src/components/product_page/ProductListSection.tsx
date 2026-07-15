@@ -1,85 +1,49 @@
-'use client'
+"use client";
 
 import { FaLock, FaLockOpen } from "react-icons/fa";
-import Link from 'next/link'
-import { useSearchParams, usePathname, useRouter } from 'next/navigation'
-import React, { useState, useEffect, useRef } from 'react'
-import { BiSearch } from 'react-icons/bi'
-import { FaX } from 'react-icons/fa6'
-
-import { useDispatch, useSelector } from "react-redux";
+import Link from "next/link";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef } from "react";
+import { BiSearch } from "react-icons/bi";
+import { FaX } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { FilterSidebar } from "@/components/product_page/FilterSidebar";
 import { DocumentRequestModal } from "@/components/product_page/DocumentRequestModal";
-import { setProductsFromApi } from "@/features/synmacdata.slice";
 
-const page = ({productData, sidebar, currentPage: initialPage, perPage: initialPerPage}: any) => {
+const page = ({
+    productData,
+    sidebar,
+    currentPage: initialPage,
+    perPage: initialPerPage,
+}: any) => {
+    const apiData = productData;
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    
-    const apiData = productData;
     const products = apiData?.data || [];
     const paginationData = apiData || {};
-    
-    console.log("API Data:", apiData);
-const productName = searchParams.get("productname");
-    
-
-    
+    const productName = searchParams.get("productname");
     const captchaRef = useRef<any>(null);
-   
     const [captchaValue, setCaptchaValue] = useState("");
     const [search, setSearch] = useState<string>(productName ? productName : "");
-    const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    // Use props for pagination state
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pageSize, setPageSize] = useState(initialPerPage || 30);
-
     const [filters, setFilters] = useState({
         industry: "",
-        subIndustry: "",
-        category: "",
+        subindustry: "",
+        productcategory: "",
     });
 
-
     useEffect(() => {
-  setSearch(searchParams.get("productname") || "");
-}, [searchParams]);
-
-
-const filteredProducts = products.filter((product: any) => {
-  const { industry, subIndustry, category } = filters;
-
-  const searchMatch =
-    !search ||
-    product.name?.toLowerCase().includes(search.toLowerCase()) 
-
-  const industryMatch =
-    !industry || product.industry_name === industry;
-
-  const subIndustryMatch =
-    !subIndustry || product.sub_industry_name === subIndustry;
-
-  const categoryMatch =
-    !category || product.product_category_name === category;
-
-  return (
-    searchMatch &&
-    industryMatch &&
-    subIndustryMatch &&
-    categoryMatch
-  );
-});
+        setSearch(searchParams.get("productname") || "");
+    }, [searchParams]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<{
         productId: number;
         productName: string;
-        documentType: 'tds' | 'sds';
+        documentType: "tds" | "sds";
         documentUrl: string;
         pendingRequest?: any;
     } | null>(null);
@@ -95,68 +59,84 @@ const filteredProducts = products.filter((product: any) => {
         message: "",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [submitMessage, setSubmitMessage] = useState<{
+        type: "success" | "error";
+        text: string;
+    } | null>(null);
 
-  
     const totalProducts = paginationData?.total || 0;
     const totalPages = paginationData?.last_page || 1;
 
-    const from = paginationData?.from || 0;
-    const to = paginationData?.to || 0;
-
-   
     const formatRequestTime = (timestamp: number) => {
         const date = new Date(timestamp);
-        return date.toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
+        return date.toLocaleString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
         });
     };
 
     const getTimeRemaining = (timestamp: number) => {
         const elapsed = Date.now() - timestamp;
-        const hoursRemaining = Math.max(0, 24 - (elapsed / (1000 * 60 * 60)));
+        const hoursRemaining = Math.max(0, 24 - elapsed / (1000 * 60 * 60));
         if (hoursRemaining < 1) {
             const minutesRemaining = Math.ceil(hoursRemaining * 60);
-            return `${minutesRemaining} minute${minutesRemaining > 1 ? 's' : ''}`;
+            return `${minutesRemaining} minute${minutesRemaining > 1 ? "s" : ""}`;
         }
-        return `${Math.ceil(hoursRemaining)} hour${Math.ceil(hoursRemaining) > 1 ? 's' : ''}`;
+        return `${Math.ceil(hoursRemaining)} hour${Math.ceil(hoursRemaining) > 1 ? "s" : ""}`;
     };
 
-    const hasPendingRequest = React.useCallback((productId: any, documentType: any) => {
-
-
-       
-        const pendingRequests = localStorage.getItem(`doc_request_${productId}_${documentType}`);
-        if (pendingRequests) {
-            const requestData = JSON.parse(pendingRequests);
-            const hoursSinceRequest = (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
-            if (hoursSinceRequest < 24) {
-                return requestData;
+    const hasPendingRequest = React.useCallback(
+        (productId: any, documentType: any) => {
+            const pendingRequests = localStorage.getItem(
+                `doc_request_${productId}_${documentType}`,
+            );
+            if (pendingRequests) {
+                const requestData = JSON.parse(pendingRequests);
+                const hoursSinceRequest =
+                    (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
+                if (hoursSinceRequest < 24) {
+                    return requestData;
+                }
             }
-        }
-        return null;
-    }, []);
+            return null;
+        },
+        [],
+    );
 
-    const saveRequestToLocalStorage = (productId: number, documentType: string) => {
+    const saveRequestToLocalStorage = (
+        productId: number,
+        documentType: string,
+    ) => {
         const requestData = {
             timestamp: Date.now(),
-            status: 'pending'
+            status: "pending",
         };
-        localStorage.setItem(`doc_request_${productId}_${documentType}`, JSON.stringify(requestData));
+        localStorage.setItem(
+            `doc_request_${productId}_${documentType}`,
+            JSON.stringify(requestData),
+        );
     };
 
-    const removeRequestFromLocalStorage = (productId: number, documentType: string) => {
+    const removeRequestFromLocalStorage = (
+        productId: number,
+        documentType: string,
+    ) => {
         localStorage.removeItem(`doc_request_${productId}_${documentType}`);
     };
 
-    const handleDocumentClick = (e: React.MouseEvent, pro: any, docType: 'tds' | 'sds', docUrl: string) => {
-        const isLocked = docType === 'tds' ? pro?.is_tds_locked : pro?.is_msds_locked;
-        const hasDoc = docType === 'tds' ? pro?.tds_doc : pro?.msds_doc;
+    const handleDocumentClick = (
+        e: React.MouseEvent,
+        pro: any,
+        docType: "tds" | "sds",
+        docUrl: string,
+    ) => {
+        const isLocked =
+            docType === "tds" ? pro?.is_tds_locked : pro?.is_msds_locked;
+        const hasDoc = docType === "tds" ? pro?.tds_doc : pro?.msds_doc;
 
         if (!hasDoc) {
             e.preventDefault();
@@ -170,15 +150,15 @@ const filteredProducts = products.filter((product: any) => {
 
         if (hasDoc && isLocked) {
             e.preventDefault();
-            
+
             const pendingRequest = hasPendingRequest(pro?.id, docType);
-            
+
             setSelectedDocument({
                 productId: pro?.id,
                 productName: pro?.name,
                 documentType: docType,
                 documentUrl: docUrl,
-                pendingRequest: pendingRequest
+                pendingRequest: pendingRequest,
             });
             setIsModalOpen(true);
             setSubmitMessage(null);
@@ -191,15 +171,15 @@ const filteredProducts = products.filter((product: any) => {
                 company_address: "",
                 purposes: [],
                 purpose_other_text: "",
-                message: ""
+                message: "",
             });
         }
     };
 
     const handleFormChange = React.useCallback((e: any) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         }));
     }, []);
 
@@ -224,12 +204,12 @@ const filteredProducts = products.filter((product: any) => {
             message: formData.message,
             document_type: selectedDocument.documentType,
             request_status: "pending",
-            captchaToken: captchaValue
+            captchaToken: captchaValue,
         };
 
         try {
-            const response = await fetch('/api/request', {
-                method: 'POST',
+            const response = await fetch("/api/request", {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -243,7 +223,10 @@ const filteredProducts = products.filter((product: any) => {
                     toast.success("Request submitted successfully");
                     setIsModalOpen(false);
                     captchaRef.current.reset();
-                    saveRequestToLocalStorage(selectedDocument.productId, selectedDocument.documentType);
+                    saveRequestToLocalStorage(
+                        selectedDocument.productId,
+                        selectedDocument.documentType,
+                    );
                     setSelectedDocument(null);
                     setSubmitMessage(null);
                     setCaptchaValue("");
@@ -254,10 +237,10 @@ const filteredProducts = products.filter((product: any) => {
             } else {
                 setCaptchaValue("");
                 captchaRef.current.reset();
-                throw new Error('Failed to submit request');
+                throw new Error("Failed to submit request");
             }
         } catch (error) {
-            console.error('Error submitting request:', error);
+            console.error("Error submitting request:", error);
             toast.error("Something went wrong");
             setCaptchaValue("");
             captchaRef.current.reset();
@@ -271,24 +254,27 @@ const filteredProducts = products.filter((product: any) => {
         if (selectedDocument) {
             setSelectedDocument({
                 ...selectedDocument,
-                pendingRequest: null
+                pendingRequest: null,
             });
         }
     };
 
-  
-    const navigateToPage = (page: number, pageSizeValue?: number) => {
+    const navigateToPage = (page: number, pageSizeValue?: number, data?: any) => {
         const params = new URLSearchParams(searchParams.toString());
-        params.set('page', page.toString());
+        params.set("page", page.toString());
         if (pageSizeValue) {
-            params.set('per_page', pageSizeValue.toString());
+            params.set("per_page", pageSizeValue.toString());
+        }
+
+        if (data) {
+            params.set(`${data.type}`, data.id.toString());
         }
         router.push(`${pathname}?${params.toString()}`);
         setCurrentPage(page);
         if (pageSizeValue) {
             setPageSize(pageSizeValue);
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     const handlePageChange = (page: number) => {
@@ -301,17 +287,30 @@ const filteredProducts = products.filter((product: any) => {
         navigateToPage(currentPage, newSize);
     };
 
-   
-    const handleFilterChange = (type: string, value: string) => {
+    const removeFilter = (type: string) => {
+        const params = new URLSearchParams(searchParams.toString());
 
-        console.log("type aya",type, "value aya",value)
+        params.delete(type);
 
-
-        setFilters(prev => ({
+        setFilters((prev) => ({
             ...prev,
-            [type]: prev[type as keyof typeof filters] === value ? "" : value
+            [type]: "",
         }));
-      
+
+        router.push(`${pathname}?${params.toString()}`);
+    };
+
+    const handleFilterChange = (type: string, value: any) => {
+        setFilters((prev) => ({
+            ...prev,
+            [type]:
+                prev[type as keyof typeof filters] === value.name ? "" : value.name,
+        }));
+
+        navigateToPage(currentPage, pageSize, {
+            type: type,
+            id: value.id,
+        });
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,21 +320,23 @@ const filteredProducts = products.filter((product: any) => {
 
     const clearAllFilters = () => {
         setSearch("");
-        router.replace(pathname)
-        setFilters({ industry: "", subIndustry: "", category: "" });
+        router.replace(pathname);
+        setFilters({ industry: "", subindustry: "", productcategory: "" });
     };
 
-    const filteredIndustries = sidebar?.industry?.filter((item: any) =>
-        item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
-    ) || [];
+    const filteredIndustries = sidebar?.industry;
 
-    const filteredSubIndustries = filters.industry ? sidebar?.subIndustry?.filter((item: any) =>
-        item?.industry_name === filters.industry
-    ) :  sidebar?.subIndustry
+    const filteredSubIndustries = filters.industry
+        ? sidebar?.subIndustry?.filter(
+            (item: any) => item?.industry_name === filters.industry,
+        )
+        : sidebar?.subIndustry;
 
-    const filteredCategories =  filters.subIndustry ?   sidebar?.productCategory?.filter((item: any) =>
-        item?.sub_industry_name === filters.subIndustry
-    ) : sidebar?.productCategory;
+    const filteredCategories = filters.subindustry
+        ? sidebar?.productCategory?.filter(
+            (item: any) => item?.sub_industry_name === filters.subindustry,
+        )
+        : sidebar?.productCategory;
 
     const getPageNumbers = () => {
         const pageNumbers = [];
@@ -350,21 +351,21 @@ const filteredProducts = products.filter((product: any) => {
                 for (let i = 1; i <= 4; i++) {
                     pageNumbers.push(i);
                 }
-                pageNumbers.push('...');
+                pageNumbers.push("...");
                 pageNumbers.push(totalPages);
             } else if (currentPage >= totalPages - 2) {
                 pageNumbers.push(1);
-                pageNumbers.push('...');
+                pageNumbers.push("...");
                 for (let i = totalPages - 3; i <= totalPages; i++) {
                     pageNumbers.push(i);
                 }
             } else {
                 pageNumbers.push(1);
-                pageNumbers.push('...');
+                pageNumbers.push("...");
                 for (let i = currentPage - 1; i <= currentPage + 1; i++) {
                     pageNumbers.push(i);
                 }
-                pageNumbers.push('...');
+                pageNumbers.push("...");
                 pageNumbers.push(totalPages);
             }
         }
@@ -374,76 +375,78 @@ const filteredProducts = products.filter((product: any) => {
 
     return (
         <>
-
-  
-            {isLoading && (
-                <div className="fixed inset-0 z-50 bg-blue-500/20 backdrop-blur-sm flex items-center justify-center">
-                    <div className="bg-white rounded-lg p-4 shadow-xl flex items-center gap-3">
-                        <div className="w-5 h-5 border-2 border-[#cd2626] border-t-transparent rounded-full animate-spin"></div>
-                        <p className="text-gray-700 text-sm">Loading...</p>
-                    </div>
-                </div>
-            )}
-
-            <div className='py-8 sm:py-12 lg:pt-30 px-4 sm:px-6 lg:px-8'>
+            <div className="py-8 sm:py-12 lg:pt-30 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-6 sm:mb-8">
-                        <p className="text-[#cd2626] text-xs sm:text-sm font-medium tracking-wider uppercase mb-2"  onClick={()=>console.log(filters)}>Product Finder</p>
+                        <p className="text-[#cd2626] text-xs sm:text-sm font-medium tracking-wider uppercase mb-2">
+                            Product Finder
+                        </p>
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-                            Find the Right <span className="text-[#cd2626]">Chemical Solution</span>
+                            Find the Right{" "}
+                            <span className="text-[#cd2626]">Chemical Solution</span>
                         </h1>
                         <p className="text-gray-500 text-sm sm:text-base max-w-xl fonts">
-                            Browse our catalog of specialty chemicals. Filter by industry, sub-market, product type, or brand.
+                            Browse our catalog of specialty chemicals. Filter by industry,
+                            sub-market, product type, or brand.
                         </p>
                     </div>
 
                     <div className="relative mb-4 sm:mb-6 fonts">
-                        <BiSearch size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                        <BiSearch
+                            size={18}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+                        />
                         <input
                             type="text"
                             placeholder="Search products by name or description..."
                             value={search}
                             onChange={handleSearchChange}
-                            disabled={isLoading}
                             className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-4 rounded-xl border border-gray-300 bg-white text-gray-700 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626] disabled:bg-gray-100 disabled:cursor-not-allowed"
                         />
-                        {isLoading && (
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                <div className="w-4 h-4 border-2 border-[#cd2626] border-t-transparent rounded-full animate-spin"></div>
-                            </div>
-                        )}
                     </div>
 
                     <div className="flex gap-2 flex-wrap mb-4 sm:mb-6 fonts">
                         {search && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Search: "{search}"
-                                <button onClick={() => {
-                                    setSearch("");
-                                    navigateToPage(1);
-                                }} className="hover:text-red-500" disabled={isLoading}>
+                                <button
+                                    onClick={() => {
+                                        setSearch("");
+                                        navigateToPage(1);
+                                    }}
+                                    className="hover:text-red-500"
+                                >
                                     ✕
                                 </button>
                             </div>
                         )}
                         {Object.entries(filters).map(([key, value]) => {
                             if (!value) return null;
-                            let displayKey = key === "subIndustry" ? "Sub Industry" :
-                                key === "category" ? "Category" : "Industry";
+                            let displayKey =
+                                key === "subindustry"
+                                    ? "Sub Industry"
+                                    : key === "productcategory"
+                                        ? "Category"
+                                        : "Industry";
                             return (
-                                <div key={key} className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
+                                <div
+                                    key={key}
+                                    className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm"
+                                >
                                     {displayKey}: {value}
-                                    <button onClick={() => handleFilterChange(key, value)} className="hover:text-red-500" disabled={isLoading}>
+                                    <button
+                                        onClick={() => removeFilter(key)}
+                                        className="hover:text-red-500"
+                                    >
                                         ✕
                                     </button>
                                 </div>
                             );
                         })}
-                        {(Object.values(filters).some(v => v) || search) && (
+                        {(Object.values(filters).some((v) => v) || search) && (
                             <button
                                 onClick={clearAllFilters}
                                 className="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs sm:text-sm hover:bg-red-600 transition-colors"
-                                disabled={isLoading}
                             >
                                 Clear All
                             </button>
@@ -454,7 +457,6 @@ const filteredProducts = products.filter((product: any) => {
                         <button
                             onClick={() => setIsFilterOpen(true)}
                             className="w-full bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
-                            disabled={isLoading}
                         >
                             <BiSearch size={18} />
                             Filters & Categories
@@ -505,8 +507,9 @@ const filteredProducts = products.filter((product: any) => {
 
                         <div className="flex-1 min-w-0">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                                <h1 className='text-sm sm:text-base text-gray-500 font-semibold'>
-                                    Showing {from}-{to} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
+                                <h1 className="text-sm sm:text-base text-gray-500 font-semibold">
+                                    Showing {apiData.from}-{apiData.to} of {apiData.total} Result
+                                    {totalProducts !== 1 ? "s" : ""}
                                 </h1>
 
                                 <div className="flex items-center gap-2">
@@ -515,7 +518,6 @@ const filteredProducts = products.filter((product: any) => {
                                         value={pageSize}
                                         onChange={handlePageSizeChange}
                                         className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626]"
-                                        disabled={isLoading}
                                     >
                                         <option value={10}>10</option>
                                         <option value={15}>15</option>
@@ -527,13 +529,11 @@ const filteredProducts = products.filter((product: any) => {
                                 </div>
                             </div>
 
-                            <div className='space-y-3 sm:space-y-4'>
-                                {filteredProducts.length > 0 ? (
-                                    filteredProducts.map((pro: any) => {
-
-
-                                        const pendingTDS = hasPendingRequest(pro?.id, 'tds');
-                                        const pendingSDS = hasPendingRequest(pro?.id, 'sds');
+                            <div className="space-y-3 sm:space-y-4">
+                                {products.length > 0 ? (
+                                    products.map((pro: any) => {
+                                        const pendingTDS = hasPendingRequest(pro?.id, "tds");
+                                        const pendingSDS = hasPendingRequest(pro?.id, "sds");
 
                                         return (
                                             <div
@@ -542,14 +542,20 @@ const filteredProducts = products.filter((product: any) => {
                                             >
                                                 <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                                                     <div className="flex-1 min-w-0">
-                                                        <Link href={`/product/${pro?.slug}`}
-                                                            className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline">
+                                                        <Link
+                                                            href={`/product/${pro?.slug}`}
+                                                            className="font-bold text-base sm:text-lg text-[#cd2626] mb-1 hover:underline"
+                                                        >
                                                             {pro?.name}
                                                         </Link>
-                                                        <div dangerouslySetInnerHTML={{ __html: pro?.description || "" }}
-                                                            className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 fonts line-clamp-5" />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: pro?.description || "",
+                                                            }}
+                                                            className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 fonts line-clamp-5"
+                                                        />
                                                         <div className="flex flex-wrap gap-1.5">
-                                                            <div className='flex flex-row w-full justify-between'>
+                                                            <div className="flex flex-row w-full justify-between">
                                                                 <div className="space-x-2">
                                                                     {pro?.industry_name && (
                                                                         <span className="bg-gray-100 text-gray-700 font-medium px-2 py-1 rounded-md text-xs">
@@ -571,9 +577,22 @@ const filteredProducts = products.filter((product: any) => {
                                                                 <div className="flex flex-row items-center gap-2 shrink-0">
                                                                     {pro?.tds_doc && (
                                                                         <a
-                                                                            href={!pro?.is_tds_locked ? pro?.tds_doc : "#"}
-                                                                            onClick={(e) => handleDocumentClick(e, pro, 'tds', pro?.tds_doc)}
-                                                                            target={!pro?.is_tds_locked ? "_blank" : undefined}
+                                                                            href={
+                                                                                !pro?.is_tds_locked ? pro?.tds_doc : "#"
+                                                                            }
+                                                                            onClick={(e) =>
+                                                                                handleDocumentClick(
+                                                                                    e,
+                                                                                    pro,
+                                                                                    "tds",
+                                                                                    pro?.tds_doc,
+                                                                                )
+                                                                            }
+                                                                            target={
+                                                                                !pro?.is_tds_locked
+                                                                                    ? "_blank"
+                                                                                    : undefined
+                                                                            }
                                                                             rel="noopener noreferrer"
                                                                             className={`text-xs h-8 px-3 gap-1 flex items-center font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_tds_locked
@@ -581,16 +600,35 @@ const filteredProducts = products.filter((product: any) => {
                                                                                     : "bg-green-800 text-white"
                                                                                 }`}
                                                                         >
-                                                                            {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
+                                                                            {pro?.is_tds_locked ? (
+                                                                                <FaLock />
+                                                                            ) : (
+                                                                                <FaLockOpen />
+                                                                            )}
                                                                             TDS
                                                                         </a>
                                                                     )}
 
                                                                     {pro?.msds_doc && (
                                                                         <a
-                                                                            href={!pro?.is_msds_locked ? pro?.msds_doc : "#"}
-                                                                            onClick={(e) => handleDocumentClick(e, pro, 'sds', pro?.msds_doc)}
-                                                                            target={!pro?.is_msds_locked ? "_blank" : undefined}
+                                                                            href={
+                                                                                !pro?.is_msds_locked
+                                                                                    ? pro?.msds_doc
+                                                                                    : "#"
+                                                                            }
+                                                                            onClick={(e) =>
+                                                                                handleDocumentClick(
+                                                                                    e,
+                                                                                    pro,
+                                                                                    "sds",
+                                                                                    pro?.msds_doc,
+                                                                                )
+                                                                            }
+                                                                            target={
+                                                                                !pro?.is_msds_locked
+                                                                                    ? "_blank"
+                                                                                    : undefined
+                                                                            }
                                                                             rel="noopener noreferrer"
                                                                             className={`text-xs h-8 px-3 gap-1 flex items-center text-white font-semibold rounded-md whitespace-nowrap
                                                                             ${pro?.is_msds_locked
@@ -598,7 +636,11 @@ const filteredProducts = products.filter((product: any) => {
                                                                                     : "bg-green-800"
                                                                                 }`}
                                                                         >
-                                                                            {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
+                                                                            {pro?.is_msds_locked ? (
+                                                                                <FaLock />
+                                                                            ) : (
+                                                                                <FaLockOpen />
+                                                                            )}
                                                                             SDS
                                                                         </a>
                                                                     )}
@@ -608,15 +650,16 @@ const filteredProducts = products.filter((product: any) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        )
+                                        );
                                     })
                                 ) : (
                                     <div className="text-center py-12 bg-gray-50 rounded-xl">
-                                        <p className="text-gray-500 text-sm sm:text-base">No products found matching your criteria.</p>
+                                        <p className="text-gray-500 text-sm sm:text-base">
+                                            No products found matching your criteria.
+                                        </p>
                                         <button
                                             onClick={clearAllFilters}
                                             className="mt-4 text-[#cd2626] hover:underline text-sm sm:text-base"
-                                            disabled={isLoading}
                                         >
                                             Clear all filters
                                         </button>
@@ -628,7 +671,7 @@ const filteredProducts = products.filter((product: any) => {
                                 <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}
-                                        disabled={currentPage === 1 || isLoading}
+                                        disabled={currentPage === 1}
                                         className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
                                         Previous
@@ -637,13 +680,15 @@ const filteredProducts = products.filter((product: any) => {
                                     {getPageNumbers().map((page, index) => (
                                         <button
                                             key={index}
-                                            onClick={() => typeof page === 'number' && handlePageChange(page)}
-                                            disabled={typeof page !== 'number' || isLoading}
+                                            onClick={() =>
+                                                typeof page === "number" && handlePageChange(page)
+                                            }
+                                            disabled={typeof page !== "number"}
                                             className={`min-w-10 px-3 py-2 rounded-md transition-colors ${currentPage === page
-                                                    ? 'bg-[#cd2626] text-white'
-                                                    : typeof page === 'number'
-                                                        ? 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                                                        : 'border-none text-gray-500 cursor-default'
+                                                    ? "bg-[#cd2626] text-white"
+                                                    : typeof page === "number"
+                                                        ? "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                                                        : "border-none text-gray-500 cursor-default"
                                                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                                         >
                                             {page}
@@ -652,7 +697,7 @@ const filteredProducts = products.filter((product: any) => {
 
                                     <button
                                         onClick={() => handlePageChange(currentPage + 1)}
-                                        disabled={currentPage === totalPages || isLoading}
+                                        disabled={currentPage === totalPages}
                                         className="px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                     >
                                         Next
@@ -687,7 +732,7 @@ const filteredProducts = products.filter((product: any) => {
                 }}
             />
         </>
-    )
-}
+    );
+};
 
 export default page;
