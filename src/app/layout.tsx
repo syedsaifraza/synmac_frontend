@@ -12,43 +12,43 @@ import { Toaster } from "react-hot-toast";
 export const metadata: Metadata = {
   title: "Synmac",
   description: "Chemicle Website",
- 
+
 };
 
 
 async function getCompanyInfo() {
-    const res = await fetch(
-        `http://synmac.acetians.in/api/company-info`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store",
-        }
-    );
+  const res = await fetch(
+    `http://synmac.acetians.in/api/company-info`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    }
+  );
 
-    return res.json();
+  return res.json();
 }
 
 
 
 async function getNavData() {
-    const res = await fetch(
-        `https://synmac-backend.serverscripts.in/api/v1/user/navbar`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: "no-store",
-        }
-    );
+  const res = await fetch(
+    `https://synmac-backend.serverscripts.in/api/v1/user/navbar`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    }
+  );
 
 
-    const data = await res.json()
+  const data = await res.json()
 
-    return data;
+  return data;
 }
 
 
@@ -66,33 +66,51 @@ export default async function RootLayout({ children }: any) {
   return (
     <html lang="en">
 
-       <head>
+      <head>
         <Script
           id="gtm-script"
           strategy="beforeInteractive"
-        >
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-MLS7S5VK');
-          `}
-        </Script>
+          dangerouslySetInnerHTML={{
+            __html: `
+          (function(w,d,s,l,i){
+            w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-MLS7S5VK');
+        `,
+          }}
+        />
 
-         <script async src="https://www.googletagmanager.com/gtag/js?id=G-HYD5J2SJ6N"></script>
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-         
+      gtag('config', 'G-HYD5J2SJ6N');
+    `,
+          }}
+        />
+
+
       </head>
 
-     
+
 
 
 
       <body>
 
 
-     <noscript>
+        <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-MLS7S5VK"
             height="0"
@@ -104,16 +122,16 @@ export default async function RootLayout({ children }: any) {
           />
         </noscript>
 
-       
+
         <Providers>
 
           <Toaster position="top-right" />
-           <Navbar 
+          <Navbar
             getCompanyData={getCompanyData}
-            data={getNav.data}  />
-   {children}
+            data={getNav.data} />
+          {children}
         </Providers>
-     
+
         <Footer />
       </body>
     </html>

@@ -687,15 +687,15 @@ const dispatch = useDispatch()
 
           <div className="lg:w-2/5 space-y-3 grid grid-cols-1 justify-between">
 
-            {success.slice(1, 4).map((item: any, index: number) => (
+            {success?.slice(1, 4)?.map((item: any, index: number) => (
 
               <CardFeature
                 key={index}
                 index={index}
-                title={item.title}
-                image={item.success_story_image_url}
-                description={item.description}
-                url={`/success-stories/${item.slug}`}
+                title={item?.title}
+                image={item?.success_story_image_url}
+                description={item?.description}
+                url={`/success-stories/${item?.slug}`}
               />
 
             ))}
@@ -712,10 +712,10 @@ const dispatch = useDispatch()
 
 
                 index={indx}
-                title={res.title}
-                image={res.success_story_image_url}
-                description={res.description}
-                url={`/success-stories/${res.slug}`}
+                title={res?.title}
+                image={res?.success_story_image_url}
+                description={res?.description}
+                url={`/success-stories/${res?.slug}`}
               />
             </div>
 

@@ -2,7 +2,7 @@
 
 import { FaLock, FaLockOpen } from "react-icons/fa";
 import Link from 'next/link'
-import { useSearchParams, usePathname } from 'next/navigation'
+import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 import React, { useState, useEffect, useRef } from 'react'
 import { BiSearch } from 'react-icons/bi'
 import { FaX } from 'react-icons/fa6'
@@ -13,23 +13,31 @@ import { FilterSidebar } from "@/components/product_page/FilterSidebar";
 import { DocumentRequestModal } from "@/components/product_page/DocumentRequestModal";
 import { setProductsFromApi } from "@/features/synmacdata.slice";
 
-const page = ({productData,sidebar}:any) => {
-
-    const dispatch = useDispatch()
-      useEffect(() => {
-      dispatch(setProductsFromApi(productData))
-    }, [productData]);
-    const captchaRef = useRef<any>(null);
-    const { product, industories, sub_industries, product_category } = useSelector((state: any) => state.resources)
-    const [captchaValue, setCaptchaValue] = useState("");
+const page = ({productData, sidebar, currentPage: initialPage, perPage: initialPerPage}: any) => {
+    const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
-    const [search, setSearch] = useState<string>("");
+    
+    const apiData = productData;
+    const products = apiData?.data || [];
+    const paginationData = apiData || {};
+    
+    console.log("API Data:", apiData);
+const productName = searchParams.get("productname");
+    
+
+    
+    const captchaRef = useRef<any>(null);
+   
+    const [captchaValue, setCaptchaValue] = useState("");
+    const [search, setSearch] = useState<string>(productName ? productName : "");
     const [filterSearch, setFilterSearch] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    // Use props for pagination state
+    const [currentPage, setCurrentPage] = useState(initialPage || 1);
+    const [pageSize, setPageSize] = useState(initialPerPage || 30);
 
     const [filters, setFilters] = useState({
         industry: "",
@@ -37,13 +45,43 @@ const page = ({productData,sidebar}:any) => {
         category: "",
     });
 
+
+    useEffect(() => {
+  setSearch(searchParams.get("productname") || "");
+}, [searchParams]);
+
+
+const filteredProducts = products.filter((product: any) => {
+  const { industry, subIndustry, category } = filters;
+
+  const searchMatch =
+    !search ||
+    product.name?.toLowerCase().includes(search.toLowerCase()) 
+
+  const industryMatch =
+    !industry || product.industry_name === industry;
+
+  const subIndustryMatch =
+    !subIndustry || product.sub_industry_name === subIndustry;
+
+  const categoryMatch =
+    !category || product.product_category_name === category;
+
+  return (
+    searchMatch &&
+    industryMatch &&
+    subIndustryMatch &&
+    categoryMatch
+  );
+});
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<{
         productId: number;
         productName: string;
         documentType: 'tds' | 'sds';
         documentUrl: string;
-        pendingRequest?: any; // Add pending request data
+        pendingRequest?: any;
     } | null>(null);
     const [formData, setFormData] = useState({
         client_name: "",
@@ -59,11 +97,14 @@ const page = ({productData,sidebar}:any) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-    const prevSearchParamsRef = useRef<string>("");
-    const prevSearchRef = useRef<string>("");
-    const prevFiltersRef = useRef(filters);
+  
+    const totalProducts = paginationData?.total || 0;
+    const totalPages = paginationData?.last_page || 1;
 
-    // Helper function to format time
+    const from = paginationData?.from || 0;
+    const to = paginationData?.to || 0;
+
+   
     const formatRequestTime = (timestamp: number) => {
         const date = new Date(timestamp);
         return date.toLocaleString('en-US', {
@@ -76,7 +117,6 @@ const page = ({productData,sidebar}:any) => {
         });
     };
 
-    // Helper function to get time remaining
     const getTimeRemaining = (timestamp: number) => {
         const elapsed = Date.now() - timestamp;
         const hoursRemaining = Math.max(0, 24 - (elapsed / (1000 * 60 * 60)));
@@ -87,14 +127,16 @@ const page = ({productData,sidebar}:any) => {
         return `${Math.ceil(hoursRemaining)} hour${Math.ceil(hoursRemaining) > 1 ? 's' : ''}`;
     };
 
-    // Updated hasPendingRequest - returns request data or null
     const hasPendingRequest = React.useCallback((productId: any, documentType: any) => {
+
+
+       
         const pendingRequests = localStorage.getItem(`doc_request_${productId}_${documentType}`);
         if (pendingRequests) {
             const requestData = JSON.parse(pendingRequests);
             const hoursSinceRequest = (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
             if (hoursSinceRequest < 24) {
-                return requestData; // Return the full request data
+                return requestData;
             }
         }
         return null;
@@ -129,7 +171,6 @@ const page = ({productData,sidebar}:any) => {
         if (hasDoc && isLocked) {
             e.preventDefault();
             
-            // Check if there's already a pending request
             const pendingRequest = hasPendingRequest(pro?.id, docType);
             
             setSelectedDocument({
@@ -137,7 +178,7 @@ const page = ({productData,sidebar}:any) => {
                 productName: pro?.name,
                 documentType: docType,
                 documentUrl: docUrl,
-                pendingRequest: pendingRequest // Pass the pending request data
+                pendingRequest: pendingRequest
             });
             setIsModalOpen(true);
             setSubmitMessage(null);
@@ -230,134 +271,71 @@ const page = ({productData,sidebar}:any) => {
         if (selectedDocument) {
             setSelectedDocument({
                 ...selectedDocument,
-                pendingRequest: null // Clear the pending request
+                pendingRequest: null
             });
         }
     };
 
-    const syncFromURL = () => {
-        const productname = searchParams.get("productname");
-        const productcategoryname = searchParams.get("productcategoryname");
-        const industryname = searchParams.get("industryname");
-        const subindustryname = searchParams.get("subindustryname");
-        const searchQuery = searchParams.get("search");
-
-        let newSearch = "";
-        if (searchQuery) {
-            newSearch = searchQuery;
-        } else if (productname) {
-            newSearch = productname;
+  
+    const navigateToPage = (page: number, pageSizeValue?: number) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('page', page.toString());
+        if (pageSizeValue) {
+            params.set('per_page', pageSizeValue.toString());
         }
-
-        const newFilters = {
-            industry: industryname || "",
-            subIndustry: subindustryname || "",
-            category: productcategoryname || "",
-        };
-
-        const searchChanged = prevSearchRef.current !== newSearch;
-        const filtersChanged = JSON.stringify(prevFiltersRef.current) !== JSON.stringify(newFilters);
-
-        if (searchChanged || filtersChanged) {
-            setSearch(newSearch);
-            setFilters(newFilters);
-            setCurrentPage(1);
-
-            prevSearchRef.current = newSearch;
-            prevFiltersRef.current = newFilters;
+        router.push(`${pathname}?${params.toString()}`);
+        setCurrentPage(page);
+        if (pageSizeValue) {
+            setPageSize(pageSizeValue);
         }
-
-        setIsLoading(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    useEffect(() => {
-        const currentParams = searchParams.toString();
-
-        if (prevSearchParamsRef.current !== currentParams) {
-            setIsLoading(true);
-            syncFromURL();
-        }
-
-        prevSearchParamsRef.current = currentParams;
-    }, [searchParams]);
-
-    useEffect(() => {
-        const handlePopState = () => {
-            setIsLoading(true);
-            setTimeout(() => {
-                syncFromURL();
-            }, 100);
-        };
-
-        window.addEventListener('popstate', handlePopState);
-
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-        };
-    }, []);
-
-    const filterProduct = React.useMemo(() => {
-        return product?.filter((pro: any) => {
-            const matchIndustry = !filters.industry || pro?.industry_name === filters.industry;
-            const matchSubIndustry = !filters.subIndustry || pro?.sub_industry_name === filters.subIndustry;
-            const matchCategory = !filters.category || pro?.product_category_name === filters.category;
-            const matchSearch =
-                !search ||
-                pro?.name?.toLowerCase().includes(search.toLowerCase()) ||
-                pro?.description?.toLowerCase().includes(search.toLowerCase());
-
-            return matchIndustry && matchSubIndustry && matchCategory && matchSearch;
-        }) || [];
-    }, [product, filters, search]);
-
-    const totalProducts = filterProduct.length;
-    const totalPages = Math.ceil(totalProducts / pageSize);
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    const paginatedProducts = filterProduct.slice(startIndex, endIndex);
-
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (page < 1 || page > totalPages) return;
+        navigateToPage(page);
     };
 
     const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newSize = parseInt(e.target.value);
-        setPageSize(newSize);
-        setCurrentPage(1);
+        navigateToPage(currentPage, newSize);
     };
 
+   
     const handleFilterChange = (type: string, value: string) => {
+
+        console.log("type aya",type, "value aya",value)
+
+
         setFilters(prev => ({
             ...prev,
             [type]: prev[type as keyof typeof filters] === value ? "" : value
         }));
-        setCurrentPage(1);
+      
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearch(value);
-        setCurrentPage(1);
     };
 
     const clearAllFilters = () => {
         setSearch("");
+        router.replace(pathname)
         setFilters({ industry: "", subIndustry: "", category: "" });
-        setCurrentPage(1);
     };
 
     const filteredIndustries = sidebar?.industry?.filter((item: any) =>
         item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
     ) || [];
 
-    const filteredSubIndustries = sidebar?.subIndustry?.filter((item: any) =>
-        item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
-    ) || [];
+    const filteredSubIndustries = filters.industry ? sidebar?.subIndustry?.filter((item: any) =>
+        item?.industry_name === filters.industry
+    ) :  sidebar?.subIndustry
 
-    const filteredCategories = sidebar?.productCategory?.filter((item: any) =>
-        item?.name?.toLowerCase().includes(filterSearch.toLowerCase())
-    ) || [];
+    const filteredCategories =  filters.subIndustry ?   sidebar?.productCategory?.filter((item: any) =>
+        item?.sub_industry_name === filters.subIndustry
+    ) : sidebar?.productCategory;
 
     const getPageNumbers = () => {
         const pageNumbers = [];
@@ -396,6 +374,8 @@ const page = ({productData,sidebar}:any) => {
 
     return (
         <>
+
+  
             {isLoading && (
                 <div className="fixed inset-0 z-50 bg-blue-500/20 backdrop-blur-sm flex items-center justify-center">
                     <div className="bg-white rounded-lg p-4 shadow-xl flex items-center gap-3">
@@ -408,7 +388,7 @@ const page = ({productData,sidebar}:any) => {
             <div className='py-8 sm:py-12 lg:pt-30 px-4 sm:px-6 lg:px-8'>
                 <div className="max-w-6xl mx-auto">
                     <div className="mb-6 sm:mb-8">
-                        <p className="text-[#cd2626] text-xs sm:text-sm font-medium tracking-wider uppercase mb-2">Product Finder</p>
+                        <p className="text-[#cd2626] text-xs sm:text-sm font-medium tracking-wider uppercase mb-2"  onClick={()=>console.log(filters)}>Product Finder</p>
                         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
                             Find the Right <span className="text-[#cd2626]">Chemical Solution</span>
                         </h1>
@@ -440,7 +420,7 @@ const page = ({productData,sidebar}:any) => {
                                 Search: "{search}"
                                 <button onClick={() => {
                                     setSearch("");
-                                    setCurrentPage(1);
+                                    navigateToPage(1);
                                 }} className="hover:text-red-500" disabled={isLoading}>
                                     ✕
                                 </button>
@@ -526,7 +506,7 @@ const page = ({productData,sidebar}:any) => {
                         <div className="flex-1 min-w-0">
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
                                 <h1 className='text-sm sm:text-base text-gray-500 font-semibold'>
-                                    Showing {startIndex + 1}-{Math.min(endIndex, totalProducts)} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
+                                    Showing {from}-{to} of {totalProducts} Result{totalProducts !== 1 ? 's' : ''}
                                 </h1>
 
                                 <div className="flex items-center gap-2">
@@ -540,14 +520,18 @@ const page = ({productData,sidebar}:any) => {
                                         <option value={10}>10</option>
                                         <option value={15}>15</option>
                                         <option value={20}>20</option>
+                                        <option value={30}>30</option>
+                                        <option value={50}>50</option>
                                     </select>
                                     <span className="text-sm text-gray-600">per page</span>
                                 </div>
                             </div>
 
                             <div className='space-y-3 sm:space-y-4'>
-                                {paginatedProducts.length > 0 ? (
-                                    paginatedProducts.map((pro: any) => {
+                                {filteredProducts.length > 0 ? (
+                                    filteredProducts.map((pro: any) => {
+
+
                                         const pendingTDS = hasPendingRequest(pro?.id, 'tds');
                                         const pendingSDS = hasPendingRequest(pro?.id, 'sds');
 
@@ -599,11 +583,6 @@ const page = ({productData,sidebar}:any) => {
                                                                         >
                                                                             {pro?.is_tds_locked ? <FaLock /> : <FaLockOpen />}
                                                                             TDS
-                                                                            {/* {pendingTDS && pro?.is_tds_locked && (
-                                                                                <span className="text-[10px] ml-1 text-yellow-200">
-                                                                                   Pending
-                                                                                </span>
-                                                                            )} */}
                                                                         </a>
                                                                     )}
 
@@ -621,11 +600,6 @@ const page = ({productData,sidebar}:any) => {
                                                                         >
                                                                             {pro?.is_msds_locked ? <FaLock /> : <FaLockOpen />}
                                                                             SDS
-                                                                            {/* {pendingSDS && pro?.is_msds_locked && (
-                                                                                <span className="text-[10px] ml-1 text-yellow-200">
-                                                                                   Pending
-                                                                                </span>
-                                                                            )} */}
                                                                         </a>
                                                                     )}
                                                                 </div>
@@ -650,7 +624,7 @@ const page = ({productData,sidebar}:any) => {
                                 )}
                             </div>
 
-                            {totalPages > 1 && paginatedProducts.length > 0 && (
+                            {totalPages > 1 && products.length > 0 && (
                                 <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
                                     <button
                                         onClick={() => handlePageChange(currentPage - 1)}

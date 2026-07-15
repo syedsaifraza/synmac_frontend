@@ -47,7 +47,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.industry && (
-                        <div className=" max-h-60 overflow-y-auto">
+                        <div className=" max-h-80 overflow-y-auto">
                             {filteredIndustries.length > 0 ? (
                                 filteredIndustries.map((item: any) => (
                                     <label
@@ -99,7 +99,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.subIndustry && (
-                        <div className=" max-h-60 overflow-y-auto fonts">
+                        <div className=" max-h-80 overflow-y-auto fonts">
                             {filteredSubIndustries.length > 0 ? (
                                 filteredSubIndustries.map((item: any) => (
                                     <label
@@ -151,7 +151,7 @@ export const FilterSidebar = ({
                         </svg>
                     </div>
                     {openSections.category && (
-                        <div className=" max-h-60 overflow-y-auto fonts">
+                        <div className=" max-h-80 overflow-y-auto fonts">
                             {filteredCategories.length > 0 ? (
                                 filteredCategories.map((item: any , idx:number) => (
                                     <label

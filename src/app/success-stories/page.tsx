@@ -17,7 +17,7 @@ const page = async () => {
    const data = await getStories()
   return (
     <div>
-      <SuccessStories  storyData={data.stories}/>
+      <SuccessStories  storyData={data?.stories}/>
     </div>
   )
 }
