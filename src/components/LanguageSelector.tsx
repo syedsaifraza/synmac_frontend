@@ -61,18 +61,29 @@ const LanguageSelector = () => {
   }, []);
 
 
+  const clearAllCookies = () => {
+    document.cookie.split(";").forEach((cookie) => {
+      const name = cookie.split("=")[0].trim();
+
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname};`;
+    });
+  };
+
+
   const selectLanguage = (langCode: string) => {
 
-   
 
+    clearAllCookies()
     setCurrentLang(langCode);
 
-    console.log("Google transalte : ",langCode)
+    console.log("Google transalte : ", langCode)
     setOpen(false);
 
     document.cookie = `googtrans=/en/${langCode}; path=/`;
 
-  
+
     setTimeout(() => {
       window.location.reload();
     }, 1000);
@@ -83,7 +94,7 @@ const LanguageSelector = () => {
 
   return (
     <div ref={ref} className="relative">
-     
+
       <div
         id="google_translate_element"
         style={{ display: "none" }}
@@ -96,20 +107,19 @@ const LanguageSelector = () => {
         <FaGlobe size={16} />
         <span>{currentLabel}</span>
         {
-          open ? (  <FaAngleUp/>) : (  <FaAngleDown/>)
+          open ? (<FaAngleUp />) : (<FaAngleDown />)
         }
-       
+
       </button>
 
       {open && (
         <div className="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg z-50 max-h-64 overflow-y-auto">
-          {languages.map((lang,idx:number) => (
+          {languages.map((lang, idx: number) => (
             <button
               key={idx}
               onClick={() => selectLanguage(lang.code)}
-              className={`block w-full text-left text-black px-4 py-2 text-sm hover:bg-gray-100 ${
-                currentLang === lang.code ? "font-bold text-blue-600" : ""
-              }`}
+              className={`block w-full text-left text-black px-4 py-2 text-sm hover:bg-gray-100 ${currentLang === lang.code ? "font-bold text-blue-600" : ""
+                }`}
             >
               {lang.label}
             </button>
