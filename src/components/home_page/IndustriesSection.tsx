@@ -68,23 +68,23 @@ const IndustriesSection =  () => {
   return (
     <section
       id="industry-block"
-      className="bg-white pt-15 pb-10 max-w-6xl mx-auto text-black"
+        className="bg-white pt-10 sm:pt-12 lg:pt-16 pb-10 px-4 sm:px-6 lg:px-0 max-w-6xl mx-auto text-black"
     >
       <div className="container mx-auto">
-        <div className="text-center mb-16">
+       <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">
             Industries We Serve
           </p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-3xl font-bold leading-tight">
            DISCOVER THE PRODUCT THAT FITS  {" "}
             <span className="text-[#cd2626]">YOUR MARKET</span>
           </h2>
-          <p className="text-gray-500 mt-4 max-w-3xl mx-auto">
+          <p className="text-gray-500 mt-4 text-sm sm:text-base max-w-3xl mx-auto leading-7 px-2">
             Our end-market overview provides a structured way to identify products aligned with industry-specific requirements. Use the markets below to access relevant products, supporting background information, and a comprehensive set of downloads.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-5 lg:px-0">
           {industories?.slice(0, 10).map((industry: Industry, index: any) => {
             const imageUrl =
               industry.feature_file_link || industry.hero_background_file_url;
@@ -93,9 +93,9 @@ const IndustriesSection =  () => {
               <Link
                 href={`/industry/${industry.slug}`}
                 key={industry.id}
-                className="group rounded-xl overflow-hidden border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:shadow-xl hover:shadow-[#cd2626]/5 transition-all duration-300"
+              className="group rounded-xl overflow-hidden border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:shadow-lg transition-all duration-300"
               >
-                <div className="aspect-4/3  overflow-hidden bg-gray-100">
+                <div className="aspect-4/3 overflow-hidden bg-gray-100">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
@@ -109,8 +109,8 @@ const IndustriesSection =  () => {
                     </div>
                   )}
                 </div>
-                <div className="p-3 ">
-                  <h3 className="font-semibold text-gray-900 flex justify-between items-center gap-1 group-hover:text-[#cd2626] transition-colors text-xs">
+             <div className="p-3 sm:p-4 lg:p-2 flxe justify-center items-center">
+                 <h3 className="font-semibold text-gray-900 flex justify-between items-center gap-2 group-hover:text-[#cd2626] transition-colors text-xs sm:text-base lg:text-xs">
                     {industry?.name}
 
                     <BiChevronRight
@@ -124,9 +124,9 @@ const IndustriesSection =  () => {
           })}
         </div>
         
-          <div className="flex flex-row justify-center items-center  py-10 ">
+       <div className="flex justify-center items-center pt-8 sm:pt-10">
            
-              <Link href={"/industries"} className="bg-[#cd2626] group text-white cursor-pointer  font-semibold text-sm flex items-center gap-1 border-2 border-white px-6 py-2.5 rounded-full backdrop-blur-sm">
+              <Link href={"/industries"} className="bg-[#cd2626] text-white font-semibold text-sm sm:text-base flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-full hover:bg-red-700 transition-all duration-300">
                 View All
                 <BiChevronRight className="group-hover:translate-x-3 duration-200" size={25} />
               </Link>

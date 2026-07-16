@@ -62,6 +62,9 @@ const LanguageSelector = () => {
 
 
   const selectLanguage = (langCode: string) => {
+
+   
+
     setCurrentLang(langCode);
     setOpen(false);
 
