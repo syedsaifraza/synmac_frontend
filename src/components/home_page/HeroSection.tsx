@@ -20,7 +20,7 @@ const HeroSection = ({ data }: { data: any }) => {
   }, []);
 
   return (
-    <section className="relative h-screen flex items-center overflow-hidden">
+    <section className="relative h-screen flex items-center overflow-hidden ">
 
      
       {slides.map((src, i) => (

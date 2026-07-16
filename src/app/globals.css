@@ -167,9 +167,9 @@ background:white;
 .skiptranslate{
     /* display: none !important; */
 
-        /* position: fixed !important;
-        
-    /* z-index: -999 !important; */
+    position: absolute !important;
+
+    z-index: -999 !important;
 
 }
 
