@@ -75,7 +75,7 @@ const LanguageSelector = () => {
   
     setTimeout(() => {
       window.location.reload();
-    }, 200);
+    }, 1000);
   };
 
   const currentLabel =
