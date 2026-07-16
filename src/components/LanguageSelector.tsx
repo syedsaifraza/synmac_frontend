@@ -62,13 +62,11 @@ const LanguageSelector = () => {
 
 
   const clearAllCookies = () => {
-    document.cookie.split(";").forEach((cookie) => {
-      const name = cookie.split("=")[0].trim();
+    document.cookie =
+  "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
 
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname};`;
-    });
+document.cookie =
+  "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + window.location.hostname;
   };
 
 
