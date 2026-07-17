@@ -54,13 +54,12 @@ const page = ({
         const hasSubIndustry = searchParams.has("subindustry");
         const hasCategory = searchParams.has("productcategory");
         
-        // If only product param exists (no other filters), it's from search overlay
+
         return hasProduct && !hasIndustry && !hasSubIndustry && !hasCategory;
     }, [searchParams]);
 
       useEffect(() => {
-        if (isFromSearchOverlay) {
-            // Reset all filters except product
+        if (isFromSearchOverlay) { 
             setFilters({
                 industry: "",
                 subindustry: "",
