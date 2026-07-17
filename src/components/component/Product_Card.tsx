@@ -29,15 +29,9 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
           {visibleData.map((item: any, i: number) => {
 
             
-            const params = new URLSearchParams();
+          
 
-            if (item?.name) params.set("productname", item.name);
-            if (item?.id) params.set("productid", item.id);
-            if (item?.industry_name) params.set("industryname", item.industry_name);
-            if (item?.sub_industry_name) params.set("subindustryname", item.sub_industry_name);
-            if (item?.product_category_name) params.set("productcategoryname", item.product_category_name);
-
-            const url = `/product?${params.toString()}`;
+            const url = `/product/${item.slug}`;
 
             return (
               <Link
@@ -95,7 +89,6 @@ const Product_Section = ({ product_list  ,title = "Products"}: any) => {
                
                 </div>
                 <div className='flex justify-end absolute bottom-5 right-10'>
-
 
                     <FiArrowRight size={50} className="text-xl text-black group-hover:text-white group-hover:font-light group-hover:translate-x-4 transition " />
               

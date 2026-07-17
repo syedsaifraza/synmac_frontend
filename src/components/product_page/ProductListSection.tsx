@@ -299,9 +299,9 @@ const page = ({
             [type]: "",
         }));
 
-        // If removing product, also clear other filters if they exist
+     
         if (type === "product") {
-            // Clear all filter parameters when removing product search
+            
             const filterKeys = ["industry", "subindustry", "productcategory"];
             filterKeys.forEach(key => params.delete(key));
             
@@ -334,7 +334,7 @@ const page = ({
     };
 
     const handleFilterChange = (type: string, value: any) => {
-        // Clear product search when applying filters
+   
         const params = new URLSearchParams(searchParams.toString());
         params.delete("product");
 
@@ -359,7 +359,7 @@ const page = ({
     const handleSearch = (value: string) => {
         const params = new URLSearchParams();
 
-        // Clear all filters when searching
+    
         const filterKeys = ["industry", "subindustry", "productcategory"];
         filterKeys.forEach(key => {
             if (searchParams.has(key)) {

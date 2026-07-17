@@ -23,6 +23,9 @@ const Page = async ({ params }: any) => {
 
   const data = await getUser(resolvedParams.proSlug);
 
+
+
+
    if(!data.success){
         return notFound();
   }

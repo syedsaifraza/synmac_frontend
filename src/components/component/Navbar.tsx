@@ -209,7 +209,7 @@ const Navbar = ({
         if (product?.name) params.append("productname", product.name);
         if (product?.id) params.append("productid", product.id);
      
-        return `/product?${params.toString()}`;
+        return `/product/${product?.slug}`;
     };
 
     const products = useMemo(() => {
