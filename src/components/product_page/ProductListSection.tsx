@@ -22,10 +22,9 @@ const page = ({
     const searchParams = useSearchParams();
     const products = apiData?.data || [];
     const paginationData = apiData || {};
-    const productName = searchParams.get("productname");
+    const productName = searchParams.get("product");
     const captchaRef = useRef<any>(null);
     const [captchaValue, setCaptchaValue] = useState("");
-    const [search, setSearch] = useState<string>(productName ? productName : "");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pageSize, setPageSize] = useState(initialPerPage || 30);
@@ -33,10 +32,14 @@ const page = ({
         industry: "",
         subindustry: "",
         productcategory: "",
+        product: productName || "",
     });
 
     useEffect(() => {
-        setSearch(searchParams.get("productname") || "");
+        setFilters(prev => ({
+            ...prev,
+            product: searchParams.get("product") || ""
+        }));
     }, [searchParams]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -289,7 +292,6 @@ const page = ({
 
     const removeFilter = (type: string) => {
         const params = new URLSearchParams(searchParams.toString());
-
         params.delete(type);
 
         setFilters((prev) => ({
@@ -297,31 +299,102 @@ const page = ({
             [type]: "",
         }));
 
-        router.push(`${pathname}?${params.toString()}`);
+        // If removing product, also clear other filters if they exist
+        if (type === "product") {
+            // Clear all filter parameters when removing product search
+            const filterKeys = ["industry", "subindustry", "productcategory"];
+            filterKeys.forEach(key => params.delete(key));
+            
+            setFilters(prev => ({
+                ...prev,
+                industry: "",
+                subindustry: "",
+                productcategory: "",
+                product: "",
+            }));
+            
+            router.push(pathname);
+            setCurrentPage(1);
+            return;
+        }
+
+        // Check if any filters remain
+        const hasFilters = ["industry", "subindustry", "productcategory"].some(
+            key => params.has(key)
+        );
+
+        if (!hasFilters && !params.has("product")) {
+            router.push(pathname);
+            setCurrentPage(1);
+        } else {
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+        }
     };
 
     const handleFilterChange = (type: string, value: any) => {
+        // Clear product search when applying filters
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete("product");
+
         setFilters((prev) => ({
             ...prev,
-            [type]:
-                prev[type as keyof typeof filters] === value.name ? "" : value.name,
+            [type]: prev[type as keyof typeof filters] === value.name ? "" : value.name,
+            product: "", // Clear product search
         }));
 
-        navigateToPage(currentPage, pageSize, {
-            type: type,
-            id: value.id,
-        });
+        // Set the filter parameter
+        if (value.name && filters[type as keyof typeof filters] !== value.name) {
+            params.set(type, value.id.toString());
+        } else {
+            params.delete(type);
+        }
+
+        params.set("page", "1");
+        router.push(`${pathname}?${params.toString()}`);
+        setCurrentPage(1);
     };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearch(value);
+    const handleSearch = (value: string) => {
+        const params = new URLSearchParams();
+
+        // Clear all filters when searching
+        const filterKeys = ["industry", "subindustry", "productcategory"];
+        filterKeys.forEach(key => {
+            if (searchParams.has(key)) {
+                params.delete(key);
+            }
+        });
+
+        if (value.trim()) {
+            params.set("product", value.trim());
+        }
+
+        setFilters({
+            industry: "",
+            subindustry: "",
+            productcategory: "",
+            product: value.trim(),
+        });
+
+        setCurrentPage(1);
+
+        router.replace(
+            params.toString() ? `${pathname}?${params.toString()}` : pathname
+        );
     };
 
     const clearAllFilters = () => {
-        setSearch("");
-        router.replace(pathname);
-        setFilters({ industry: "", subindustry: "", productcategory: "" });
+        setFilters({
+            industry: "",
+            subindustry: "",
+            productcategory: "",
+            product: "",
+        });
+        
+        router.push(pathname);
+        setCurrentPage(1);
     };
 
     const filteredIndustries = sidebar?.industry;
@@ -398,22 +471,19 @@ const page = ({
                         />
                         <input
                             type="text"
-                            placeholder="Search products by name or description..."
-                            value={search}
-                            onChange={handleSearchChange}
+                            placeholder="Search products by name..."
+                            value={filters.product}
+                            onChange={(e) => handleSearch(e.target.value)}
                             className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-4 rounded-xl border border-gray-300 bg-white text-gray-700 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626] disabled:bg-gray-100 disabled:cursor-not-allowed"
                         />
                     </div>
 
                     <div className="flex gap-2 flex-wrap mb-4 sm:mb-6 fonts">
-                        {search && (
+                        {filters.product && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
-                                Search: "{search}"
+                                Search: "{filters.product}"
                                 <button
-                                    onClick={() => {
-                                        setSearch("");
-                                        navigateToPage(1);
-                                    }}
+                                    onClick={() => removeFilter("product")}
                                     className="hover:text-red-500"
                                 >
                                     ✕
@@ -421,7 +491,7 @@ const page = ({
                             </div>
                         )}
                         {Object.entries(filters).map(([key, value]) => {
-                            if (!value) return null;
+                            if (!value || key === "product") return null;
                             let displayKey =
                                 key === "subindustry"
                                     ? "Sub Industry"
@@ -443,7 +513,7 @@ const page = ({
                                 </div>
                             );
                         })}
-                        {(Object.values(filters).some((v) => v) || search) && (
+                        {(Object.values(filters).some((v) => v) || filters.product) && (
                             <button
                                 onClick={clearAllFilters}
                                 className="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs sm:text-sm hover:bg-red-600 transition-colors"
@@ -685,10 +755,10 @@ const page = ({
                                             }
                                             disabled={typeof page !== "number"}
                                             className={`min-w-10 px-3 py-2 rounded-md transition-colors ${currentPage === page
-                                                    ? "bg-[#cd2626] text-white"
-                                                    : typeof page === "number"
-                                                        ? "border border-gray-300 text-gray-700 hover:bg-gray-50"
-                                                        : "border-none text-gray-500 cursor-default"
+                                                ? "bg-[#cd2626] text-white"
+                                                : typeof page === "number"
+                                                    ? "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                                                    : "border-none text-gray-500 cursor-default"
                                                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                                         >
                                             {page}
