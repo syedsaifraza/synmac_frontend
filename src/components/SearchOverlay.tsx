@@ -11,7 +11,7 @@ interface SearchOverlayProps {
   onClose: () => void;
 }
 
-const SearchOverlay = ({ open, onClose }: any) => {
+const SearchOverlay = ({ open, onClose }: SearchOverlayProps) => {
 
   const {product} = useSelector((state:any)=>state.resources)
   const [query, setQuery] = useState("");
@@ -21,8 +21,10 @@ const SearchOverlay = ({ open, onClose }: any) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const currentUrlRef = useRef<string>("");
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load recent searches
+
   useEffect(() => {
     const saved = localStorage.getItem("recentSearches");
     if (saved) {
@@ -41,18 +43,7 @@ const SearchOverlay = ({ open, onClose }: any) => {
     localStorage.removeItem("recentSearches");
   };
 
-  useEffect(() => {
-    if (query.trim().length >= 2 && product && product.length > 0) {
-      const filtered = product
-        .filter((product: any) => 
-          product.name?.toLowerCase().includes(query.toLowerCase().trim())
-        )
-        .slice(0, 4); // Max 4 suggestions
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
-  }, [query, product]);
+
 
   useEffect(() => {
     if (open) {
@@ -67,17 +58,26 @@ const SearchOverlay = ({ open, onClose }: any) => {
     }
     return () => {
       document.body.style.overflow = "";
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
     };
   }, [open]);
 
-  
+  // URL change detection effect with delay
   useEffect(() => {
     if (!isNavigating) return;
 
     const checkUrlChange = setInterval(() => {
       if (currentUrlRef.current !== window.location.href) {
-        setIsNavigating(false);
-        onClose();
+        // Add delay before closing
+        closeTimeoutRef.current = setTimeout(() => {
+          setIsNavigating(false);
+          onClose();
+        }, 800); // 800ms delay - adjust as needed
         clearInterval(checkUrlChange);
       }
     }, 100);
@@ -109,7 +109,25 @@ const SearchOverlay = ({ open, onClose }: any) => {
     
     const url = `/product?${params.toString()}`;
     currentUrlRef.current = window.location.href;
+    
+    // Set a timeout to force close if navigation takes too long
+    navigationTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      onClose();
+    }, 5000);
+    
     await router.push(url);
+    
+    // Clear navigation timeout
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+    }
+    
+    // Add delay before closing after navigation
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsNavigating(false);
+      onClose();
+    }, 600); // 600ms delay - adjust as needed
   };
 
   const handleSearch = async () => {
@@ -117,7 +135,25 @@ const SearchOverlay = ({ open, onClose }: any) => {
       setIsNavigating(true);
       saveRecentSearch(query.trim());
       currentUrlRef.current = window.location.href;
-      await router.push(`/product?productname=${encodeURIComponent(query.trim())}`);
+      
+      // Set a timeout to force close if navigation takes too long
+      navigationTimeoutRef.current = setTimeout(() => {
+        setIsNavigating(false);
+        onClose();
+      }, 5000);
+      
+      await router.push(`/product?product=${encodeURIComponent(query.trim())}`);
+      
+      // Clear navigation timeout
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+      
+      // Add delay before closing after navigation
+      closeTimeoutRef.current = setTimeout(() => {
+        setIsNavigating(false);
+        onClose();
+      }, 600); 
     }
   };
 
@@ -129,10 +165,18 @@ const SearchOverlay = ({ open, onClose }: any) => {
 
   if (!open) return null;
 
+  // Calculate loading message based on action type
+  const getLoadingMessage = () => {
+    if (query.trim().length >= 2) {
+      return `Searching for "${query.trim()}"...`;
+    }
+    return "Loading...";
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
-        {/* Header */}
+
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-xl font-semibold text-white">Search Products</h2>
           <button
@@ -144,7 +188,6 @@ const SearchOverlay = ({ open, onClose }: any) => {
           </button>
         </div>
 
-        {/* Search Input */}
         <div className="relative mb-8">
           <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
           <input
@@ -159,7 +202,7 @@ const SearchOverlay = ({ open, onClose }: any) => {
           />
           
           {isNavigating ? (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-[#b62126] border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
@@ -174,14 +217,22 @@ const SearchOverlay = ({ open, onClose }: any) => {
           )}
         </div>
 
-        {/* Product Suggestions */}
+        {/* Loading overlay with delay message */}
+        {isNavigating && (
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="w-12 h-12 border-4 border-[#b62126] border-t-transparent rounded-full animate-spin mb-4"></div>
+          
+          </div>
+        )}
+
+        {/* Suggestions - only show when not navigating */}
         {!isNavigating && suggestions.length > 0 && (
           <div className="mb-6">
             <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
               Product Suggestions ({suggestions.length})
             </h3>
             <div className="space-y-2">
-              {suggestions.map((product,idx:number) => (
+              {suggestions.map((product, idx: number) => (
                 <button
                   key={idx}
                   onClick={() => handleProductClick(product)}
@@ -218,7 +269,7 @@ const SearchOverlay = ({ open, onClose }: any) => {
           </div>
         )}
 
-        {/* Search Result (Manual Search) */}
+        {/* Search button - only show when not navigating */}
         {!isNavigating && query.trim().length >= 2 && suggestions.length === 0 && (
           <button
             onClick={handleSearch}
@@ -236,7 +287,7 @@ const SearchOverlay = ({ open, onClose }: any) => {
           </button>
         )}
 
-        {/* Recent Searches */}
+      
         {!isNavigating && !query && recentSearches.length > 0 && (
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">

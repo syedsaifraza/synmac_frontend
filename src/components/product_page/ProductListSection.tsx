@@ -35,12 +35,40 @@ const page = ({
         product: productName || "",
     });
 
+
+    useEffect(()=>{
+
+    },[])
+
     useEffect(() => {
+
         setFilters(prev => ({
             ...prev,
             product: searchParams.get("product") || ""
         }));
     }, [searchParams]);
+
+       const isFromSearchOverlay = React.useMemo(() => {
+        const hasProduct = searchParams.has("product");
+        const hasIndustry = searchParams.has("industry");
+        const hasSubIndustry = searchParams.has("subindustry");
+        const hasCategory = searchParams.has("productcategory");
+        
+        // If only product param exists (no other filters), it's from search overlay
+        return hasProduct && !hasIndustry && !hasSubIndustry && !hasCategory;
+    }, [searchParams]);
+
+      useEffect(() => {
+        if (isFromSearchOverlay) {
+            // Reset all filters except product
+            setFilters({
+                industry: "",
+                subindustry: "",
+                productcategory: "",
+                product: productName || "",
+            });
+        }
+    }, [isFromSearchOverlay, productName]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<{
