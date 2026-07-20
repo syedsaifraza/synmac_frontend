@@ -5,14 +5,14 @@ import Image from 'next/image';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { HiMenuAlt3 } from 'react-icons/hi';
-import { MdArrowBack } from 'react-icons/md';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 import SearchOverlay from '../SearchOverlay';
 import LanguageSelector from '../LanguageSelector';
 import { useDispatch } from 'react-redux';
-import { setCompanyInfoDataFromApi, setIndustoryFromApi, setProductCategoryFromApi, setProductsFromApi, setSubIndustoryFromApi } from '@/features/synmacdata.slice';
+import { setCompanyInfoDataFromApi, setIndustoryFromApi } from '@/features/synmacdata.slice';
+
 
 interface Product {
     id: number;
@@ -33,8 +33,8 @@ interface SubIndustry {
     id: number;
     slug: string;
     name: string;
-    product_categories?: ProductCategory[]; // API uses "product_categories"
-    product?: Product[]; // API uses "product"
+    product_categories?: ProductCategory[]; 
+    product?: Product[]; 
     [key: string]: any;
 }
 
@@ -42,13 +42,13 @@ interface Industry {
     id: number;
     slug: string;
     name: string;
-    sub_industries?: SubIndustry[]; // API uses "sub_industries"
-    product_categories?: ProductCategory[]; // API uses "product_categories"
-    product?: Product[]; // API uses "product"
+    sub_industries?: SubIndustry[]; 
+    product_categories?: ProductCategory[];
+    product?: Product[]; 
     feature_file_link?: string;
     feature_title?: string;
     feature_description?: string;
-    hero_background_description?: string; // Added based on your data
+    hero_background_description?: string; 
     [key: string]: any;
 }
 
@@ -68,17 +68,15 @@ const Navbar = ({
     }, []);
 
     const pathname = usePathname();
+ 
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [mobileView, setMobileView] = useState<'main' | 'industries' | 'subIndustries' | 'categories' | 'products'>('main');
-    const [selectedIndustry, setSelectedIndustry] = useState<Industry | null>(null);
-    const [selectedSubIndustry, setSelectedSubIndustry] = useState<SubIndustry | null>(null);
-    const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null);
     const [activeIndustry, setActiveIndustry] = useState<Industry | null>(null);
     const [activeSubIndustry, setActiveSubIndustry] = useState<SubIndustry | null>(null);
     const [activeCategory, setActiveCategory] = useState<ProductCategory | null>(null);
     const hoverTimeoutRef = useRef<any>(null);
     const [searchOpen, setSearchOpen] = useState(false);
+
 
     const isProductPage = pathname === '/product';
 
@@ -113,7 +111,7 @@ const Navbar = ({
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Initialize active industry with proper property names
+ 
     useEffect(() => {
         if (data && data.length > 0) {
             const firstIndustry = data[0];
@@ -137,10 +135,6 @@ const Navbar = ({
 
     const closeMenu = () => {
         setIsMenuOpen(false);
-        setMobileView('main');
-        setSelectedIndustry(null);
-        setSelectedSubIndustry(null);
-        setSelectedCategory(null);
     };
 
     const hasSubIndustries = (industry: Industry) => {
@@ -159,13 +153,6 @@ const Navbar = ({
         return subIndustry?.product_categories && subIndustry.product_categories.length > 0;
     };
 
-    const hasDirectProductsInSub = (subIndustry: SubIndustry) => {
-        return subIndustry?.product && subIndustry.product.length > 0;
-    };
-
-    const hasProductsInCategory = (category: ProductCategory) => {
-        return category?.product && category.product.length > 0;
-    };
 
     const handleIndustryHover = useCallback((industry: Industry) => {
         setActiveIndustry(industry);
@@ -209,7 +196,7 @@ const Navbar = ({
       const createFilterUrl = (params:any) => {
     const searchParams = new URLSearchParams();
 
-    // Check each parameter and add only if it has a value
+    
     if (params.industry_id) {
       searchParams.append('industry', params.industry_id);
     }
@@ -487,7 +474,7 @@ const Navbar = ({
                                             products.map((product, idx: number) => (
                                                 <Link
                                                     key={idx}
-                                                    onClick={()=> setIsMenuOpen(false)}
+                                                 
                                                     href={getProductUrl(product)}
                                                     className="block font-medium text-xs mb-0.5 text-gray-700 hover:text-[#cd2626]"
                                                 >
