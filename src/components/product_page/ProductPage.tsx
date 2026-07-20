@@ -36,7 +36,7 @@ const ProductPage = ({ productData }: any) => {
     });
   };
 
-  // Helper function to get time remaining
+ 
   const getTimeRemaining = (timestamp: number) => {
     const elapsed = Date.now() - timestamp;
     const hoursRemaining = Math.max(0, 24 - (elapsed / (1000 * 60 * 60)));
@@ -47,7 +47,6 @@ const ProductPage = ({ productData }: any) => {
     return `${Math.ceil(hoursRemaining)} hour${Math.ceil(hoursRemaining) > 1 ? 's' : ''}`;
   };
 
-  // Updated hasPendingRequest - returns request data or null
   const hasPendingRequest = useCallback((productId: any, documentType: any) => {
     const pendingRequests = localStorage.getItem(
       `doc_request_${productId}_${documentType}`,
@@ -57,7 +56,7 @@ const ProductPage = ({ productData }: any) => {
       const hoursSinceRequest =
         (Date.now() - requestData.timestamp) / (1000 * 60 * 60);
       if (hoursSinceRequest < 24) {
-        return requestData; // Return the full request data
+        return requestData; 
       }
     }
     return null;

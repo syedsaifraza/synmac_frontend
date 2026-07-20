@@ -23,47 +23,86 @@ const page = ({
     const products = apiData?.data || [];
     const paginationData = apiData || {};
     const productName = searchParams.get("product");
+    const industryId = searchParams.get("industry");
+    const subindustryId = searchParams.get("subindustry");
+    const productcategoryId = searchParams.get("productcategory");
+    const productnameFromUrl = searchParams.get("productname");
     const captchaRef = useRef<any>(null);
     const [captchaValue, setCaptchaValue] = useState("");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pageSize, setPageSize] = useState(initialPerPage || 30);
+
+    // Helper function to get name from ID
+    const getIndustryNameFromId = (id: string) => {
+        if (!id || !sidebar?.industry) return "";
+        const industry = sidebar.industry.find((item: any) => item.id.toString() === id);
+        return industry ? industry.name : "";
+    };
+
+    const getSubIndustryNameFromId = (id: string) => {
+        if (!id || !sidebar?.subIndustry) return "";
+        const subIndustry = sidebar.subIndustry.find((item: any) => item.id.toString() === id);
+        return subIndustry ? subIndustry.name : "";
+    };
+
+    const getCategoryNameFromId = (id: string) => {
+        if (!id || !sidebar?.productCategory) return "";
+        const category = sidebar.productCategory.find((item: any) => item.id.toString() === id);
+        return category ? category.name : "";
+    };
+
     const [filters, setFilters] = useState({
-        industry: "",
-        subindustry: "",
-        productcategory: "",
+        industry: getIndustryNameFromId(industryId || "") || "",
+        industryId: industryId || "",
+        subindustry: getSubIndustryNameFromId(subindustryId || "") || "",
+        subindustryId: subindustryId || "",
+        productname: productnameFromUrl || "",
+        productcategory: getCategoryNameFromId(productcategoryId || "") || "",
+        productcategoryId: productcategoryId || "",
         product: productName || "",
     });
 
-
-    useEffect(()=>{
-
-    },[])
-
     useEffect(() => {
+        const product = searchParams.get("product") || "";
+        const industry = searchParams.get("industry") || "";
+        const subindustry = searchParams.get("subindustry") || "";
+        const productcategory = searchParams.get("productcategory") || "";
+        const productname = searchParams.get("productname") || "";
 
         setFilters(prev => ({
             ...prev,
-            product: searchParams.get("product") || ""
+            product: product,
+            productname: productname,
+            industry: getIndustryNameFromId(industry),
+            industryId: industry,
+            subindustry: getSubIndustryNameFromId(subindustry),
+            subindustryId: subindustry,
+            productcategory: getCategoryNameFromId(productcategory),
+            productcategoryId: productcategory,
         }));
-    }, [searchParams]);
+    }, [searchParams, sidebar]);
 
-       const isFromSearchOverlay = React.useMemo(() => {
+    const isFromSearchOverlay = React.useMemo(() => {
         const hasProduct = searchParams.has("product");
         const hasIndustry = searchParams.has("industry");
         const hasSubIndustry = searchParams.has("subindustry");
         const hasCategory = searchParams.has("productcategory");
-        
+        const hasProductName = searchParams.has("productname");
 
-        return hasProduct && !hasIndustry && !hasSubIndustry && !hasCategory;
+        return hasProduct && !hasIndustry && !hasSubIndustry && !hasCategory && !hasProductName;
     }, [searchParams]);
 
-      useEffect(() => {
-        if (isFromSearchOverlay) { 
+    useEffect(() => {
+        if (isFromSearchOverlay) {
             setFilters({
                 industry: "",
+                industryId: "",
+                productname: "",
                 subindustry: "",
+                subindustryId: "",
                 productcategory: "",
+                productcategoryId: "",
                 product: productName || "",
             });
         }
@@ -326,27 +365,85 @@ const page = ({
             [type]: "",
         }));
 
-     
+        // Handle product removal - clears all filters
         if (type === "product") {
-            
-            const filterKeys = ["industry", "subindustry", "productcategory"];
+            const filterKeys = ["industry", "subindustry", "productcategory", "productname"];
             filterKeys.forEach(key => params.delete(key));
-            
+
             setFilters(prev => ({
                 ...prev,
                 industry: "",
+                industryId: "",
+                productname: "",
                 subindustry: "",
+                subindustryId: "",
                 productcategory: "",
+                productcategoryId: "",
                 product: "",
             }));
-            
+
             router.push(pathname);
             setCurrentPage(1);
             return;
         }
 
+        // Handle productname removal - only removes productname
+        if (type === "productname") {
+            params.delete("productname");
+            setFilters(prev => ({
+                ...prev,
+                productname: "",
+            }));
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
+
+        // Handle industry removal
+        if (type === "industry" || type === "industryId") {
+            params.delete("industry");
+            setFilters(prev => ({
+                ...prev,
+                industry: "",
+                industryId: "",
+            }));
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
+
+        // Handle subindustry removal
+        if (type === "subindustry" || type === "subindustryId") {
+            params.delete("subindustry");
+            setFilters(prev => ({
+                ...prev,
+                subindustry: "",
+                subindustryId: "",
+            }));
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
+
+        // Handle productcategory removal
+        if (type === "productcategory" || type === "productcategoryId") {
+            params.delete("productcategory");
+            setFilters(prev => ({
+                ...prev,
+                productcategory: "",
+                productcategoryId: "",
+            }));
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
+
         // Check if any filters remain
-        const hasFilters = ["industry", "subindustry", "productcategory"].some(
+        const hasFilters = ["industry", "subindustry", "productcategory", "productname"].some(
             key => params.has(key)
         );
 
@@ -361,33 +458,138 @@ const page = ({
     };
 
     const handleFilterChange = (type: string, value: any) => {
-   
         const params = new URLSearchParams(searchParams.toString());
-        params.delete("product");
 
-        setFilters((prev) => ({
-            ...prev,
-            [type]: prev[type as keyof typeof filters] === value.name ? "" : value.name,
-            product: "", // Clear product search
-        }));
+        // If it's a productname filter
+        if (type === "productname") {
+            // Remove product search if present
+            params.delete("product");
 
-        // Set the filter parameter
-        if (value.name && filters[type as keyof typeof filters] !== value.name) {
-            params.set(type, value.id.toString());
-        } else {
-            params.delete(type);
+            setFilters((prev) => ({
+                ...prev,
+                [type]: prev[type as keyof typeof filters] === value.name ? "" : value.name,
+                product: "", // Clear product search
+            }));
+
+            // Set or remove the productname parameter
+            if (value.name && filters[type as keyof typeof filters] !== value.name) {
+                params.set(type, value.id.toString());
+            } else {
+                params.delete(type);
+            }
+
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
         }
 
-        params.set("page", "1");
-        router.push(`${pathname}?${params.toString()}`);
-        setCurrentPage(1);
+        // For industry filter
+        if (type === "industry") {
+            const isSelected = filters.industry === value.name;
+            
+            // Remove product and productname search if present
+            params.delete("product");
+            params.delete("productname");
+
+            setFilters((prev) => ({
+                ...prev,
+                industry: isSelected ? "" : value.name,
+                industryId: isSelected ? "" : value.id.toString(),
+                product: "",
+                productname: "",
+                subindustry: "", // Clear subindustry when industry changes
+                subindustryId: "",
+                productcategory: "", // Clear category when industry changes
+                productcategoryId: "",
+            }));
+
+            // Set or remove the industry parameter
+            if (!isSelected) {
+                params.set("industry", value.id.toString());
+            } else {
+                params.delete("industry");
+            }
+            
+            // Remove dependent filters
+            params.delete("subindustry");
+            params.delete("productcategory");
+
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
+
+        // For subindustry filter
+        if (type === "subindustry") {
+            const isSelected = filters.subindustry === value.name;
+            
+            // Remove product and productname search if present
+            params.delete("product");
+            params.delete("productname");
+
+            setFilters((prev) => ({
+                ...prev,
+                subindustry: isSelected ? "" : value.name,
+                subindustryId: isSelected ? "" : value.id.toString(),
+                product: "",
+                productname: "",
+                productcategory: "", // Clear category when subindustry changes
+                productcategoryId: "",
+            }));
+
+            // Set or remove the subindustry parameter
+            if (!isSelected) {
+                params.set("subindustry", value.id.toString());
+            } else {
+                params.delete("subindustry");
+            }
+            
+            // Remove dependent filters
+            params.delete("productcategory");
+
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
+
+        // For productcategory filter
+        if (type === "productcategory") {
+            const isSelected = filters.productcategory === value.name;
+            
+            // Remove product and productname search if present
+            params.delete("product");
+            params.delete("productname");
+
+            setFilters((prev) => ({
+                ...prev,
+                productcategory: isSelected ? "" : value.name,
+                productcategoryId: isSelected ? "" : value.id.toString(),
+                product: "",
+                productname: "",
+            }));
+
+            // Set or remove the productcategory parameter
+            if (!isSelected) {
+                params.set("productcategory", value.id.toString());
+            } else {
+                params.delete("productcategory");
+            }
+
+            params.set("page", "1");
+            router.push(`${pathname}?${params.toString()}`);
+            setCurrentPage(1);
+            return;
+        }
     };
 
     const handleSearch = (value: string) => {
         const params = new URLSearchParams();
 
-    
-        const filterKeys = ["industry", "subindustry", "productcategory"];
+        // Remove all filter keys
+        const filterKeys = ["industry", "subindustry", "productcategory", "productname"];
         filterKeys.forEach(key => {
             if (searchParams.has(key)) {
                 params.delete(key);
@@ -395,14 +597,18 @@ const page = ({
         });
 
         if (value.trim()) {
-            params.set("product", value.trim());
+            params.set("product", value);
         }
 
         setFilters({
+            productname: "",
             industry: "",
+            industryId: "",
             subindustry: "",
+            subindustryId: "",
             productcategory: "",
-            product: value.trim(),
+            productcategoryId: "",
+            product: value,
         });
 
         setCurrentPage(1);
@@ -415,26 +621,30 @@ const page = ({
     const clearAllFilters = () => {
         setFilters({
             industry: "",
+            industryId: "",
             subindustry: "",
+            subindustryId: "",
             productcategory: "",
+            productcategoryId: "",
             product: "",
+            productname: "",
         });
-        
+
         router.push(pathname);
         setCurrentPage(1);
     };
 
     const filteredIndustries = sidebar?.industry;
 
-    const filteredSubIndustries = filters.industry
+    const filteredSubIndustries = filters.industryId
         ? sidebar?.subIndustry?.filter(
-            (item: any) => item?.industry_name === filters.industry,
+            (item: any) => item?.industry_id?.toString() === filters.industryId,
         )
         : sidebar?.subIndustry;
 
-    const filteredCategories = filters.subindustry
+    const filteredCategories = filters.subindustryId
         ? sidebar?.productCategory?.filter(
-            (item: any) => item?.sub_industry_name === filters.subindustry,
+            (item: any) => item?.sub_industry_id?.toString() === filters.subindustryId,
         )
         : sidebar?.productCategory;
 
@@ -506,6 +716,7 @@ const page = ({
                     </div>
 
                     <div className="flex gap-2 flex-wrap mb-4 sm:mb-6 fonts">
+                      
                         {filters.product && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Search: "{filters.product}"
@@ -517,29 +728,51 @@ const page = ({
                                 </button>
                             </div>
                         )}
-                        {Object.entries(filters).map(([key, value]) => {
-                            if (!value || key === "product") return null;
-                            let displayKey =
-                                key === "subindustry"
-                                    ? "Sub Industry"
-                                    : key === "productcategory"
-                                        ? "Category"
-                                        : "Industry";
-                            return (
-                                <div
-                                    key={key}
-                                    className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm"
+                        {filters.industry && (
+                            <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
+                                Industry: {filters.industry}
+                                <button
+                                    onClick={() => removeFilter("industry")}
+                                    className="hover:text-red-500"
                                 >
-                                    {displayKey}: {value}
-                                    <button
-                                        onClick={() => removeFilter(key)}
-                                        className="hover:text-red-500"
-                                    >
-                                        ✕
-                                    </button>
-                                </div>
-                            );
-                        })}
+                                    ✕
+                                </button>
+                            </div>
+                        )}
+                        {filters.subindustry && (
+                            <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
+                                Sub Industry: {filters.subindustry}
+                                <button
+                                    onClick={() => removeFilter("subindustry")}
+                                    className="hover:text-red-500"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
+                        {filters.productcategory && (
+                            <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
+                                Category: {filters.productcategory}
+                                <button
+                                    onClick={() => removeFilter("productcategory")}
+                                    className="hover:text-red-500"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
+
+                          {filters.productname && (
+                            <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
+                                Product Name: "{filters.productname}"
+                                <button
+                                    onClick={() => removeFilter("productname")}
+                                    className="hover:text-red-500"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
                         {(Object.values(filters).some((v) => v) || filters.product) && (
                             <button
                                 onClick={clearAllFilters}

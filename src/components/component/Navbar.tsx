@@ -204,12 +204,45 @@ const Navbar = ({
         return `/industry/${industry.slug}/${subIndustry?.slug || " "}/${category?.slug || " "}`;
     };
 
+
+
+      const createFilterUrl = (params:any) => {
+    const searchParams = new URLSearchParams();
+
+    // Check each parameter and add only if it has a value
+    if (params.industry_id) {
+      searchParams.append('industry', params.industry_id);
+    }
+    if (params.sub_industry_id) {
+      searchParams.append('subindustry', params.sub_industry_id);
+    }
+    if (params.product_category_id) {
+      searchParams.append('productcategory', params.product_category_id);
+    }
+    if (params.name) {
+      searchParams.append('productname', params.name);
+    }
+
+    const queryString = searchParams.toString();
+    return `/product/${queryString ? `?${queryString}` : ''}`;
+  };
+
+
     const getProductUrl = (product: any) => {
+        
         const params = new URLSearchParams();
         if (product?.name) params.append("productname", product.name);
         if (product?.id) params.append("productid", product.id);
+
+
+        const url = createFilterUrl({
+              industry_id: activeIndustry?.id,
+              sub_industry_id: activeSubIndustry?.id,
+              product_category_id: activeCategory?.id,
+              name: product?.name
+            })
      
-        return `/product/${product?.slug}`;
+        return  url
     };
 
     const products = useMemo(() => {
@@ -454,6 +487,7 @@ const Navbar = ({
                                             products.map((product, idx: number) => (
                                                 <Link
                                                     key={idx}
+                                                    onClick={()=> setIsMenuOpen(false)}
                                                     href={getProductUrl(product)}
                                                     className="block font-medium text-xs mb-0.5 text-gray-700 hover:text-[#cd2626]"
                                                 >
