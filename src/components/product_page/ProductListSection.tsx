@@ -33,7 +33,13 @@ const page = ({
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pageSize, setPageSize] = useState(initialPerPage || 30);
 
-    // Helper function to get name from ID
+    const [loading,setLoading] = useState(false)
+
+    useEffect(()=>{
+        setLoading(false)
+    },[apiData,products])
+
+
     const getIndustryNameFromId = (id: string) => {
         if (!id || !sidebar?.industry) return "";
         const industry = sidebar.industry.find((item: any) => item.id.toString() === id);
@@ -460,7 +466,7 @@ const page = ({
     const handleFilterChange = (type: string, value: any) => {
         const params = new URLSearchParams(searchParams.toString());
 
-        // If it's a productname filter
+       
         if (type === "productname") {
             // Remove product search if present
             params.delete("product");
@@ -487,7 +493,7 @@ const page = ({
         // For industry filter
         if (type === "industry") {
             const isSelected = filters.industry === value.name;
-            
+
             // Remove product and productname search if present
             params.delete("product");
             params.delete("productname");
@@ -510,7 +516,7 @@ const page = ({
             } else {
                 params.delete("industry");
             }
-            
+
             // Remove dependent filters
             params.delete("subindustry");
             params.delete("productcategory");
@@ -524,7 +530,7 @@ const page = ({
         // For subindustry filter
         if (type === "subindustry") {
             const isSelected = filters.subindustry === value.name;
-            
+
             // Remove product and productname search if present
             params.delete("product");
             params.delete("productname");
@@ -545,7 +551,7 @@ const page = ({
             } else {
                 params.delete("subindustry");
             }
-            
+
             // Remove dependent filters
             params.delete("productcategory");
 
@@ -558,7 +564,7 @@ const page = ({
         // For productcategory filter
         if (type === "productcategory") {
             const isSelected = filters.productcategory === value.name;
-            
+
             // Remove product and productname search if present
             params.delete("product");
             params.delete("productname");
@@ -585,7 +591,9 @@ const page = ({
         }
     };
 
-    const handleSearch = (value: string) => {
+    const handleSearch = () => {
+
+        setLoading(true)
         const params = new URLSearchParams();
 
         // Remove all filter keys
@@ -596,8 +604,8 @@ const page = ({
             }
         });
 
-        if (value.trim()) {
-            params.set("product", value);
+        if (filters.product.trim()) {
+            params.set("product", filters.product);
         }
 
         setFilters({
@@ -608,7 +616,7 @@ const page = ({
             subindustryId: "",
             productcategory: "",
             productcategoryId: "",
-            product: value,
+            product: filters.product,
         });
 
         setCurrentPage(1);
@@ -702,21 +710,38 @@ const page = ({
                     </div>
 
                     <div className="relative mb-4 sm:mb-6 fonts">
-                        <BiSearch
-                            size={18}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
-                        />
+
                         <input
                             type="text"
                             placeholder="Search products by name..."
                             value={filters.product}
-                            onChange={(e) => handleSearch(e.target.value)}
+                            onChange={(e) =>setFilters ((prev)=>({...prev,product:e.target.value})) }
                             className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-4 rounded-xl border border-gray-300 bg-white text-gray-700 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626] disabled:bg-gray-100 disabled:cursor-not-allowed"
                         />
+
+                      {
+  loading ? (
+    <button
+      onClick={handleSearch}
+      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md bg-[#cd2626] p-2 text-white cursor-pointer"
+    >
+      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+    </button>
+  ) : (
+    <button
+      onClick={handleSearch}
+      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#cd2626] p-2 text-white cursor-pointer"
+    >
+      <BiSearch size={18} />
+    </button>
+  )
+}
+
+                       
                     </div>
 
                     <div className="flex gap-2 flex-wrap mb-4 sm:mb-6 fonts">
-                      
+
                         {filters.product && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Search: "{filters.product}"
@@ -762,7 +787,7 @@ const page = ({
                             </div>
                         )}
 
-                          {filters.productname && (
+                        {filters.productname && (
                             <div className="bg-gray-100 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs sm:text-sm">
                                 Product Name: "{filters.productname}"
                                 <button
