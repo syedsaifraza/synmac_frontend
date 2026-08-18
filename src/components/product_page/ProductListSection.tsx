@@ -33,11 +33,11 @@ const page = ({
     const [currentPage, setCurrentPage] = useState(initialPage || 1);
     const [pageSize, setPageSize] = useState(initialPerPage || 30);
 
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
-    useEffect(()=>{
+    useEffect(() => {
         setLoading(false)
-    },[apiData,products])
+    }, [apiData, products])
 
 
     const getIndustryNameFromId = (id: string) => {
@@ -466,7 +466,7 @@ const page = ({
     const handleFilterChange = (type: string, value: any) => {
         const params = new URLSearchParams(searchParams.toString());
 
-       
+
         if (type === "productname") {
             // Remove product search if present
             params.delete("product");
@@ -592,7 +592,7 @@ const page = ({
     };
 
     const handleSearch = () => {
-
+        if (!filters.product) return
         setLoading(true)
         const params = new URLSearchParams();
 
@@ -710,34 +710,40 @@ const page = ({
                     </div>
 
                     <div className="relative mb-4 sm:mb-6 fonts">
-
                         <input
                             type="text"
                             placeholder="Search products by name..."
                             value={filters.product}
-                            onChange={(e) =>setFilters ((prev)=>({...prev,product:e.target.value})) }
+                            onChange={(e) =>
+                                setFilters((prev) => ({
+                                    ...prev,
+                                    product: e.target.value,
+                                }))
+                            }
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !loading) {
+                                    handleSearch();
+                                }
+                            }}
                             className="w-full h-11 sm:h-12 pl-11 sm:pl-12 pr-4 rounded-xl border border-gray-300 bg-white text-gray-700 placeholder:text-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-[#cd2626]/20 focus:border-[#cd2626] disabled:bg-gray-100 disabled:cursor-not-allowed"
                         />
 
-                      {
-  loading ? (
-    <button
-      onClick={handleSearch}
-      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md bg-[#cd2626] p-2 text-white cursor-pointer"
-    >
-      <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-    </button>
-  ) : (
-    <button
-      onClick={handleSearch}
-      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#cd2626] p-2 text-white cursor-pointer"
-    >
-      <BiSearch size={18} />
-    </button>
-  )
-}
-
-                       
+                        {loading ? (
+                            <button
+                                onClick={handleSearch}
+                                disabled={loading}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md bg-[#cd2626] p-2 text-white cursor-not-allowed"
+                            >
+                                <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleSearch}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-[#cd2626] p-2 text-white cursor-pointer"
+                            >
+                                <BiSearch size={18} />
+                            </button>
+                        )}
                     </div>
 
                     <div className="flex gap-2 flex-wrap mb-4 sm:mb-6 fonts">
