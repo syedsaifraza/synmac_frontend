@@ -65,7 +65,7 @@ export default async function RootLayout({ children }: any) {
 
   return (
     <html lang="en">
-
+     <meta name="algolia-site-verification"  content="81C663C430D64D27" />
       <head>
         <Script
           id="gtm-script"
