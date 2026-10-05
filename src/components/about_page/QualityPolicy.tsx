@@ -34,13 +34,13 @@ const QualityPolicy = ({ qualityPolicy }: any) => {
         {/* Title */}
         <div
           dangerouslySetInnerHTML={{ __html: qualityPolicy?.content?.title || "" }}
-          className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2"
+          className="ql-editor mb-2"
         />
 
         {/* Subtitle */}
         <div
           dangerouslySetInnerHTML={{ __html: qualityPolicy?.content?.subtitle || "" }}
-          className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-6"
+          className="ql-editor  mb-6"
         />
 
         {/* ===== SCROLLER SECTION ===== */}
@@ -124,9 +124,12 @@ const QualityPolicy = ({ qualityPolicy }: any) => {
                     </p>
                   )}
 
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                    {item?.description}
-                  </p>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: item?.description || "" }}
+                    className="ql-editor line-clamp-3  mb-6"
+                  />
+
+
                 </div>
               </div>
             ))}

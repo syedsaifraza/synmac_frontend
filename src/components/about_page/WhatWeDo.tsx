@@ -44,7 +44,7 @@ const WhatWeDo = ({ whatWeDo }: any) => {
 
 
             {whatWeDo?.content?.list_item?.length > 0 && (
-              <ul className="space-y-1 flex flex-row flex-wrap gap-4">
+              <ul className="space-y-1 ">
                 {whatWeDo.content.list_item.map((item: any, index: number) => (
                   <li
                     key={index}
