@@ -34,23 +34,57 @@ async function getCompanyInfo() {
 
 
 async function getNavData() {
-  const res = await fetch(
-    `https://synmac-backend.serverscripts.in/api/v1/user/navbar`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    }
-  );
+
+  try {
+    const res = await fetch(
+      `https://synmac-backend.serverscripts.in/api/v1/user/navbar`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
 
-  const data = await res.json()
+    const data = await res?.json()
 
-  return data;
+    return data;
+  } catch {
+    console.log("error")
+  }
+
 }
 
+
+async function getAboutUsData() {
+
+  try {
+    const res = await fetch(
+      `https://synmac-backend.serverscripts.in/api/v1/user/aboutus/view`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        
+      }
+    );
+
+
+    const data = await res?.json()
+
+
+    console.log("about us data", data?.data[0]?.content)
+
+    return data;
+  } catch {
+    console.log("error")
+  }
+
+}
 
 
 
@@ -60,12 +94,14 @@ export default async function RootLayout({ children }: any) {
 
   const getCompanyData = await getCompanyInfo();
 
-  const getNav = await getNavData()
+  const getNav = await getNavData();
+
+  const getAboutUs = await getAboutUsData();
 
 
   return (
     <html lang="en">
-     <meta name="algolia-site-verification"  content="81C663C430D64D27" />
+      <meta name="algolia-site-verification" content="81C663C430D64D27" />
       <head>
         <Script
           id="gtm-script"
@@ -127,8 +163,9 @@ export default async function RootLayout({ children }: any) {
 
           <Toaster position="top-right" />
           <Navbar
+            getAboutUs={getAboutUs?.data}
             getCompanyData={getCompanyData}
-            data={getNav.data} />
+            data={getNav?.data} />
           {children}
         </Providers>
 

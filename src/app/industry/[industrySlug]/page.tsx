@@ -21,7 +21,7 @@ const page = async ({ params }: any) => {
 
 
 
-  if(!data.success){
+  if (!data.success) {
     return notFound();
   }
 
@@ -30,7 +30,7 @@ const page = async ({ params }: any) => {
   return (
     <div >
       <Industory industoryData={data?.industry} />
-  
+
     </div>
   );
 };

@@ -14,8 +14,8 @@ const page = async ({ params }: any) => {
   const path = await params;
   const getBlogData = await getBlogsResources(path.slug);
 
-   if(!getBlogData.success){
-        return notFound();
+  if (!getBlogData.success) {
+    return notFound();
   }
 
   return (
@@ -29,9 +29,9 @@ const page = async ({ params }: any) => {
       <div className="text-black py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="mb-3">
-     <h1 className="text-xl text-gray-800">{ getBlogData?.blogData?.description}</h1>
+            <h1 className="text-xl text-gray-800">{getBlogData?.blogData?.description}</h1>
           </div>
-     
+
           <div
             dangerouslySetInnerHTML={{
               __html: getBlogData?.blogData?.blog_content || "",

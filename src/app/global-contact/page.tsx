@@ -54,7 +54,7 @@ const page = async () => {
       <div
         className="relative h-100 bg-fixed bg-center bg-cover flex items-center justify-center "
         style={{
-          backgroundImage:`url(${globalBG})`,
+          backgroundImage: `url(${globalBG})`,
         }}
       >
 

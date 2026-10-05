@@ -2,7 +2,7 @@ import Blogs from '@/components/Resources_Components/Blogs'
 
 async function getAllBlogs() {
   const res = await fetch(`http://synmac.acetians.in/api/blogs`, {
-    next : { revalidate: 300 },
+    next: { revalidate: 300 },
     // cache: "no-store",
   });
 
@@ -11,7 +11,7 @@ async function getAllBlogs() {
 
 
 const page = async () => {
-   const getBlogs = await getAllBlogs()
+  const getBlogs = await getAllBlogs()
   return (
     <div>
       <Blogs blogsData={getBlogs?.blogs} />

@@ -15,7 +15,7 @@ const AboutPage = () => {
   const ref = useScrollReveal<HTMLDivElement>();
 
   return (
-    <div className="  px-20 min-h-screen">
+    <div className="  px-20 py-10 min-h-screen">
       <div className="container mx-auto">
 
         <div ref={ref} className="section-fade-in grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">

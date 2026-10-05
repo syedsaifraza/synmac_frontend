@@ -26,8 +26,8 @@ const Page = async ({ params }: any) => {
 
 
 
-   if(!data.success){
-        return notFound();
+  if (!data.success) {
+    return notFound();
   }
 
   return (
@@ -44,10 +44,10 @@ const Page = async ({ params }: any) => {
         subIndustryName={data.data.sub_industry_name}
         subIndustrySlug={data.data.sub_industry_slug}
 
-         productCategoryName={data?.data?.name}
-  productCategorySlug={data?.data?.slug}
+        productCategoryName={data?.data?.name}
+        productCategorySlug={data?.data?.slug}
       />
-     
+
 
       <About_Soluctions
         heading={data.data.feature_title}

@@ -23,9 +23,9 @@ const Page = async ({ params }: any) => {
 
   const data = await getUser(resolvedParams.subSlug);
 
-  if(!data.success){
-      return notFound();
-    }
+  if (!data.success) {
+    return notFound();
+  }
 
   const resources = data?.data?.resources;
 
@@ -43,7 +43,7 @@ const Page = async ({ params }: any) => {
         subIndustryName={data?.data?.name}
         subIndustrySlug={data?.data?.slug}
       />
-   
+
 
       <About_Soluctions
         heading={data?.data?.feature_title}

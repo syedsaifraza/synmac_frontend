@@ -9,7 +9,8 @@ const initialState:any = {
     industories:[],
     sub_industries:[],
     product_category:[],
-    company_info:null
+    company_info:null,
+    about_us:[]
 }
 
 const synmaceSlice = createSlice({
@@ -27,6 +28,10 @@ const synmaceSlice = createSlice({
 
            setNewFromApi : (state,action) => {
             state.news = action.payload
+        },
+
+            setAboutUsFromApi : (state,action) => {
+            state.about_us = action.payload
         },
 
            setSuccessFromApi : (state,action) => {
@@ -65,6 +70,6 @@ const synmaceSlice = createSlice({
 })
 
 
-export const {setResourcesFromApi,setProductsFromApi,setIndustoryFromApi,setSubIndustoryFromApi,setProductCategoryFromApi,setNewFromApi,setSuccessFromApi ,setBlogsFromApi, setCompanyInfoDataFromApi} = synmaceSlice.actions
+export const {setResourcesFromApi,setProductsFromApi,setIndustoryFromApi,setSubIndustoryFromApi,setProductCategoryFromApi,setNewFromApi,setSuccessFromApi ,setBlogsFromApi, setCompanyInfoDataFromApi, setAboutUsFromApi} = synmaceSlice.actions
 
 export default synmaceSlice.reducer

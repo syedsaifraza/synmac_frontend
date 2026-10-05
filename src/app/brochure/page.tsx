@@ -4,7 +4,7 @@ import React from 'react'
 
 async function getResources() {
   const res = await fetch(`http://synmac.acetians.in/api/resources`, {
-    next : { revalidate: 300 },
+    next: { revalidate: 300 },
     // cache: "no-store",
   });
 
@@ -14,12 +14,12 @@ async function getResources() {
 
 const page = async () => {
 
-    const allResources = await getResources();
+  const allResources = await getResources();
 
 
   return (
     <div>
-      <Brochure allResources={allResources}/>
+      <Brochure allResources={allResources} />
     </div>
   )
 }

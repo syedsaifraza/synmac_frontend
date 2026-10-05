@@ -6,7 +6,7 @@ import SustainabilitySection from "@/components/home_page/SustainabilitySection"
 
 async function getSustainability() {
   const res = await fetch(`http://synmac.acetians.in/api/sustainability`, {
-  
+
     cache: "no-store"
   });
   return res.json();
@@ -40,15 +40,15 @@ export default async function page() {
 
   return (
     <>
-    
-     {
-  heroSection?.data && (
-    <HeroSection data={heroSection.data} />
-  )
-}
+
+      {
+        heroSection?.data && (
+          <HeroSection data={heroSection.data} />
+        )
+      }
       <IndustriesSection />
       <OurStrengths />
-      <SustainabilitySection  data={sustainability?.data} data1={footer.data} />
+      <SustainabilitySection data={sustainability?.data} data1={footer.data} />
     </>
   );
 }

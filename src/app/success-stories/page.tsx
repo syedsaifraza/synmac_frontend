@@ -4,7 +4,7 @@ import SuccessStories from '@/components/Resources_Components/SuccessStories'
 
 async function getStories() {
   const res = await fetch(`http://synmac.acetians.in/api/success`, {
-    next : { revalidate: 300 },
+    next: { revalidate: 300 },
     // cache: "no-store",
   });
 
@@ -14,10 +14,10 @@ async function getStories() {
 
 const page = async () => {
 
-   const data = await getStories()
+  const data = await getStories()
   return (
     <div>
-      <SuccessStories  storyData={data?.stories}/>
+      <SuccessStories storyData={data?.stories} />
     </div>
   )
 }

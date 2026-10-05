@@ -17,9 +17,9 @@ const Page = async ({ params }: any) => {
   const productData = response?.product || null;
 
 
-   if (!response.success) {
-     return notFound();
-   }
+  if (!response.success) {
+    return notFound();
+  }
 
 
 
@@ -29,9 +29,9 @@ const Page = async ({ params }: any) => {
 
 
       <Header title={productData?.name} description={" "} background_image={productData?.hero_background_file_url} />
-    
 
-    <ProductPage productData={productData} />
+
+      <ProductPage productData={productData} />
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { FiSearch } from 'react-icons/fi';
 import SearchOverlay from '../SearchOverlay';
 import LanguageSelector from '../LanguageSelector';
 import { useDispatch } from 'react-redux';
-import { setCompanyInfoDataFromApi, setIndustoryFromApi } from '@/features/synmacdata.slice';
+import { setAboutUsFromApi, setCompanyInfoDataFromApi, setIndustoryFromApi } from '@/features/synmacdata.slice';
 
 
 interface Product {
@@ -33,8 +33,8 @@ interface SubIndustry {
     id: number;
     slug: string;
     name: string;
-    product_categories?: ProductCategory[]; 
-    product?: Product[]; 
+    product_categories?: ProductCategory[];
+    product?: Product[];
     [key: string]: any;
 }
 
@@ -42,33 +42,37 @@ interface Industry {
     id: number;
     slug: string;
     name: string;
-    sub_industries?: SubIndustry[]; 
+    sub_industries?: SubIndustry[];
     product_categories?: ProductCategory[];
-    product?: Product[]; 
+    product?: Product[];
     feature_file_link?: string;
     feature_title?: string;
     feature_description?: string;
-    hero_background_description?: string; 
+    hero_background_description?: string;
     [key: string]: any;
 }
 
 const Navbar = ({
     getCompanyData,
     data,
+    getAboutUs,
 }: {
     data: any,
-    getCompanyData: any
+    getCompanyData: any,
+    getAboutUs?:any
 }) => {
 
     const dispatch = useDispatch()
 
     useEffect(() => {
+        dispatch(setAboutUsFromApi
+            (getAboutUs))
         dispatch(setIndustoryFromApi(data))
         dispatch(setCompanyInfoDataFromApi(getCompanyData))
     }, []);
 
     const pathname = usePathname();
- 
+
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeIndustry, setActiveIndustry] = useState<Industry | null>(null);
@@ -78,8 +82,7 @@ const Navbar = ({
     const [searchOpen, setSearchOpen] = useState(false);
 
 
-    const isProductPage = pathname === '/product';
-
+    const isProductPage = pathname === '/product'
     const getNavbarTextColor = () => {
         if (isProductPage) return "text-gray-700";
         return !scrolled && !isMenuOpen ? "text-white" : "text-gray-700";
@@ -111,12 +114,12 @@ const Navbar = ({
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
- 
+
     useEffect(() => {
         if (data && data.length > 0) {
             const firstIndustry = data[0];
             setActiveIndustry(firstIndustry);
-            
+
             if (firstIndustry?.sub_industries?.length > 0) {
                 const firstSub = firstIndustry.sub_industries[0];
                 setActiveSubIndustry(firstSub);
@@ -156,7 +159,7 @@ const Navbar = ({
 
     const handleIndustryHover = useCallback((industry: Industry) => {
         setActiveIndustry(industry);
-        
+
         if (hasSubIndustries(industry)) {
             const sub = industry.sub_industries![0];
             setActiveSubIndustry(sub);
@@ -193,43 +196,43 @@ const Navbar = ({
 
 
 
-      const createFilterUrl = (params:any) => {
-    const searchParams = new URLSearchParams();
+    const createFilterUrl = (params: any) => {
+        const searchParams = new URLSearchParams();
 
-    
-    if (params.industry_id) {
-      searchParams.append('industry', params.industry_id);
-    }
-    if (params.sub_industry_id) {
-      searchParams.append('subindustry', params.sub_industry_id);
-    }
-    if (params.product_category_id) {
-      searchParams.append('productcategory', params.product_category_id);
-    }
-    if (params.name) {
-      searchParams.append('productname', params.name);
-    }
 
-    const queryString = searchParams.toString();
-    return `/product/${queryString ? `?${queryString}` : ''}`;
-  };
+        if (params.industry_id) {
+            searchParams.append('industry', params.industry_id);
+        }
+        if (params.sub_industry_id) {
+            searchParams.append('subindustry', params.sub_industry_id);
+        }
+        if (params.product_category_id) {
+            searchParams.append('productcategory', params.product_category_id);
+        }
+        if (params.name) {
+            searchParams.append('productname', params.name);
+        }
+
+        const queryString = searchParams.toString();
+        return `/product/${queryString ? `?${queryString}` : ''}`;
+    };
 
 
     const getProductUrl = (product: any) => {
-        
+
         const params = new URLSearchParams();
         if (product?.name) params.append("productname", product.name);
         if (product?.id) params.append("productid", product.id);
 
 
         const url = createFilterUrl({
-              industry_id: activeIndustry?.id,
-              sub_industry_id: activeSubIndustry?.id,
-              product_category_id: activeCategory?.id,
-              name: product?.name
-            })
-     
-        return  url
+            industry_id: activeIndustry?.id,
+            sub_industry_id: activeSubIndustry?.id,
+            product_category_id: activeCategory?.id,
+            name: product?.name
+        })
+
+        return url
     };
 
     const products = useMemo(() => {
@@ -281,7 +284,7 @@ const Navbar = ({
                                 <Link className='cursor-pointer hover:text-[#cd2626]' href={"/news-releases"}>News Releases</Link>
                             </div>
                         </div>
-                        <Link href="#" className="relative group">
+                        <Link href="/about-us" className="relative group">
                             <span>About us</span>
                             <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#cd2626] transition-all duration-300 group-hover:w-full"></span>
                         </Link>
@@ -306,8 +309,8 @@ const Navbar = ({
                         {!isMenuOpen ? (
                             <HiMenuAlt3
                                 className={`text-2xl cursor-pointer ${isProductPage
-                                        ? "text-gray-700"
-                                        : !scrolled && !isMenuOpen ? "text-white" : "text-gray-700"
+                                    ? "text-gray-700"
+                                    : !scrolled && !isMenuOpen ? "text-white" : "text-gray-700"
                                     }`}
                                 onClick={() => setIsMenuOpen(true)}
                             />
@@ -474,7 +477,7 @@ const Navbar = ({
                                             products.map((product, idx: number) => (
                                                 <Link
                                                     key={idx}
-                                                 
+
                                                     href={getProductUrl(product)}
                                                     className="block font-medium text-xs mb-0.5 text-gray-700 hover:text-[#cd2626]"
                                                 >

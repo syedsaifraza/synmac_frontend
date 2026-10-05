@@ -24,16 +24,16 @@ async function getUser() {
 }
 
 
-const OurStrengths =async () => {
+const OurStrengths = async () => {
 
-    const data = await getUser()
+  const data = await getUser()
 
 
 
-  
+
 
   return (
-    <section  className="section-fade-in py-24  bg-muted/40 bg-gray-50">
+    <section className="section-fade-in py-24  bg-muted/40 bg-gray-50">
       <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-[#cd2626] text-sm font-medium tracking-wider uppercase mb-3">Our Strengths</p>
@@ -41,14 +41,14 @@ const OurStrengths =async () => {
             Why Choose <span className="text-[#cd2626]">Synmac</span>
           </h2>
           <p className="text-gray-500 mt-4 max-w-4xl mx-auto fonts">
-           {data?.data?.description}
+            {data?.data?.description}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data?.data?.strength_lists.map((cap:any,idx:number) => (
+          {data?.data?.strength_lists.map((cap: any, idx: number) => (
             <div key={idx} className="p-8 text-center rounded-xl border border-gray-200 bg-white hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 transition-all duration-300 group">
               <div className="w-16 h-16   flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/15 transition-colors">
-                <Image alt={cap.title} height={50} width={50} src={cap?.image_url} className="h-10 w-10  object-cover"/>
+                <Image alt={cap.title} height={50} width={50} src={cap?.image_url} className="h-10 w-10  object-cover" />
               </div>
               <h3 className="font-display font-semibold text-xl mb-3 text-black">{cap.title}</h3>
               <p className="text-sm text-gray-500 leading-relaxed fonts">{cap.description}</p>
@@ -56,7 +56,7 @@ const OurStrengths =async () => {
           ))}
         </div>
       </div>
-     
+
     </section>
   );
 };

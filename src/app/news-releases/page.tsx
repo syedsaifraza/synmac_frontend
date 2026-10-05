@@ -5,7 +5,7 @@ import React from 'react'
 
 async function getAllNews() {
   const res = await fetch(`http://synmac.acetians.in/api/news`, {
-    next : { revalidate: 300 },
+    next: { revalidate: 300 },
     // cache: "no-store",
   });
 
@@ -14,13 +14,13 @@ async function getAllNews() {
 
 const page = async () => {
 
-   const getNews = await getAllNews()
+  const getNews = await getAllNews()
 
 
   return (
     <div>
-      <News newsData={getNews.news} />   
-     </div>
+      <News newsData={getNews.news} />
+    </div>
   )
 }
 

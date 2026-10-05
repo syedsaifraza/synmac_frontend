@@ -117,13 +117,11 @@ body {
 .custom-content li[data-list="bullet"] {
   list-style-type: disc;
 }
-
-
-
-.ql-editor{
+.ql-editor {
     padding: 0px !important;
+    height: auto !important;
+    overflow: hidden !important;
 }
-
 .resouce-Section{
     position: relative;
 }
