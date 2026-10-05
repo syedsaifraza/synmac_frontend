@@ -74,7 +74,7 @@ const CompanyTimeline = ({ companyTimeline }: any) => {
                                            w-[200px]
                                            sm:w-[calc(50%-12px)]
                                            lg:w-[calc(20%-20px)]
-                                           flex flex-col items-center justify-center
+                                           flex flex-col items-center justify-top
                                            transition-all duration-300"
                             >
                                 {/* Number on top */}

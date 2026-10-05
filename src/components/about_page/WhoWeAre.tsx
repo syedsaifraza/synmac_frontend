@@ -42,7 +42,7 @@ const WhoWeAre = ({whoWeAre}:any) => {
                     <img
                       src={whoWeAre?.content?.br_image_url || "https://via.placeholder.com/600x700"}
                       alt="Who We Are"
-                      className="w-full h-auto object-cover"
+                      className="w-full max-h-100 object-cover"
                     />
                   </div>
                 </div>

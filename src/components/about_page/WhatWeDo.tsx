@@ -2,7 +2,7 @@ import { FaCheckCircle } from "react-icons/fa";
 
 const WhatWeDo = ({ whatWeDo }: any) => {
   return (
-    <div className="w-full bg-white text-black py-10 ">
+    <div className="w-full   bg-white text-black py-10 ">
       <div className="">
 
         {/* Title */}
@@ -26,7 +26,7 @@ const WhatWeDo = ({ whatWeDo }: any) => {
               <img
                 src={whatWeDo?.content?.br_image_url || "https://via.placeholder.com/600x700"}
                 alt="What We Do"
-                className="w-full h-auto object-cover "
+                className="w-full max-h-100 object-cover "
               />
             </div>
           </div>
@@ -37,7 +37,7 @@ const WhatWeDo = ({ whatWeDo }: any) => {
 
             <div
               dangerouslySetInnerHTML={{ __html: whatWeDo?.content?.description || "" }}
-              className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2 line-clamp-8"
+              className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2 line-clamp-10"
             />
 
             
