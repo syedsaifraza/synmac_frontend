@@ -31,8 +31,7 @@ const QualityPolicy = ({ qualityPolicy }: any) => {
     <div className="w-full text-black py-10">
       <div>
 
-        {/* Title */}
-        <div
+              <div
           dangerouslySetInnerHTML={{ __html: qualityPolicy?.content?.title || "" }}
           className="ql-editor mb-2"
         />
@@ -88,7 +87,7 @@ const QualityPolicy = ({ qualityPolicy }: any) => {
           <div
             ref={scrollRef}
             onScroll={checkScroll}
-            className="flex flex-row gap-4 sm:gap-6 overflow-x-auto scroll-smooth pb-2
+            className="flex flex-row w-5xl mx-auto gap-4 sm:gap-6 overflow-x-auto scroll-smooth pb-2
                        snap-x snap-mandatory
                        [&::-webkit-scrollbar]:hidden
                        [-ms-overflow-style:none]

@@ -37,7 +37,7 @@ const WhatWeDo = ({ whatWeDo }: any) => {
 
             <div
               dangerouslySetInnerHTML={{ __html: whatWeDo?.content?.description || "" }}
-              className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2"
+              className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2 line-clamp-8"
             />
 
             

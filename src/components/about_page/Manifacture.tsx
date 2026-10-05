@@ -1,49 +1,3 @@
-// import React from 'react'
-
-// const Manifacture = ({ manifacture }: any) => {
-//   return (
-
-//     <div className="border">
-
-//       <div
-//         dangerouslySetInnerHTML={{ __html: manifacture?.content?.title || "" }}
-//         className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2"
-//       />
-
-
-//       <div
-//         dangerouslySetInnerHTML={{ __html: manifacture?.content?.subtitle || "" }}
-//         className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-3"
-//       />
-//       <div className='flex justify-center items-center border'>
-
-//     <img src={"./Hexagon.png"} alt="image" className='w-full' />
-
-//       </div>
-
-
-//       <h1 onClick={() => console.log(manifacture)}>{manifacture?.content?.title}</h1>
-
-//         {
-//           manifacture?.content?.section_item?.map((item: any, index: number) => (
-//             <div>
-
-//               <h2>{item?.title}</h2>
-//               <p>{item?.number}</p>
-//               <img src={item?.icon_url} alt="image" />
-
-
-
-//             </div>
-//           ))}
-
-//     </div>
-//   )
-// }
-
-// export default Manifacture
-
-
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -51,96 +5,283 @@ import React, { useEffect, useState } from 'react'
 const Manifacture = ({ manifacture }: any) => {
 
   const [items, setItems] = useState({
-    item1: manifacture?.content?.section_item[0],
-    item2: manifacture?.content?.section_item[1],
-    item3: manifacture?.content?.section_item[2],
-    item4: manifacture?.content?.section_item[3],
-    item5: manifacture?.content?.section_item[4],
-    item6: manifacture?.content?.section_item[5],
-
+    item1: manifacture?.content?.section_item?.[0],
+    item2: manifacture?.content?.section_item?.[1],
+    item3: manifacture?.content?.section_item?.[2],
+    item4: manifacture?.content?.section_item?.[3],
+    item5: manifacture?.content?.section_item?.[4],
+    item6: manifacture?.content?.section_item?.[5],
   })
-
 
   useEffect(() => {
     setItems({
-      item1: manifacture?.content?.section_item[0],
-      item2: manifacture?.content?.section_item[1],
-      item3: manifacture?.content?.section_item[2],
-      item4: manifacture?.content?.section_item[3],
-      item5: manifacture?.content?.section_item[4],
-      item6: manifacture?.content?.section_item[5],
-
+      item1: manifacture?.content?.section_item?.[0],
+      item2: manifacture?.content?.section_item?.[1],
+      item3: manifacture?.content?.section_item?.[2],
+      item4: manifacture?.content?.section_item?.[3],
+      item5: manifacture?.content?.section_item?.[4],
+      item6: manifacture?.content?.section_item?.[5],
     })
   }, [manifacture])
-  return (
 
+  return (
     <div className="bg-gray-50 py-10">
 
+      {/* TITLE */}
       <div
-        dangerouslySetInnerHTML={{ __html: manifacture?.content?.title || "" }}
+        dangerouslySetInnerHTML={{
+          __html: manifacture?.content?.title || '',
+        }}
         className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-2"
       />
 
-
+      {/* SUBTITLE */}
       <div
-        dangerouslySetInnerHTML={{ __html: manifacture?.content?.subtitle || "" }}
+        dangerouslySetInnerHTML={{
+          __html: manifacture?.content?.subtitle || '',
+        }}
         className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-3"
       />
-      <div className='flex justify-center items-center  relative'>
 
-        <img src={"./Hexagon.png"} alt="image" className='w-full brightness-98' />
-        <div className=' flex flex-col items-center justify-center absolute left-53.5 top-75'>
+      {/* HEXAGON CONTAINER */}
+      <div className="relative flex justify-center items-center w-full">
 
-          <h1 className='font-bold text-5xl'>{items?.item1?.number}</h1>
-          <img src={items?.item1?.icon_url} alt="image" className='w-20' />
-          <h1 className='font-bold text-2xl'>{items?.item1?.title}</h1>
+        {/* HEXAGON IMAGE */}
+        <img
+          src="/Hexagon.png"
+          alt="Hexagon"
+          className="w-full h-auto brightness-98"
+        />
+
+        {/* ================= ITEM 1 ================= */}
+        <div
+          className="
+            absolute
+            left-48
+            top-75
+            w-[210px]
+            flex flex-col
+            items-center
+            justify-center
+            text-center
+            overflow-hidden
+          "
+        >
+          <h1 className="font-bold text-5xl leading-none">
+            {items?.item1?.number}
+          </h1>
+
+          <img
+            src={items?.item1?.icon_url}
+            alt="icon"
+            className="w-16 h-16 object-contain my-1"
+          />
+
+          <h1
+            className="
+              font-bold
+              text-2xl
+              leading-tight
+              max-w-[210px]
+              break-words
+              [overflow-wrap:anywhere]
+            "
+          >
+            {items?.item1?.title}
+          </h1>
         </div>
 
+        {/* ================= ITEM 2 ================= */}
+        <div
+          className="
+            absolute
+            left-48
+            top-150
+            w-[210px]
+            flex flex-col
+            items-center
+            justify-center
+            text-center
+            overflow-hidden
+          "
+        >
+          <h1 className="font-bold text-5xl leading-none">
+            {items?.item2?.number}
+          </h1>
 
-        <div className=' flex flex-col items-center justify-center absolute left-53.5 top-150'>
+          <img
+            src={items?.item2?.icon_url}
+            alt="icon"
+            className="w-16 h-16 object-contain my-1"
+          />
 
-          <h1 className='font-bold text-5xl'>{items?.item1?.number}</h1>
-          <img src={items?.item1?.icon_url} alt="image" className='w-20' />
-          <h1 className='font-bold text-2xl'>{items?.item1?.title}</h1>
+          <h1
+            className="
+              font-bold
+              text-2xl
+              leading-tight
+              max-w-[210px]
+              break-words
+              [overflow-wrap:anywhere]
+            "
+          >
+            {items?.item2?.title}
+          </h1>
         </div>
 
-        <div className=' flex flex-col items-center justify-center absolute left-122 top-113'>
+        {/* ================= ITEM 3 ================= */}
+        <div
+          className="
+            absolute
+            left-116
+            top-113
+            w-[210px]
+            flex flex-col
+            items-center
+            justify-center
+            text-center
+            overflow-hidden
+          "
+        >
+          <h1 className="font-bold text-5xl leading-none">
+            {items?.item3?.number}
+          </h1>
 
-          <h1 className='font-bold text-5xl'>{items?.item1?.number}</h1>
-          <img src={items?.item1?.icon_url} alt="image" className='w-20' />
-          <h1 className='font-bold text-2xl'>{items?.item1?.title}</h1>
+          <img
+            src={items?.item3?.icon_url}
+            alt="icon"
+            className="w-16 h-16 object-contain my-1"
+          />
+
+          <h1
+            className="
+              font-bold
+              text-2xl
+              leading-tight
+              max-w-[210px]
+              break-words
+              [overflow-wrap:anywhere]
+            "
+          >
+            {items?.item3?.title}
+          </h1>
         </div>
 
-        <div className=' flex flex-col items-center justify-center absolute left-122 top-35'>
+        {/* ================= ITEM 4 ================= */}
+        <div
+          className="
+            absolute
+            left-116
+            top-35
+            w-[210px]
+            flex flex-col
+            items-center
+            justify-center
+            text-center
+            overflow-hidden
+          "
+        >
+          <h1 className="font-bold text-5xl leading-none">
+            {items?.item4?.number}
+          </h1>
 
-          <h1 className='font-bold text-5xl'>{items?.item1?.number}</h1>
-          <img src={items?.item1?.icon_url} alt="image" className='w-20' />
-          <h1 className='font-bold text-2xl'>{items?.item1?.title}</h1>
+          <img
+            src={items?.item4?.icon_url}
+            alt="icon"
+            className="w-16 h-16 object-contain my-1"
+          />
+
+          <h1
+            className="
+              font-bold
+              text-2xl
+              leading-tight
+              max-w-[210px]
+              break-words
+              [overflow-wrap:anywhere]
+            "
+          >
+            {items?.item4?.title}
+          </h1>
         </div>
 
+        {/* ================= ITEM 5 ================= */}
+        <div
+          className="
+            absolute
+            right-52
+            top-75
+            w-[210px]
+            flex flex-col
+            items-center
+            justify-center
+            text-center
+            overflow-hidden
+          "
+        >
+          <h1 className="font-bold text-5xl leading-none">
+            {items?.item5?.number}
+          </h1>
 
-        <div className=' flex flex-col items-center justify-center absolute right-58 top-75'>
+          <img
+            src={items?.item5?.icon_url}
+            alt="icon"
+            className="w-16 h-16 object-contain my-1"
+          />
 
-          <h1 className='font-bold text-5xl'>{items?.item1?.number}</h1>
-          <img src={items?.item1?.icon_url} alt="image" className='w-20' />
-          <h1 className='font-bold text-2xl'>{items?.item1?.title}</h1>
+          <h1
+            className="
+              font-bold
+              text-2xl
+              leading-tight
+              max-w-[210px]
+              break-words
+              [overflow-wrap:anywhere]
+            "
+          >
+            {items?.item5?.title}
+          </h1>
         </div>
 
+        {/* ================= ITEM 6 ================= */}
+        <div
+          className="
+            absolute
+            right-52
+            top-150
+            w-[210px]
+            flex flex-col
+            items-center
+            justify-center
+            text-center
+            overflow-hidden
+          "
+        >
+          <h1 className="font-bold text-5xl leading-none">
+            {items?.item6?.number}
+          </h1>
 
-        <div className=' flex flex-col items-center justify-center absolute right-58 top-150'>
+          <img
+            src={items?.item6?.icon_url}
+            alt="icon"
+            className="w-16 h-16 object-contain my-1"
+          />
 
-          <h1 className='font-bold text-5xl'>{items?.item1?.number}</h1>
-          <img src={items?.item1?.icon_url} alt="image" className='w-20' />
-          <h1 className='font-bold text-2xl'>{items?.item1?.title}</h1>
+          <h1
+            className="
+              font-bold
+              text-2xl
+              leading-tight
+              max-w-[210px]
+              break-words
+              [overflow-wrap:anywhere]
+            "
+          >
+            {items?.item6?.title}
+          </h1>
         </div>
-
-
-
 
       </div>
-
-
-
     </div>
   )
 }
