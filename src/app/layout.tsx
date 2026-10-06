@@ -77,8 +77,6 @@ async function getAboutUsData() {
     const data = await res?.json()
 
 
-    console.log("about us data", data?.data[0]?.content)
-
     return data;
   } catch {
     console.log("error")

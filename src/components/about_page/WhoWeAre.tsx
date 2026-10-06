@@ -26,7 +26,7 @@ const WhoWeAre = ({whoWeAre}:any) => {
     
                   <div
                     dangerouslySetInnerHTML={{ __html: whoWeAre?.content?.description || "" }}
-                    className=" ql-editor line-clamp-12"
+                    className=" ql-editor line-clamp-13"
                   />
     
                   <div className="mt-8 absolute bottom-0 left-0">

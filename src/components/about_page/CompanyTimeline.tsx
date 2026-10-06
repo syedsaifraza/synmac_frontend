@@ -84,11 +84,11 @@ const CompanyTimeline = ({ companyTimeline }: any) => {
 
                                 {/* Icon Circle */}
                                 <div className="relative flex items-center justify-center">
-                                    <div className="relative z-10 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-[#cd2626] flex items-center justify-center overflow-hidden">
+                                    <div className="relative z-10 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-[#cd2626] flex items-center justify-center overflow-hidden p-2">
                                         <img
                                             src={item?.icon_url || "https://via.placeholder.com/100"}
                                             alt={item?.title || "icon"}
-                                            className="w-full h-full object-cover rounded-full"
+                                            className="w-full h-full object-contain "
                                         />
                                     </div>
                                 </div>

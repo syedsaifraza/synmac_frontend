@@ -67,7 +67,7 @@ const Manifacture = ({ manifacture }: any) => {
             overflow-hidden
           "
         >
-          <h1 className="font-bold text-5xl leading-none">
+          <h1 className="font-bold text-5xl text-gray-800 leading-none">
             {items?.item1?.number}
           </h1>
 
@@ -78,9 +78,10 @@ const Manifacture = ({ manifacture }: any) => {
           />
 
           <h1
-            className="
+           className="
               font-bold
-              text-2xl
+              text-gray-800
+              text-3xl
               leading-tight
               max-w-[210px]
               break-words
@@ -105,7 +106,7 @@ const Manifacture = ({ manifacture }: any) => {
             overflow-hidden
           "
         >
-          <h1 className="font-bold text-5xl leading-none">
+          <h1 className="font-bold text-5xl text-gray-800 leading-none">
             {items?.item2?.number}
           </h1>
 
@@ -116,9 +117,10 @@ const Manifacture = ({ manifacture }: any) => {
           />
 
           <h1
-            className="
+       className="
               font-bold
-              text-2xl
+              text-gray-800
+              text-3xl
               leading-tight
               max-w-[210px]
               break-words
@@ -143,7 +145,7 @@ const Manifacture = ({ manifacture }: any) => {
             overflow-hidden
           "
         >
-          <h1 className="font-bold text-5xl leading-none">
+            <h1 className="font-bold text-5xl text-gray-800 leading-none">
             {items?.item3?.number}
           </h1>
 
@@ -154,9 +156,10 @@ const Manifacture = ({ manifacture }: any) => {
           />
 
           <h1
-            className="
+           className="
               font-bold
-              text-2xl
+              text-gray-800
+              text-3xl
               leading-tight
               max-w-[210px]
               break-words
@@ -181,7 +184,7 @@ const Manifacture = ({ manifacture }: any) => {
             overflow-hidden
           "
         >
-          <h1 className="font-bold text-5xl leading-none">
+          <h1 className="font-bold text-5xl text-gray-800 leading-none">
             {items?.item4?.number}
           </h1>
 
@@ -194,7 +197,8 @@ const Manifacture = ({ manifacture }: any) => {
           <h1
             className="
               font-bold
-              text-2xl
+              text-gray-800
+              text-3xl
               leading-tight
               max-w-[210px]
               break-words
@@ -219,7 +223,7 @@ const Manifacture = ({ manifacture }: any) => {
             overflow-hidden
           "
         >
-          <h1 className="font-bold text-5xl leading-none">
+            <h1 className="font-bold text-5xl text-gray-800 leading-none">
             {items?.item5?.number}
           </h1>
 
@@ -230,9 +234,10 @@ const Manifacture = ({ manifacture }: any) => {
           />
 
           <h1
-            className="
+           className="
               font-bold
-              text-2xl
+              text-gray-800
+              text-3xl
               leading-tight
               max-w-[210px]
               break-words
@@ -257,7 +262,7 @@ const Manifacture = ({ manifacture }: any) => {
             overflow-hidden
           "
         >
-          <h1 className="font-bold text-5xl leading-none">
+          <h1 className="font-bold text-5xl text-gray-800 leading-none">
             {items?.item6?.number}
           </h1>
 
@@ -270,7 +275,8 @@ const Manifacture = ({ manifacture }: any) => {
           <h1
             className="
               font-bold
-              text-2xl
+              text-gray-800
+              text-3xl
               leading-tight
               max-w-[210px]
               break-words

@@ -223,8 +223,6 @@ const LanguageSelector = () => {
 
     clearAllCookies()
     setCurrentLang(langCode);
-
-    console.log("Google transalte : ", langCode)
     setOpen(false);
 
     document.cookie = `googtrans=/en/${langCode}; path=/`;
