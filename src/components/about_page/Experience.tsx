@@ -56,8 +56,14 @@ const Experience = ({ about_us_experience }: any) => {
               
                 <div
                     dangerouslySetInnerHTML={{ __html: about_us_experience?.content?.description || "" }}
-                    className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-10"
+                    className="ql-editor text-sm sm:text-base text-gray-700 leading-relaxed mb-5"
                 />
+
+                <div className="mb-5"> 
+                    
+                <h1 className="font-bold text-3xl text-gray-800">Certificates</h1>
+
+                </div>
 
                
                 <div className="relative">

@@ -41,18 +41,10 @@ const AboutHeroPage = ({ HeroPage }: any) => {
 
                     />
 
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-
-
-
-                        <Link
-                            href="/contact-us"
-                            className="px-6 sm:px-8 py-3 sm:py-3.5 bg-[#cd2626] text-white rounded-lg  hover:bg-[#b32020] transition-colors text-center font-500 text-sm sm:text-base"
-                        >
-                            Contact Us
+                    <div className="mt-8 absolute bottom-0 left-0">
+                        <Link href="/product" className="bg-[#cd2626] hover:bg-[#b01f1f] text-white text-sm sm:text-base font-medium px-6 sm:px-8 py-3 rounded-full transition-colors duration-300">
+                            View Products
                         </Link>
-
-
                     </div>
                 </div>
             </div>

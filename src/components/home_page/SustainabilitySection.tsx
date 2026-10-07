@@ -128,6 +128,44 @@ const SustainabilitySection = ({ data, data1 }: any) => {
       </section>
 
 
+           <section ref={statsRef} className="py-20  bg-[#b0c4b1]/80">
+        <div className="container mx-auto max-w-8xl ">
+          <div className="text-center mb-12">
+            <p className="text-gray-800 text-sm font-semibold tracking-wider uppercase mb-3">Key Numbers</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-gray-800">
+              Our Impact in <span className="text-white">Numbers</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-gray-900">
+            {stats?.map((s: any, i: any) => {
+
+              let label;
+
+              if (s?.label === "years_of_excellence") {
+                label = "Years of Excellence"
+              } else if (s?.label === "no_of_products") {
+                label = "No of Products"
+              } else if (s?.label === "countries_served") {
+                label = "Countries Served"
+              } else if (s?.label === "happy_clients") {
+                label = "Happy Clients"
+              }
+
+              return (
+                <div key={i} className="text-center py-6">
+                  <div className="text-4xl md:text-5xl font-display font-bold  mb-2">
+                    {counts[i]}{s?.suffix}
+                  </div>
+                  <p className="text-lg font-semibold ">{label}</p>
+                </div>
+              )
+
+            })}
+          </div>
+        </div>
+      </section>
+
+
     
       {/* <section  className="section-fade-in py-20  bg-muted/40 bg-gray-50">
         <div className="container max-w-6xl mx-auto">

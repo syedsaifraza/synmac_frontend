@@ -135,9 +135,6 @@ const QualityPolicy = ({ qualityPolicy }: any) => {
 
                 {/* Content */}
                 <div className="p-4 sm:p-5 flex flex-col gap-2 flex-1">
-                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900 leading-snug line-clamp-1">
-                    {item?.title}
-                  </h2>
 
                   {item?.subtitle && (
                     <p className="text-sm text-[#cd2626] font-semibold line-clamp-1">
@@ -145,18 +142,24 @@ const QualityPolicy = ({ qualityPolicy }: any) => {
                     </p>
                   )}
 
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900 leading-snug line-clamp-1">
+                    {item?.title}
+                  </h2>
+
+
+
                   <div
                     dangerouslySetInnerHTML={{ __html: item?.description || "" }}
-                    className="ql-editor line-clamp-3 text-sm text-gray-600"
+                    className="ql-editor line-clamp-4 text-sm text-gray-600"
                   />
 
                   {/* ✅ Read More button */}
-                  <button
+                  {/* <button
                     onClick={() => setSelectedItem(item)}
                     className="mt-auto self-start text-sm font-semibold text-[#cd2626] hover:underline transition"
                   >
                     Read More →
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}

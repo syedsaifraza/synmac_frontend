@@ -26,14 +26,14 @@ const WhoWeAre = ({whoWeAre}:any) => {
     
                   <div
                     dangerouslySetInnerHTML={{ __html: whoWeAre?.content?.description || "" }}
-                    className=" ql-editor line-clamp-13"
+                    className=" ql-editor line-clamp-16"
                   />
     
-                  <div className="mt-8 absolute bottom-0 left-0">
+                  {/* <div className="mt-8 absolute bottom-0 left-0">
                     <Link href="/product" className="bg-[#cd2626] hover:bg-[#b01f1f] text-white text-sm sm:text-base font-medium px-6 sm:px-8 py-3 rounded-full transition-colors duration-300">
                       View Products
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
     
     
